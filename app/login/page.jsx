@@ -1,30 +1,8 @@
 import Image from "next/image";
 import { SubmitButton } from "./submit-button";
-import { createClient } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
+import { signIn } from "./actions";
 
 export default function LoginPage({ searchParams: { message } }) {
-  const signIn = async (formData) => {
-    "use server";
-
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return redirect(
-        "/login?message=Falha ao autenticar usuário. Por favor, verifique seu email e senha."
-      );
-    }
-
-    return redirect("/user-dashboard");
-  };
-
   return (
     <div className="flex min-h-full flex-1 bg-white">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">

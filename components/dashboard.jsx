@@ -5,9 +5,9 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import SolicitacaoPreviewCard from "../../components/solicitacao-preview";
+import NovaAplicacaoCard from "./nenhuma-aplicacao-card";
 
-const user = {
+const fakeuser = {
   name: "Pedro Daia",
   email: "pedrodaia.c@gmail.com",
   imageUrl: "/farmer.png",
@@ -25,7 +25,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Exemplo() {
+export default function UserDashboardPage() {
   return (
     <div className="min-h-full">
       <div className="bg-orange-800 pb-32">
@@ -87,7 +87,7 @@ export default function Exemplo() {
                               </span>
                               <Image
                                 className="h-8 w-8 rounded-full"
-                                src={user.imageUrl}
+                                src={fakeuser.imageUrl}
                                 alt=""
                                 width={300}
                                 height={50}
@@ -170,16 +170,16 @@ export default function Exemplo() {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
+                        src={fakeuser.imageUrl}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {user.name}
+                        {fakeuser.name}
                       </div>
                       <div className="text-sm font-medium leading-none text-gray-400">
-                        {user.email}
+                        {fakeuser.email}
                       </div>
                     </div>
                     <button
@@ -220,7 +220,7 @@ export default function Exemplo() {
       <main className="-mt-32">
         <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-            <SolicitacaoPreviewCard />
+            <NovaAplicacaoCard />
           </div>
         </div>
       </main>

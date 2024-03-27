@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import UserDashboardPage from "./dashboard";
+import UserDashboardPage from "../../components/dashboard";
 import { redirect } from "next/navigation";
 
 export default async function UserProtectedPage() {

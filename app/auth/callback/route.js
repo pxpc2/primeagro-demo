@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
-  const origin = requestUrl.origin;
+  const { searchParams } = new URL(request.url);
+  const code = searchParams.get("code");
+  const origin = searchParams.origin;
 
   if (code) {
     const supabase = createClient();
