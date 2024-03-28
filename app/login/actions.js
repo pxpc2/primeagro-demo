@@ -16,7 +16,11 @@ export async function signIn(formData) {
 
   if (error) {
     return redirect(
-      "/login?message=Falha ao autenticar usuário. Por favor, verifique seu email e senha."
+      `/login?message=${
+        error.message === "Email not confirmed"
+          ? "Por favor, verifique seu email para completar o registro."
+          : "Credenciais inválidas. Por favor verifique o email e a senha."
+      }`
     );
   }
   revalidatePath("/", "layout");
@@ -39,10 +43,11 @@ export async function signUp(formData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
+    console.log(error.message);
     /*redirect(
       "/login?message=Falha ao cadastrar usuário. Por favor, tente novamente ou entre em contato."
     );*/
-    redirect("/error");
+    redirect("/error?message= " + error.message);
   }
 
   /*const clienteData = {
