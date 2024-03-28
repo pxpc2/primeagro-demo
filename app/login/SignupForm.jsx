@@ -1,7 +1,7 @@
 import { signUp } from "./actions";
 import { SubmitButton } from "./submit-button";
 
-export default function SignUpForm({ isToggled, onClose }) {
+export default function SignUpForm({ isToggled, onClose, msg }) {
   if (!isToggled) return null;
   return (
     <div className="fixed inset-x-0 inset-y-0  bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
@@ -94,6 +94,9 @@ export default function SignUpForm({ isToggled, onClose }) {
             >
               Salvar informações e registrar conta
             </SubmitButton>
+            {msg && (
+              <p className="mt-4 p-4 bg-foreground/10 text-center">{msg}</p>
+            )}
           </div>
         </form>
       </div>

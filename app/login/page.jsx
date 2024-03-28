@@ -8,7 +8,9 @@ import SignUpForm from "./SignupForm";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
   const [showModal, setShowModal] = useState(false);
+  console.log(" in here");
   const toggleModal = () => {
+    console.log("mudando showModal de " + showModal + " para " + !showModal);
     setShowModal(!showModal);
   };
 
@@ -135,6 +137,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
         onClose={() => {
           setShowModal(false);
         }}
+        msg={successmsg}
       />
     </div>
   );

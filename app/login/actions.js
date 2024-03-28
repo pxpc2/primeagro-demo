@@ -2,7 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { RedirectType, redirect } from "next/navigation";
 
 export async function signIn(formData) {
   const supabase = createClient();
@@ -58,7 +58,8 @@ export async function signUp(formData) {
 
   revalidatePath("/", "layout");
   redirect(
-    "/login?successmsg=Por favor, verifique seu email para completar o registro."
+    "/login?successmsg=Por favor, verifique seu email para completar o registro.",
+    RedirectType.replace
   );
 }
 

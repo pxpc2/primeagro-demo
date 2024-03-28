@@ -8,6 +8,7 @@ import Link from "next/link";
 import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-card";
 import userHasFilledProfileBasicInfo from "./actions";
 import { createClient } from "@/utils/supabase/client";
+import { redirect } from "next/navigation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -15,6 +16,11 @@ function classNames(...classes) {
 
 export default function UserDashboardPage({ cliente }) {
   const usuario = cliente[0];
+
+  if (usuario === undefined) {
+    console.log("primeiro nome is undefined");
+    redirect("/error?message=Cadastre seu perfil.");
+  }
 
   const navigation = [
     { name: "Aplicações", href: "#", current: true },
