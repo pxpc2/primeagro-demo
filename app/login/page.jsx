@@ -1,8 +1,17 @@
+"use client";
+
 import Image from "next/image";
-import { SubmitButton } from "./submit-button";
-import { signIn } from "./actions";
+import { signIn } from "@/app/login/actions";
+import { SubmitButton } from "@/app/login/submit-button";
+import { useState } from "react";
+import SignUpForm from "./SignupForm";
 
 export default function LoginPage({ searchParams: { message } }) {
+  const [showModal, setShowModal] = useState(false);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <div className="flex min-h-full flex-1 bg-white">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -20,15 +29,11 @@ export default function LoginPage({ searchParams: { message } }) {
             </h2>
             <p className="mt-2 text-sm leading-6 text-gray-500">
               Não possui conta?{" "}
-              <a
-                href="#"
-                className="font-semibold text-orange-600 hover:text-orange-400"
-              >
-                Registrar agora.
-              </a>
+              <span className="font-semibold text-orange-600 hover:text-orange-400">
+                <button onClick={toggleModal}>Registrar agora.</button>
+              </span>
             </p>
           </div>
-
           <div className="mt-10">
             <div>
               <form action="#" method="POST" className="space-y-6">
@@ -124,6 +129,13 @@ export default function LoginPage({ searchParams: { message } }) {
           height={50}
         />
       </div>
+
+      <SignUpForm
+        isToggled={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+      />
     </div>
   );
 }
