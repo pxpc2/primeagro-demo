@@ -47,7 +47,7 @@ export async function signUp(formData) {
     /*redirect(
       "/login?message=Falha ao cadastrar usuário. Por favor, tente novamente ou entre em contato."
     );*/
-    redirect("/error?message= " + error.message);
+    redirect("/error?message=" + error.message);
   }
 
   /*const clienteData = {
@@ -62,6 +62,9 @@ export async function signUp(formData) {
   };*/
 
   revalidatePath("/", "layout");
+  redirect(
+    "/login?message=Por favor, verifique seu email para completar o registro."
+  );
   return true;
 }
 
