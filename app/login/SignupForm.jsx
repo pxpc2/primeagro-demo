@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { signUp } from "./actions";
 import { SubmitButton } from "./submit-button";
 
-export default function SignUpForm({ isToggled, onClose, success }) {
+export default function SignUpForm({ isToggled, onClose }) {
   if (!isToggled) return null;
   return (
     <div className="fixed inset-x-0 inset-y-0  bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">

@@ -6,7 +6,7 @@ import { SubmitButton } from "@/app/login/submit-button";
 import { useState } from "react";
 import SignUpForm from "./SignupForm";
 
-export default function LoginPage({ searchParams: { message } }) {
+export default function LoginPage({ searchParams: { message, successmsg } }) {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -110,7 +110,7 @@ export default function LoginPage({ searchParams: { message } }) {
                     Entrar
                   </SubmitButton>
                   {message && (
-                    <p className="mt-4 p-4 bg-foreground/10 text-center text-red">
+                    <p className="mt-4 p-4 bg-foreground/10 text-center">
                       {message}
                     </p>
                   )}

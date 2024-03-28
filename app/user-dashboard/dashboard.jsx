@@ -1,31 +1,32 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import NovaAplicacaoCard from "./nenhuma-aplicacao-card";
-
-const fakeuser = {
-  name: "Pedro Daia",
-  email: "pedrodaia.c@gmail.com",
-  imageUrl: "/farmer.png",
-};
-const navigation = [
-  { name: "Aplicações", href: "#", current: true },
-  { name: "Suporte", href: "#", current: false },
-];
-const userNavigation = [
-  { name: "Sua Conta", href: "#" },
-  { name: "Sair", href: "#" },
-];
+import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-card";
+import userHasFilledProfileBasicInfo from "./actions";
+import { createClient } from "@/utils/supabase/client";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserDashboardPage() {
+export default function UserDashboardPage({ cliente }) {
+  const usuario = cliente[0];
+
+  const navigation = [
+    { name: "Aplicações", href: "#", current: true },
+    { name: "Suporte", href: "#", current: false },
+  ];
+  const userNavigation = [
+    { name: "Sua Conta", href: "#" },
+    { name: "Sair", href: "#" },
+  ];
+
+  console.log(usuario);
+
   return (
     <div className="min-h-full">
       <div className="bg-orange-800 pb-32">
@@ -87,7 +88,7 @@ export default function UserDashboardPage() {
                               </span>
                               <Image
                                 className="h-8 w-8 rounded-full"
-                                src={fakeuser.imageUrl}
+                                src={"/farmer.png"}
                                 alt=""
                                 width={300}
                                 height={50}
@@ -170,16 +171,16 @@ export default function UserDashboardPage() {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={fakeuser.imageUrl}
+                        src={"/farmer.png"}
                         alt=""
                       />
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {fakeuser.name}
+                        {usuario.primeiro_nome}
                       </div>
                       <div className="text-sm font-medium leading-none text-gray-400">
-                        {fakeuser.email}
+                        {usuario.email}
                       </div>
                     </div>
                     <button
@@ -211,7 +212,7 @@ export default function UserDashboardPage() {
         <header className="py-10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-white">
-              Bem vindo, Pedro.
+              Bem vindo, {usuario.primeiro_nome}.
             </h1>
           </div>
         </header>

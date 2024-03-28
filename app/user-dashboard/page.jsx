@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import UserDashboardPage from "../../components/dashboard";
+import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 
 export default async function UserProtectedPage() {
@@ -13,5 +13,10 @@ export default async function UserProtectedPage() {
     return redirect("/login");
   }
 
-  return <UserDashboardPage />;
+  let { data: cliente, error } = await supabase
+    .from("cliente")
+    .select()
+    .eq("authuser_id", user.id);
+
+  return <UserDashboardPage cliente={cliente} />;
 }

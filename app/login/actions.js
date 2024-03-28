@@ -27,11 +27,6 @@ export async function signIn(formData) {
   return redirect("/user-dashboard");
 }
 
-/**
- *@todo FALTA ADICIONAR MENSAGEM DE AVISO PARA VERIFICAR O EMAIL...
- * @param {*} formData é para ter mais parametros do que o form de login
- * é para criar um registro novo na tabela "clientes" apontando para o userID.
- */
 export async function signUp(formData) {
   const supabase = createClient();
 
@@ -63,9 +58,8 @@ export async function signUp(formData) {
 
   revalidatePath("/", "layout");
   redirect(
-    "/login?message=Por favor, verifique seu email para completar o registro."
+    "/login?successmsg=Por favor, verifique seu email para completar o registro."
   );
-  return true;
 }
 
 /*export async function criarUsuario(dados) {
