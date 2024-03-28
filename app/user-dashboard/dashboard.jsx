@@ -6,22 +6,12 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-card";
-import userHasFilledProfileBasicInfo from "./actions";
-import { createClient } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function UserDashboardPage({ cliente }) {
-  const usuario = cliente[0];
-
-  if (usuario === undefined) {
-    console.log("primeiro nome is undefined");
-    redirect("/error?message=Cadastre seu perfil.");
-  }
-
   const navigation = [
     { name: "Aplicações", href: "#", current: true },
     { name: "Suporte", href: "#", current: false },
@@ -31,7 +21,7 @@ export default function UserDashboardPage({ cliente }) {
     { name: "Sair", href: "#" },
   ];
 
-  console.log(usuario);
+  const usuario = cliente[0];
 
   return (
     <div className="min-h-full">
