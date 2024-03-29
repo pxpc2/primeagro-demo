@@ -219,9 +219,13 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
             {aplicacoes.length == 0 ? (
               <NovaAplicacaoCard />
+            ) : aplicacoes.length == 1 ? (
+              <h1 className="text-2xl">
+                Você é usuário normal e possui uma aplicação em andamento.
+              </h1>
             ) : (
-              <h1 className="text-xl font-semibold">
-                Você já possui solicitações de orçamento. Acompanhar!
+              <h1 className="text-2xl">
+                Total de aplicações de usuários: {aplicacoes.length}
               </h1>
             )}
           </div>
