@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 import ProfileCreationPage from "./profile-creation";
+import { getAplicacoes } from "./actions";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();
@@ -15,13 +16,13 @@ export default async function UserProtectedPage() {
   }
 
   let { data: cliente, error } = await supabase
-    .from("cliente")
+    .from("clientes")
     .select()
     .eq("authuser_id", user.id);
 
-  if (cliente[0] === undefined) {
-    return <ProfileCreationPage authID={user.id} />;
-  }
+  if (cliente[0] === undefined) return <ProfileCreationPage authID={user.id} />;
 
-  return <UserDashboardPage cliente={cliente} />;
+  const aps = await getAplicacoes();
+
+  return <UserDashboardPage cliente={cliente} aplicacoes={aps} />;
 }

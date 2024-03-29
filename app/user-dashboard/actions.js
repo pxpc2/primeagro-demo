@@ -21,9 +21,21 @@ export default async function completeProfile(formData) {
     endereco: formData.get("street-address"),
   };
 
-  const { error } = await supabase.from("cliente").insert(clienteData);
+  const { error } = await supabase.from("clientes").insert(clienteData);
   if (error) {
     return redirect("/error?message=" + error.message);
   }
   return redirect("/user-dashboard");
+}
+
+/**
+ * se for usuario admin, vai retornar todas.
+ * se for usuario normal, vai retornar só a sua própria.
+ */
+export async function getAplicacoes() {
+  const supabase = createClient();
+  let { data: aplicacoes, error } = await supabase
+    .from("aplicacoes")
+    .select("*");
+  return aplicacoes;
 }

@@ -11,7 +11,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserDashboardPage({ cliente }) {
+export default function UserDashboardPage({ cliente, aplicacoes }) {
   const navigation = [
     { name: "Aplicações", href: "#", current: true },
     { name: "Suporte", href: "#", current: false },
@@ -217,7 +217,13 @@ export default function UserDashboardPage({ cliente }) {
       <main className="-mt-32">
         <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-            <NovaAplicacaoCard />
+            {aplicacoes.length == 0 ? (
+              <NovaAplicacaoCard />
+            ) : (
+              <h1 className="text-xl font-semibold">
+                Você já possui solicitações de orçamento. Acompanhar!
+              </h1>
+            )}
           </div>
         </div>
       </main>
