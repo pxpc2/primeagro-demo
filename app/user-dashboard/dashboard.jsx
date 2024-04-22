@@ -5,7 +5,8 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-card";
+import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-view";
+import SolicitacaoPreviewCard from "@/components/solicitacao-preview";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -221,7 +222,7 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
               <NovaAplicacaoCard />
             ) : aplicacoes.length == 1 ? (
               <h1 className="text-2xl">
-                Você é usuário normal e possui uma aplicação em andamento.
+                <SolicitacaoPreviewCard />
               </h1>
             ) : (
               <h1 className="text-2xl">

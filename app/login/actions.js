@@ -63,6 +63,17 @@ export async function signUp(formData) {
   );
 }
 
+/**
+ * @todo CRIAR FUNCAO PARA GERAR NOVA APLICACAO NO BANCO DE DADOS
+ *
+ * @param {} formData
+ */
+export async function createAplicacao(formData) {
+  const supabase = createClient();
+
+  const data = {};
+}
+
 /*export async function criarUsuario(dados) {
   const { data, error } = await supabase
     .from("cliente")
