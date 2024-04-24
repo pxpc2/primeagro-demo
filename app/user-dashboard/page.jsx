@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 import ProfileCreationPage from "./profile-creation";
-import { getAplicacoes } from "./actions";
+import { getAplicacoes, getUserRole } from "./actions";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();
@@ -23,6 +23,13 @@ export default async function UserProtectedPage() {
   if (cliente[0] === undefined) return <ProfileCreationPage authID={user.id} />;
 
   const aps = await getAplicacoes();
+
+  //const userRole = await getUserRole();
+  // invés de pegar userRole, a gente tem que simplesmente só permitir as coisas de acordo com as policies
+
+  //ou seja, na userdashboardpage, a gente mostra tudo... mas só vai aparecer oq o seu user for permitido.
+
+  //console.log(userRole);
 
   return <UserDashboardPage cliente={cliente} aplicacoes={aps} />;
 }

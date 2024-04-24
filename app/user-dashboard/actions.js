@@ -39,3 +39,14 @@ export async function getAplicacoes() {
     .select("*");
   return aplicacoes;
 }
+
+export async function getUserRole(id) {
+  const supabase = createClient();
+  let { data: user_roles, error } = await supabase
+    .from("user_roles")
+    .select("*")
+    // Filters
+    .eq("user_id", id);
+  console.log(user_roles);
+  return user_roles;
+}

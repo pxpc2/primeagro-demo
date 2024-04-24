@@ -7,12 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-view";
 import SolicitacaoPreviewCard from "@/components/solicitacao-preview";
+import { jwtDecode } from "jwt-decode";
+import { createClient } from "@/utils/supabase/client";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function UserDashboardPage({ cliente, aplicacoes }) {
+  const [role, setRole] = useState(null);
   const navigation = [
     { name: "Aplicações", href: "#", current: true },
     { name: "Suporte", href: "#", current: false },
@@ -23,6 +26,18 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
   ];
 
   const usuario = cliente[0];
+
+  const supabase = createClient();
+
+  const { subscription: authListener } = supabase.auth.onAuthStateChange(
+    async (event, session) => {
+      if (session) {
+        const jwt = jwtDecode(session.access_token);
+        const userRole = jwt.user_role;
+        setRole(userRole);
+      }
+    }
+  );
 
   return (
     <div className="min-h-full">
@@ -211,6 +226,34 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Bem vindo, {usuario.primeiro_nome}.
             </h1>
+            <h2 className="text-lg font-normal tracking-tight text-gray-100 pt-20">
+              Perfil de {role == null ? "beneficiário" : role}, funcionalidades
+              que estarão disponíveis:
+            </h2>
+            {role == "gerente" ? (
+              <div>
+                <p className="pb-10 text-gray-100 font-thin">
+                  Visualizar todas as aplicações existentes, criar um novo
+                  perfil de técnico (associado a um beneficiário já existente),
+                  editar aplicações, gerar resumo em PDF (formatado
+                  corretamente) de uma aplicação.
+                </p>
+              </div>
+            ) : (
+              <div>
+                {role == "tecnico" ? (
+                  <p className="text-gray-100 pb-10 font-thin text-sm">
+                    Criar nova aplicação para seu beneficiário; se já tiver
+                    existente, pode editar ou acompanhar status.
+                  </p>
+                ) : (
+                  <p className="pb-10 text-gray-100 font-thin text-sm">
+                    Pode acompanhar o status de sua aplicação (criada pelo seu
+                    respectivo técnico-avaliador)
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </header>
       </div>
@@ -220,14 +263,14 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
             {aplicacoes.length == 0 ? (
               <NovaAplicacaoCard />
-            ) : aplicacoes.length == 1 ? (
-              <h1 className="text-2xl">
-                <SolicitacaoPreviewCard />
-              </h1>
             ) : (
-              <h1 className="text-2xl">
-                Total de aplicações de usuários: {aplicacoes.length}
-              </h1>
+              <div>
+                {role == "gerente" ? (
+                  <h1>Total de aplicações disponíveis: {aplicacoes.length}</h1>
+                ) : (
+                  <SolicitacaoPreviewCard />
+                )}
+              </div>
             )}
           </div>
         </div>
