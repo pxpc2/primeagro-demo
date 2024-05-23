@@ -4,8 +4,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "ConfiensAgro",
-  description: "Consultoria e Financiamento de Agronegócio",
+  title: "ConfidensAgro",
+  description: "Consultoria e Crédito Rural",
 };
 
 export default function RootLayout({ children }) {

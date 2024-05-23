@@ -10,9 +10,12 @@ export default function ProfileCreationPage({ authID }) {
    do perfil ainda não foram preenchidos */
 
   const [showModal, setShowModal] = useState(false);
+  const [showAvaliadorMsg, setShowAvaliadorMsg] = useState(false);
   const toggleModal = () => {
-    console.log("mudando showModal de " + showModal + " para " + !showModal);
     setShowModal(!showModal);
+  };
+  const showAvaliador = () => {
+    setShowAvaliadorMsg(!showAvaliadorMsg);
   };
 
   return (
@@ -26,24 +29,33 @@ export default function ProfileCreationPage({ authID }) {
             <HomeIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
           </button>
         </Link>
-        <div className="flex items-center flex-col justify-center align-middle h-full">
-          <h1 className="font-medium pt-20">Qual o seu tipo de conta?</h1>
-          <div className="w-full flex items-center gap-11 justify-center py-10">
-            <button
-              type="button"
-              className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
-              onClick={toggleModal}
-            >
-              Sou beneficiário
-            </button>
-            <button
-              type="button"
-              className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
-            >
-              Sou avaliador técnico
-            </button>
+        {!showAvaliadorMsg && (
+          <div className="flex items-center flex-col justify-center align-middle h-full">
+            <h1 className="font-medium pt-20">Qual o seu tipo de conta?</h1>
+            <div className="w-full flex items-center gap-11 justify-center py-10">
+              <button
+                type="button"
+                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
+                onClick={toggleModal}
+              >
+                Sou beneficiário
+              </button>
+              <button
+                type="button"
+                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
+                onClick={showAvaliador}
+              >
+                Sou avaliador técnico
+              </button>
+            </div>
           </div>
-        </div>
+        )}
+
+        {showAvaliadorMsg && (
+          <h1 className="font-medium pt-20">
+            Entre em contato para solicitar a liberação de conta avaliador.
+          </h1>
+        )}
       </div>
 
       <FormPNCF
