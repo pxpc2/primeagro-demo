@@ -12,8 +12,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
         <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white  shadow-2xl p-8 sm:p-16 sm:w-[80%] h-full overflow-y-auto">
           <div className="px-4 py-5 sm:px-6">
             <h1 className="text-2xl font-semibold">
-              Programa Nacional de Crédito Fundiário - Formulário de
-              Enquadramento
+              Programa Nacional de Crédito Fundiário
             </h1>
           </div>
           <div className="px-4 py-5 sm:p-6">
@@ -21,7 +20,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
               <div className="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
                 <div className="px-4 sm:px-0">
                   <h2 className="text-base font-semibold leading-7 text-gray-900">
-                    Informações Pessoais
+                    Formulário de Enquadramento
                   </h2>
                   <p className="mt-1 text-sm leading-6 text-gray-600">
                     Seu próximo passo é preencher o formulário de enquadramento
@@ -35,8 +34,10 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                   method="POST"
                 >
                   <div className="px-4 py-6 sm:p-8">
+                    <p className="text-xl font-semibold leading-7 text-gray-900 mb-12">
+                      Informações Pessoais
+                    </p>
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                      {/*
                       <div className="sm:col-span-3">
                         <label
                           htmlFor="first-name"
@@ -54,8 +55,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
-                        */}
-                      {/*
+
                       <div className="sm:col-span-3">
                         <label
                           htmlFor="last-name"
@@ -73,7 +73,109 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
-                      */}
+
+                      {/* AQUI COMEÇA DADOS DE RESIDENCIA */}
+
+                      <div className="sm:col-span-2">
+                        <label
+                          htmlFor="state"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Qual seu estado de residência?
+                        </label>
+                        <div className="mt-2">
+                          <select
+                            id="state"
+                            name="state"
+                            autoComplete="estado"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                          >
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                            <option value="EX">Estrangeiro</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label
+                          htmlFor="city"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Cidade de residência
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            name="city"
+                            id="city"
+                            autoComplete="address-level1"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label
+                          htmlFor="postal-code"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          CEP de residência
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            name="postal-code"
+                            id="postal-code"
+                            autoComplete="postal-code"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+                      <div className="col-span-full">
+                        <label
+                          htmlFor="street-address"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Logradouro
+                        </label>
+                        <div className="mt-2">
+                          <input
+                            type="text"
+                            name="street-address"
+                            id="street-address"
+                            autoComplete="street-address"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          />
+                        </div>
+                      </div>
+
+                      <p className="text-xl font-semibold leading-7 text-gray-900 mt-12 mb-6">
+                        Questionário
+                      </p>
 
                       <div className="sm:col-span-full">
                         <label
@@ -154,111 +256,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </select>
                         </div>
                       </div>
-                      {/* AQUI COMEÇA DADOS DE RESIDENCIA */}
-                      {/* 
-                      <div className="sm:col-span-2">
-                        <label
-                          htmlFor="state"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          Qual seu estado de residência?
-                        </label>
-                        <div className="mt-2">
-                          <select
-                            id="state"
-                            name="state"
-                            autoComplete="estado"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                          >
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espírito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
-                            <option value="EX">Estrangeiro</option>
-                          </select>
-                        </div>
-                      </div>
-                    */}
-                      {/* 
-                      <div className="sm:col-span-2">
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          Cidade de residência
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            name="city"
-                            id="city"
-                            autoComplete="address-level1"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      </div>
-                      */}
-                      {/* 
-                      <div className="sm:col-span-2">
-                        <label
-                          htmlFor="postal-code"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          CEP de residência
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            name="postal-code"
-                            id="postal-code"
-                            autoComplete="postal-code"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      </div>
-                      */}
-                      {/* 
-                      <div className="col-span-full">
-                        <label
-                          htmlFor="street-address"
-                          className="block text-sm font-medium leading-6 text-gray-900"
-                        >
-                          Logradouro
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            name="street-address"
-                            id="street-address"
-                            autoComplete="street-address"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
-                        </div>
-                      </div>
-                      */}
+
                       <div className="sm:col-span-full">
                         <legend className="text-sm font-semibold leading-6 text-gray-900">
                           3. Você tem entre 18 a 70 anos?

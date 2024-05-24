@@ -44,6 +44,8 @@ export async function submitEnquadramentoForm(formData) {
   const formValues = {};
   const checkboxValues = [];
 
+  await completeProfile(formData);
+
   formData.forEach((value, key) => {
     if (key.startsWith("8-doc")) {
       const checkboxNumber = key.replace("8-doc", "");
@@ -54,12 +56,11 @@ export async function submitEnquadramentoForm(formData) {
           checkboxValues.push(`documento${checkboxNumber}`);
         }
       }
-    } else {
+    } else if (!isNaN(parseInt(key[0]))) {
       formValues[key] = value;
     }
   });
   formValues["8"] = checkboxValues;
-  console.log(formValues);
   formValues["authuser_id"] = user.id;
 
   const { error } = await supabase
@@ -68,6 +69,7 @@ export async function submitEnquadramentoForm(formData) {
   if (error) {
     return redirect("/error?message=" + error.message);
   }
+
   return redirect("/user-dashboard");
 }
 
