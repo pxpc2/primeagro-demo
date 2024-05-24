@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function completeProfile(formData) {
+export async function completeProfile(formData) {
   const supabase = createClient();
 
   const {
@@ -22,6 +22,49 @@ export default async function completeProfile(formData) {
   };
 
   const { error } = await supabase.from("clientes").insert(clienteData);
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+  return redirect("/user-dashboard");
+}
+
+/**
+ * Cria uma nova entrada na tabela dos formulários de enquadramento relacionada a um authuser_id
+ *
+ * @param {*} formData dados do formulário
+ * @returns redirecionamento p/ dashboard com msg
+ */
+export async function submitEnquadramentoForm(formData) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const formValues = {};
+  const checkboxValues = [];
+
+  formData.forEach((value, key) => {
+    if (key.startsWith("8-doc")) {
+      const checkboxNumber = key.replace("8-doc", "");
+      if (value === "on") {
+        if (checkboxNumber === "18") {
+          checkboxValues.push("nenhum_documento");
+        } else {
+          checkboxValues.push(`documento${checkboxNumber}`);
+        }
+      }
+    } else {
+      formValues[key] = value;
+    }
+  });
+  formValues["8"] = checkboxValues;
+  console.log(formValues);
+  formValues["authuser_id"] = user.id;
+
+  const { error } = await supabase
+    .from("enquadramento_forms")
+    .insert(formValues);
   if (error) {
     return redirect("/error?message=" + error.message);
   }

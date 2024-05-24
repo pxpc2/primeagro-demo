@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitButton } from "../login/submit-button";
-import completeProfile from "./actions";
+import completeProfile, { submitEnquadramentoForm } from "./actions";
 export default function FormPNCF({ authID, isToggled, onClose, msg }) {
   /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
    do perfil ainda não foram preenchidos */
@@ -36,6 +36,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                 >
                   <div className="px-4 py-6 sm:p-8">
                     <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                      {/*
                       <div className="sm:col-span-3">
                         <label
                           htmlFor="first-name"
@@ -53,7 +54,8 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
-
+                        */}
+                      {/*
                       <div className="sm:col-span-3">
                         <label
                           htmlFor="last-name"
@@ -71,35 +73,39 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
+                      */}
 
-                      <div className="sm:col-span-2">
+                      <div className="sm:col-span-full">
                         <label
-                          htmlFor="state"
+                          htmlFor="1"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          Você faz parte de algum grupo?
+                          1. Você faz parte de algum grupo?
                         </label>
                         <div className="mt-2">
                           <select
-                            id="state"
-                            name="state"
-                            autoComplete="estado"
+                            id="1"
+                            name="1"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                           >
-                            <option value="AC">
+                            <option value="1-nenhumGrupo">
                               Não faço parte de nenhum grupo ainda.
                             </option>
-                            <option value="AL">
+                            <option value="1-visitanteAgrotins">
                               Visitante AGROTINS - 2024
                             </option>
-                            <option value="AP">
+                            <option value="1-grupoTerraPorto">
                               G01 - PNCF - Grupo da Terra-Porto/Terezinha
                             </option>
-                            <option value="AM">
+                            <option value="1-grupoAltoSerra">
                               G02 - PNCF - Alto da Serra - Ap. Rio Negro
                             </option>
-                            <option value="BA">G04 - Ananás-01-Bico</option>
-                            <option value="CE">G05 - Sandolândia 01</option>
+                            <option value="1-Ananas">
+                              G04 - Ananás-01-Bico
+                            </option>
+                            <option value="1-Sandolandia">
+                              G05 - Sandolândia 01
+                            </option>
                           </select>
                         </div>
                       </div>
@@ -108,12 +114,12 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           htmlFor="state"
                           className="block text-sm font-medium leading-6 text-gray-900"
                         >
-                          Em qual estado pretende comprar sua propriedade?
+                          2. Em qual estado pretende comprar sua propriedade?
                         </label>
                         <div className="mt-2">
                           <select
-                            id="estado-propriedade"
-                            name="estado-propriedade"
+                            id="2"
+                            name="2"
                             autoComplete="estado da propriedade"
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                           >
@@ -145,12 +151,11 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                             <option value="SP">São Paulo</option>
                             <option value="SE">Sergipe</option>
                             <option value="TO">Tocantins</option>
-                            <option value="EX">Estrangeiro</option>
                           </select>
                         </div>
                       </div>
                       {/* AQUI COMEÇA DADOS DE RESIDENCIA */}
-
+                      {/* 
                       <div className="sm:col-span-2">
                         <label
                           htmlFor="state"
@@ -196,7 +201,8 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </select>
                         </div>
                       </div>
-
+                    */}
+                      {/* 
                       <div className="sm:col-span-2">
                         <label
                           htmlFor="city"
@@ -214,7 +220,8 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
-
+                      */}
+                      {/* 
                       <div className="sm:col-span-2">
                         <label
                           htmlFor="postal-code"
@@ -232,6 +239,8 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
+                      */}
+                      {/* 
                       <div className="col-span-full">
                         <label
                           htmlFor="street-address"
@@ -249,20 +258,22 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           />
                         </div>
                       </div>
+                      */}
                       <div className="sm:col-span-full">
                         <legend className="text-sm font-semibold leading-6 text-gray-900">
-                          Você tem entre 18 a 70 anos?
+                          3. Você tem entre 18 a 70 anos?
                         </legend>
                         <div className="mt-6 space-y-6">
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-everything"
-                              name="push-notifications"
+                              name="3"
+                              id="3-sim"
                               type="radio"
+                              value={"Sim"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-everything"
+                              htmlFor="3-sim"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Sim
@@ -270,13 +281,14 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </div>
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-email"
-                              name="push-notifications"
+                              name="3"
+                              id="3-nao"
                               type="radio"
+                              value={"Nao"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-email"
+                              htmlFor="3-nao"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Não
@@ -286,29 +298,27 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                       </div>
                       <div className="sm:col-span-full">
                         <legend className="text-sm font-semibold leading-6 text-gray-900">
-                          Podem participar do PNCF: Trabalhadores rurais
+                          4. Podem participar do PNCF: Trabalhadores rurais
                           não-proprietários, preferencialmente assalariados,
-                          parceiros, posseiros e arrendatários.
+                          parceiros, posseiros e arrendatários. Ou agricultores
+                          proprietários de imóveis cuja área não alcance a
+                          dimensão da propriedade familiar. (320 hectares, ou
+                          66,1 alqueires para grande parte do Tocantins)
                         </legend>
-                        <legend className="text-sm font-semibold leading-6 text-gray-900 mt-2">
-                          Ou agricultores proprietários de imóveis cuja área não
-                          alcance a dimensão da propriedade familiar. (320
-                          hectares, ou 66,1 alqueires para grande parte do
-                          Tocantins)
-                        </legend>
-                        <legend className="text-sm font-semibold leading-6 text-gray-900 mt-6">
+                        <legend className="text-sm font-semibold leading-6 text-gray-900 mt-3">
                           Você se enquadra em uma dessa condições?
                         </legend>
                         <div className="mt-6 space-y-6">
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-everything"
-                              name="push-notifications"
                               type="radio"
+                              name="4"
+                              id="4-sim"
+                              value={"Sim"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-everything"
+                              htmlFor="4-sim"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Sim
@@ -316,13 +326,14 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </div>
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-email"
-                              name="push-notifications"
                               type="radio"
+                              name="4"
+                              id="4-nao"
+                              value={"Nao"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-email"
+                              htmlFor="4-nao"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Não
@@ -332,18 +343,108 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                       </div>
                       <div className="sm:col-span-full">
                         <legend className="text-sm font-semibold leading-6 text-gray-900">
-                          Você é funcionário público?
+                          5. O PNCF é dividido em 4 linhas, considerando renda
+                          anual e patrimônio, marque em qual das linhas voce se
+                          enquadra.
                         </legend>
                         <div className="mt-6 space-y-6">
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-everything"
-                              name="push-notifications"
                               type="radio"
+                              name="5"
+                              id="5-social"
+                              value={"PNCF - Social"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-everything"
+                              htmlFor="linha-social"
+                              className="block text-sm font-normal leading-6 text-gray-900"
+                            >
+                              PNCF - Social (Renda Anual de até R$ 27.775,99 e
+                              Patrimônio de até R$ 70 mil).
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-x-3">
+                            <input
+                              type="radio"
+                              name="5"
+                              id="5-mais"
+                              value={"PNCF - Mais"}
+                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                            <label
+                              htmlFor="5-mais"
+                              className="block text-sm font-normal leading-6 text-gray-900"
+                            >
+                              PNCF - Mais (Renda Anual de até R$ 55.551,98 e
+                              Patrimônio de até R$ 140 mil).
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-x-3">
+                            <input
+                              type="radio"
+                              name="5"
+                              id="5-jovemterra"
+                              value={"PNCF - Jovem Terra da Juventude"}
+                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                            <label
+                              htmlFor="5-jovemterra"
+                              className="block text-sm font-normal leading-6 text-gray-900"
+                            >
+                              PNCF - Jovem Terra da Juventude (Renda Anual de
+                              até R$ 55.551,98 e Patrimônio de até R$ 140 mil).
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-x-3">
+                            <input
+                              type="radio"
+                              name="5"
+                              id="5-empreendedor"
+                              value={"PNCF - Empreendedor"}
+                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                            <label
+                              htmlFor="5-empreendedor"
+                              className="block text-sm font-normal leading-6 text-gray-900"
+                            >
+                              PNCF - Empreendedor (Renda Anual de até R$
+                              299.890,63 e Patrimônio de até R$ 500 mil).
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-x-3">
+                            <input
+                              type="radio"
+                              name="5"
+                              id="5-acima"
+                              value={"renda anual acima de R$ 299,890,63"}
+                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                            <label
+                              htmlFor="5-acima"
+                              className="block text-sm font-normal leading-6 text-gray-900"
+                            >
+                              Tenho renda anual acima de R$ 299,890,63 - Não me
+                              enquadro em nenhuma das opções.
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="sm:col-span-full">
+                        <legend className="text-sm font-semibold leading-6 text-gray-900">
+                          6. Você é funcionário público?
+                        </legend>
+                        <div className="mt-6 space-y-6">
+                          <div className="flex items-center gap-x-3">
+                            <input
+                              name="6"
+                              id="6-sim"
+                              type="radio"
+                              value={"Sim"}
+                              className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            />
+                            <label
+                              htmlFor="6-sim"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Sim
@@ -351,13 +452,14 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </div>
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-email"
-                              name="push-notifications"
+                              name="6"
+                              id="6-nao"
                               type="radio"
+                              value={"Nao"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-email"
+                              htmlFor="6-nao"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Não
@@ -367,20 +469,21 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                       </div>
                       <div className="sm:col-span-full">
                         <legend className="text-sm font-semibold leading-6 text-gray-900">
-                          Você já foi assentado da reforma agrária, ou
+                          7. Você já foi assentado da reforma agrária, ou
                           participou de algum programa que tenha recursos do
                           Fundo de Terras da Reforma Agrária?
                         </legend>
                         <div className="mt-6 space-y-6">
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-everything"
-                              name="push-notifications"
+                              name="7"
                               type="radio"
+                              id="7-sim"
+                              value={"Sim"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-everything"
+                              htmlFor="7-sim"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Sim
@@ -388,13 +491,14 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                           </div>
                           <div className="flex items-center gap-x-3">
                             <input
-                              id="push-email"
-                              name="push-notifications"
+                              name="7"
+                              id="7-nao"
                               type="radio"
+                              value={"Nao"}
                               className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                             <label
-                              htmlFor="push-email"
+                              htmlFor="7-nao"
                               className="block text-sm font-normal leading-6 text-gray-900"
                             >
                               Não
@@ -405,24 +509,24 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                     </div>
                     <fieldset className="mt-10">
                       <legend className="text-sm font-semibold leading-6 text-gray-900">
-                        Marque quais dos documentos listados abaixo você possui
-                        ou já possuiu nos últimos 15 anos que seja possÍvel
-                        localizar e contabilizar pelo menos 5 anos (pode marcar
-                        mais de 1)
+                        8. Marque quais dos documentos listados abaixo você
+                        possui ou já possuiu nos últimos 15 anos que seja
+                        possÍvel localizar e contabilizar pelo menos 5 anos
+                        (pode marcar mais de 1)
                       </legend>
                       <div className="mt-6 space-y-6">
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc1"
+                              name="8-doc1"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc1"
                               className="font-normal text-gray-900"
                             >
                               Comprovante de matrícula ou ficha de insc. em
@@ -434,15 +538,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc2"
+                              name="8-doc2"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc2"
                               className="font-normal text-gray-900"
                             >
                               Ficha de associado em cooperativa.
@@ -452,15 +556,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc3"
+                              name="8-doc3"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc3"
                               className="font-normal text-gray-900"
                             >
                               Comprovante de participação como beneficiário em
@@ -472,15 +576,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc4"
+                              name="8-doc4"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc4"
                               className="font-normal text-gray-900"
                             >
                               Comprovante de recebimento de assistencia ou de
@@ -492,15 +596,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc5"
+                              name="8-doc5"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc5"
                               className="font-normal text-gray-900"
                             >
                               Escritura pública de imóvel rural
@@ -510,15 +614,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc6"
+                              name="8-doc6"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc6"
                               className="font-normal text-gray-900"
                             >
                               Recibo de pagamento de contribuição federativa ou
@@ -529,15 +633,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc7"
+                              name="8-doc7"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc7"
                               className="font-normal text-gray-900"
                             >
                               Registro de processos administrativos ou
@@ -549,15 +653,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc8"
+                              name="8-doc8"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc8"
                               className="font-normal text-gray-900"
                             >
                               Ficha de registro em livros de casas de saúde,
@@ -569,15 +673,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc9"
+                              name="8-doc9"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc9"
                               className="font-normal text-gray-900"
                             >
                               Carteira de Vacinação (com endereço rural).
@@ -587,15 +691,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc10"
+                              name="8-doc10"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc10"
                               className="font-normal text-gray-900"
                             >
                               Título de propriedade de imóvel rural.
@@ -605,15 +709,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc11"
+                              name="8-doc11"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc11"
                               className="font-normal text-gray-900"
                             >
                               Recibo ou nota fiscal de compra de implementos ou
@@ -624,15 +728,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc12"
+                              name="8-doc12"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc12"
                               className="font-normal text-gray-900"
                             >
                               Publicação na impresa ou informativos de
@@ -643,15 +747,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc13"
+                              name="8-doc13"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc13"
                               className="font-normal text-gray-900"
                             >
                               Registro em documentos de associações de
@@ -663,15 +767,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc14"
+                              name="8-doc14"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc14"
                               className="font-normal text-gray-900"
                             >
                               Carteira de trabalho (quanto possuir vínculo CLT)
@@ -681,15 +785,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc15"
+                              name="8-doc15"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc15"
                               className="font-normal text-gray-900"
                             >
                               Título de Aforamento
@@ -699,15 +803,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc16"
+                              name="8-doc16"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc16"
                               className="font-normal text-gray-900"
                             >
                               Declaração de aptidão ao Pronaf (DAP) ou Cadastro
@@ -719,15 +823,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc17"
+                              name="8-doc17"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc17"
                               className="font-normal text-gray-900"
                             >
                               Contratos firmados e registrados de
@@ -738,15 +842,15 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                         <div className="relative flex gap-x-3">
                           <div className="flex h-6 items-center">
                             <input
-                              id="comments"
-                              name="comments"
+                              id="8-doc18"
+                              name="8-doc18"
                               type="checkbox"
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                             />
                           </div>
                           <div className="text-sm leading-6">
                             <label
-                              htmlFor="comments"
+                              htmlFor="8-doc18"
                               className="font-normal text-gray-900"
                             >
                               Não possuo e não possuí nos últimos 15 anos nenhum
@@ -766,7 +870,7 @@ export default function FormPNCF({ authID, isToggled, onClose, msg }) {
                       Cancelar
                     </button>
                     <SubmitButton
-                      formAction={completeProfile}
+                      formAction={submitEnquadramentoForm}
                       className="flex  justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
                       pendingText="Salvando..."
                     >
