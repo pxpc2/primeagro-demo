@@ -44,8 +44,6 @@ export async function submitEnquadramentoForm(formData) {
   const formValues = {};
   const checkboxValues = [];
 
-  await completeProfile(formData);
-
   formData.forEach((value, key) => {
     if (key.startsWith("8-doc")) {
       const checkboxNumber = key.replace("8-doc", "");
@@ -70,7 +68,7 @@ export async function submitEnquadramentoForm(formData) {
     return redirect("/error?message=" + error.message);
   }
 
-  return redirect("/user-dashboard");
+  return await completeProfile(formData);
 }
 
 /**
