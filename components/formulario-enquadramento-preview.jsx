@@ -13,7 +13,8 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Nome
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {cliente.primeiro_nome} {cliente.ultimo_nome}
+              {cliente === undefined ? "" : cliente.primeiro_nome}
+              {cliente === undefined ? "" : cliente.ultimo_nome}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -46,7 +47,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               1. Grupo
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[1]}
+              {dados === undefined ? "" : dados[1]}
             </dd>
           </div>
           <div className="bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -54,7 +55,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               2. Estado que pretende comprar a propriedade
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[2]}
+              {dados === undefined ? "" : dados[2]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -62,7 +63,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               3. É maior de 18 anos e mais jovem que 70 anos?
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[3]}
+              {dados === undefined ? "" : dados[3]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -75,7 +76,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Você se enquadra em uma dessa condições?
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[4]}
+              {dados === undefined ? "" : dados[4]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -84,7 +85,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               patrimônio, marque em qual das linhas voce se enquadra.
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[5]}
+              {dados === undefined ? "" : dados[5]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -92,7 +93,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               6. Você é funcionário público?
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[6]}
+              {dados === undefined ? "" : dados[6]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -102,7 +103,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Agrária?
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[7]}
+              {dados === undefined ? "" : dados[7]}
             </dd>
           </div>
           <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -112,7 +113,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               contabilizar pelo menos 5 anos (pode marcar mais de 1)
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {dados[8]}
+              {dados === undefined ? "" : dados[8]}
             </dd>
           </div>
         </dl>
