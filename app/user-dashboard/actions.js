@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function completeProfile(formData) {
+export async function completeProfile(formData, enquadramentoStatus) {
   const supabase = createClient();
 
   const {
@@ -19,6 +19,7 @@ export async function completeProfile(formData) {
     authuser_id: user.id,
     email: user.email,
     endereco: formData.get("street-address"),
+    status_enquadramento: enquadramentoStatus,
   };
 
   const { error } = await supabase.from("clientes").insert(clienteData);
@@ -92,7 +93,7 @@ export async function submitEnquadramentoForm(formData) {
     return redirect("/error?message=" + error.message);
   }
 
-  return await completeProfile(formData);
+  return await completeProfile(formData, aprovadoStatus);
 }
 
 /**

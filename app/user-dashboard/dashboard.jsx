@@ -9,6 +9,8 @@ import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-view";
 import SolicitacaoPreviewCard from "@/components/solicitacao-preview";
 import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
+import DashboardTasksComponent from "@/components/dashboard-tasks";
+import UserDashboardTasksComponent from "@/components/dashboard-tasks";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,8 +19,13 @@ function classNames(...classes) {
 export default function UserDashboardPage({ cliente, aplicacoes }) {
   const [role, setRole] = useState(null);
   const navigation = [
-    { name: "Aplicações", href: "#", current: true },
-    { name: "Suporte", href: "#", current: false },
+    { name: "Geral", href: "#", current: true },
+    {
+      name: "Formulario de Enquadramento",
+      href: "#",
+      current: false,
+    },
+    { name: "Documentos", href: "#", current: false },
   ];
   const userNavigation = [
     { name: "Sua Conta", href: "#" },
@@ -261,17 +268,10 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
       <main className="-mt-32">
         <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-            {aplicacoes.length == 0 ? (
-              <NovaAplicacaoCard />
-            ) : (
-              <div>
-                {role == "gerente" ? (
-                  <h1>Total de aplicações disponíveis: {aplicacoes.length}</h1>
-                ) : (
-                  <SolicitacaoPreviewCard />
-                )}
-              </div>
-            )}
+            <UserDashboardTasksComponent
+              enqStatus={usuario.status_enquadramento}
+              docStatus={usuario.status_documentos}
+            />
           </div>
         </div>
       </main>
