@@ -77,7 +77,7 @@ export default function DashboardSteps({ cliente }) {
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-600">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600">
                           <CheckIcon
                             className="h-6 w-6 text-white"
                             aria-hidden="true"
@@ -95,7 +95,7 @@ export default function DashboardSteps({ cliente }) {
                 ) : step.status === "current" ? (
                   <a href={step.href} aria-current="step">
                     <span
-                      className="absolute left-0 top-0 h-full w-1 bg-indigo-600 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
+                      className="absolute left-0 top-0 h-full w-1 bg-orange-600 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
                     />
                     <span
@@ -105,12 +105,12 @@ export default function DashboardSteps({ cliente }) {
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-indigo-600">
-                          <span className="text-indigo-600">{step.id}</span>
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-orange-600">
+                          <span className="text-orange-600">{step.id}</span>
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium text-indigo-600">
+                        <span className="text-sm font-medium text-orange-600">
                           {step.name}
                         </span>
                         <span className="text-sm font-medium text-gray-500">

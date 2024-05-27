@@ -8,7 +8,6 @@ import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
-import UserDashboardTasksComponent from "./dashboard-tasks";
 import DashboardSteps from "@/components/dashboard-steps";
 
 function classNames(...classes) {
