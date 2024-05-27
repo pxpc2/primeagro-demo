@@ -5,27 +5,30 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import NovaAplicacaoCard from "../../components/nenhuma-aplicacao-view";
-import SolicitacaoPreviewCard from "@/components/solicitacao-preview";
 import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
-import DashboardTasksComponent from "@/components/dashboard-tasks";
 import UserDashboardTasksComponent from "@/components/dashboard-tasks";
+import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserDashboardPage({ cliente, aplicacoes }) {
+export default function UserDashboardPage({
+  cliente,
+  aplicacoes,
+  dadosEnquadramento,
+}) {
   const [role, setRole] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("Geral");
   const navigation = [
-    { name: "Geral", href: "#", current: true },
+    { name: "Geral", href: "#", current: selectedTab === "Geral" },
     {
       name: "Formulario de Enquadramento",
       href: "#",
-      current: false,
+      current: selectedTab === "Formulario de Enquadramento",
     },
-    { name: "Documentos", href: "#", current: false },
+    { name: "Documentos", href: "#", current: selectedTab === "Documentos" },
   ];
   const userNavigation = [
     { name: "Sua Conta", href: "#" },
@@ -45,6 +48,8 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
       }
     }
   );
+
+  console.log(dadosEnquadramento[0][8]);
 
   return (
     <div className="min-h-full">
@@ -69,19 +74,21 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
                       <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-4">
                           {navigation.map((item) => (
-                            <a
+                            <p
                               key={item.name}
-                              href={item.href}
+                              onClick={() => {
+                                setSelectedTab(item.name);
+                              }}
                               className={classNames(
                                 item.current
                                   ? "bg-orange-700 text-gray-200 font-medium"
                                   : "text-gray-200 hover:bg-orange-700 font-normal",
-                                "rounded-md px-3 py-2 text-sm "
+                                "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
                               )}
                               aria-current={item.current ? "page" : undefined}
                             >
                               {item.name}
-                            </a>
+                            </p>
                           ))}
                         </div>
                       </div>
@@ -268,10 +275,19 @@ export default function UserDashboardPage({ cliente, aplicacoes }) {
       <main className="-mt-32">
         <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-            <UserDashboardTasksComponent
-              enqStatus={usuario.status_enquadramento}
-              docStatus={usuario.status_documentos}
-            />
+            {selectedTab === "Geral" ? (
+              <UserDashboardTasksComponent
+                enqStatus={usuario.status_enquadramento}
+                docStatus={usuario.status_documentos}
+              />
+            ) : selectedTab === "Documentos" ? (
+              <></>
+            ) : (
+              <FormularioEnquadramentoPreview
+                dados={dadosEnquadramento[0]}
+                cliente={usuario}
+              />
+            )}
           </div>
         </div>
       </main>

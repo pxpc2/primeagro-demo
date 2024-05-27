@@ -118,3 +118,11 @@ export async function getUserRole(id) {
   console.log(user_roles);
   return user_roles;
 }
+
+export async function getDadosEnquadramentoForm() {
+  const supabase = createClient();
+  let { data: dados, error } = await supabase
+    .from("enquadramento_forms")
+    .select("*");
+  return dados;
+}

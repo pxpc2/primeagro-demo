@@ -5,7 +5,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import SolicitacaoPreviewCard from "../../components/solicitacao-preview";
+import SolicitacaoPreviewCard from "../../components/formulario-enquadramento-preview";
 
 const user = {
   name: "Pedro Daia",

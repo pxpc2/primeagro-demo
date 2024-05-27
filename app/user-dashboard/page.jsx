@@ -2,7 +2,11 @@ import { createClient } from "@/utils/supabase/server";
 import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 import ProfileCreationPage from "./profile-creation";
-import { getAplicacoes, getUserRole } from "./actions";
+import {
+  getAplicacoes,
+  getDadosEnquadramentoForm,
+  getUserRole,
+} from "./actions";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();
@@ -23,6 +27,7 @@ export default async function UserProtectedPage() {
   if (cliente[0] === undefined) return <ProfileCreationPage authID={user.id} />;
 
   const aps = await getAplicacoes();
+  const dadosEnquadramento = await getDadosEnquadramentoForm();
 
   //const userRole = await getUserRole();
   // invés de pegar userRole, a gente tem que simplesmente só permitir as coisas de acordo com as policies
@@ -31,5 +36,11 @@ export default async function UserProtectedPage() {
 
   //console.log(userRole);
 
-  return <UserDashboardPage cliente={cliente} aplicacoes={aps} />;
+  return (
+    <UserDashboardPage
+      cliente={cliente}
+      aplicacoes={aps}
+      dadosEnquadramento={dadosEnquadramento}
+    />
+  );
 }
