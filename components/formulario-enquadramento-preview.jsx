@@ -22,7 +22,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Estado de residência
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {cliente.estado}
+              {cliente === undefined ? "" : cliente.estado}
             </dd>
           </div>
           <div className="bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
@@ -30,7 +30,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Endereço de Email
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {cliente.email}
+              {cliente === undefined ? "" : cliente.email}
             </dd>
           </div>
         </dl>
