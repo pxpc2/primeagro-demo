@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
 import DashboardSteps from "@/components/dashboard-steps";
+import PagamentoCard from "@/components/pagamento-card";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -261,6 +262,11 @@ export default function UserDashboardPage({
               />
             )}
           </div>
+          {selectedTab === "Geral" ? (
+            <PagamentoCard cliente={usuario} />
+          ) : (
+            <></>
+          )}
         </div>
       </main>
     </div>
