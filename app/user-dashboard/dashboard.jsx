@@ -7,8 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
-import UserDashboardTasksComponent from "@/components/dashboard-tasks";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
+import UserDashboardTasksComponent from "./dashboard-tasks";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
