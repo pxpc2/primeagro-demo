@@ -59,15 +59,17 @@ export default function UserDashboardPage({
             <>
               <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div className="border-b border-orange-700">
-                  <div className="flex h-16 items-center justify-between px-4 sm:px-0">
+                  <div className="flex h-36 items-center justify-between px-4 sm:px-0">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0">
+                      <div className="flex-shrink-0 mr-8">
                         <Link href={"/"}>
-                          <img
-                            className="h-8 w-8"
-                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                          <Image
+                            className=""
+                            src="/logo-claro.png"
                             alt="Your Company"
                             href={"/"}
+                            height={120}
+                            width={120}
                           />
                         </Link>
                       </div>

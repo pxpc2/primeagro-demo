@@ -19,11 +19,11 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
             <Image
-              className="h-16 w-auto"
-              src="/farmer.png"
+              className="h-36 w-auto"
+              src="/confidens-logo-verde-laranja.png"
               alt="Your Company"
-              width={500}
-              height={500}
+              width={1200}
+              height={1200}
             />
             <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Entre com sua conta
