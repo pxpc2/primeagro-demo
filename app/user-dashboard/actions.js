@@ -44,11 +44,15 @@ export async function submitEnquadramentoForm(formData) {
   const formValues = {};
   const checkboxValues = [];
 
+  // definir status com base nos formValues
+  let aprovadoStatus = true;
+
   formData.forEach((value, key) => {
     if (key.startsWith("8-doc")) {
       const checkboxNumber = key.replace("8-doc", "");
       if (value === "on") {
         if (checkboxNumber === "18") {
+          aprovadoStatus = false;
           checkboxValues.push("nenhum_documento");
         } else {
           checkboxValues.push(`documento${checkboxNumber}`);
@@ -60,6 +64,26 @@ export async function submitEnquadramentoForm(formData) {
   });
   formValues["8"] = checkboxValues;
   formValues["authuser_id"] = user.id;
+
+  for (let key in formValues) {
+    if (!aprovadoStatus) break;
+    if (key === "3" && formValues[key] === "Nao") {
+      aprovadoStatus = false;
+    } else if (key === "4" && formValues[key] === "Nao") {
+      aprovadoStatus = false;
+    } else if (
+      key === "5" &&
+      formValues[key] === "renda anual acima de R$ 299,890,63"
+    ) {
+      aprovadoStatus = false;
+    } else if (key === "6" && formValues[key] === "Sim") {
+      aprovadoStatus = false;
+    } else if (key === "7" && formValues[key] === "Sim") {
+      aprovadoStatus = false;
+    }
+  }
+
+  formValues["aprovado"] = aprovadoStatus;
 
   const { error } = await supabase
     .from("enquadramento_forms")
