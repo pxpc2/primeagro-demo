@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
 import UserDashboardTasksComponent from "./dashboard-tasks";
+import DashboardSteps from "@/components/dashboard-steps";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -48,8 +49,6 @@ export default function UserDashboardPage({
       }
     }
   );
-
-  console.log(dadosEnquadramento[0][8]);
 
   return (
     <div className="min-h-full">
@@ -253,10 +252,7 @@ export default function UserDashboardPage({
         <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
             {selectedTab === "Geral" ? (
-              <UserDashboardTasksComponent
-                enqStatus={usuario.status_enquadramento}
-                docStatus={usuario.status_documentos}
-              />
+              <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
               <></>
             ) : (

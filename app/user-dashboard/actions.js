@@ -20,6 +20,8 @@ export async function completeProfile(formData, enquadramentoStatus) {
     email: user.email,
     endereco: formData.get("street-address"),
     status_enquadramento: enquadramentoStatus,
+    status_documentos: false,
+    status_pagamento: false,
   };
 
   const { error } = await supabase.from("clientes").insert(clienteData);

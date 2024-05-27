@@ -30,7 +30,7 @@ export default function UserDashboardTasksComponent({ enqStatus, docStatus }) {
       title: "Documentos",
       href: "#",
       icon:
-        docStatus === null
+        docStatus === false
           ? enqStatus === true
             ? ClockIcon
             : NoSymbolIcon
@@ -38,7 +38,7 @@ export default function UserDashboardTasksComponent({ enqStatus, docStatus }) {
       iconForeground: "text-white",
       iconBackground: enqStatus === false ? "bg-red-400" : "bg-orange-400",
       description:
-        docStatus === null
+        docStatus === false
           ? enqStatus === true
             ? "A Próxima etapa de juntada de documentação, é uma das etapas mais importantes do processo. Precisamos coletar documentos com alta qualidade de imagem, pra que seja possível a leitura de todos dos dados pelos analistas, encaminhe documentos feitos via scanner, caso tenha dúvida entre em contato conosco pelo número 63-99131-4127.  Obrigado! Equipe ConfidensAgro."
             : "Você não pode avançar para etapa de documentos."
