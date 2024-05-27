@@ -83,7 +83,10 @@ export default function UserDashboardPage({
                                 item.current
                                   ? "bg-orange-700 text-gray-200 font-medium"
                                   : "text-gray-200 hover:bg-orange-700 font-normal",
-                                "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
+                                usuario.status_enquadramento === false &&
+                                  item.name === "Documentos"
+                                  ? "hidden"
+                                  : "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
                               )}
                               aria-current={item.current ? "page" : undefined}
                             >
@@ -240,34 +243,6 @@ export default function UserDashboardPage({
             <h1 className="text-3xl font-bold tracking-tight text-white">
               Bem vindo, {usuario.primeiro_nome}.
             </h1>
-            <h2 className="text-lg font-normal tracking-tight text-gray-100 pt-20">
-              Perfil de {role == null ? "beneficiário" : role}, funcionalidades
-              que estarão disponíveis:
-            </h2>
-            {role == "gerente" ? (
-              <div>
-                <p className="pb-10 text-gray-100 font-thin">
-                  Visualizar todas as aplicações existentes, criar um novo
-                  perfil de técnico (associado a um beneficiário já existente),
-                  editar aplicações, gerar resumo em PDF (formatado
-                  corretamente) de uma aplicação.
-                </p>
-              </div>
-            ) : (
-              <div>
-                {role == "tecnico" ? (
-                  <p className="text-gray-100 pb-10 font-thin text-sm">
-                    Criar nova aplicação para seu beneficiário; se já tiver
-                    existente, pode editar ou acompanhar status.
-                  </p>
-                ) : (
-                  <p className="pb-10 text-gray-100 font-thin text-sm">
-                    Pode acompanhar o status de sua aplicação (criada pelo seu
-                    respectivo técnico-avaliador)
-                  </p>
-                )}
-              </div>
-            )}
           </div>
         </header>
       </div>
