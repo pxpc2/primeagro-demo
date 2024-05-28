@@ -62,7 +62,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3 
-          ${dados["erradas"].includes("3") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("3")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               3. É maior de 18 anos e mais jovem que 70 anos?
@@ -73,7 +77,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
-          ${dados["erradas"].includes("4") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("4")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               4. Podem participar do PNCF: Trabalhadores rurais
@@ -89,7 +97,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
-          ${dados["erradas"].includes("5") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("5")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               5. O PNCF é dividido em 4 linhas, considerando renda anual e
@@ -101,7 +113,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
-          ${dados["erradas"].includes("6") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("6")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               6. Você é funcionário público?
@@ -112,7 +128,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
-          ${dados["erradas"].includes("7") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("7")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               7. Você já foi assentado da reforma agrária, ou participou de
@@ -125,7 +145,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
           <div
             className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
-          ${dados["erradas"].includes("8") ? "outline outline-red-600" : ""}`}
+          ${
+            dados !== undefined && dados["erradas"].includes("8")
+              ? "outline outline-red-600"
+              : ""
+          }`}
           >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               8. Marque quais dos documentos listados abaixo você possui ou já
