@@ -10,6 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
 import DashboardSteps from "@/components/dashboard-steps";
 import PagamentoCard from "@/components/pagamento-card";
+import UserDocumentosDashboard from "@/components/UserDocumentosDashboard";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -25,9 +26,9 @@ export default function UserDashboardPage({
   const navigation = [
     { name: "Geral", href: "#", current: selectedTab === "Geral" },
     {
-      name: "Formulario de Enquadramento",
+      name: "Formulário de Enquadramento",
       href: "#",
-      current: selectedTab === "Formulario de Enquadramento",
+      current: selectedTab === "Formulário de Enquadramento",
     },
     { name: "Documentos", href: "#", current: selectedTab === "Documentos" },
   ];
@@ -84,7 +85,8 @@ export default function UserDashboardPage({
                                 item.current
                                   ? "bg-orange-700 text-gray-200 font-medium"
                                   : "text-gray-200 hover:bg-orange-700 font-normal",
-                                usuario.status_enquadramento === false &&
+                                (!usuario.status_enquadramento ||
+                                  !usuario.status_pagamento) &&
                                   item.name === "Documentos"
                                   ? "hidden"
                                   : "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
@@ -254,7 +256,7 @@ export default function UserDashboardPage({
             {selectedTab === "Geral" ? (
               <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
-              <></>
+              <UserDocumentosDashboard />
             ) : (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
