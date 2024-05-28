@@ -10,7 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
 import DashboardSteps from "@/components/dashboard-steps";
 import PagamentoCard from "@/components/pagamento-card";
-import UserDocumentosDashboard from "@/components/UserDocumentosDashboard";
+import UserDocumentosDashboard from "@/components/documentos/UserDocumentosDashboard";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -59,22 +59,22 @@ export default function UserDashboardPage({
             <>
               <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div className="border-b border-orange-700">
-                  <div className="flex h-36 items-center justify-between px-4 sm:px-0">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 mr-8">
+                  <div className="flex h-36 items-end justify-between px-4 sm:px-0">
+                    <div className="flex items-end">
+                      <div className="flex-shrink-0 mr-8 sm:mb-2">
                         <Link href={"/"}>
                           <Image
                             className=""
                             src="/logo-claro.png"
                             alt="Your Company"
                             href={"/"}
-                            height={120}
-                            width={120}
+                            height={140}
+                            width={140}
                           />
                         </Link>
                       </div>
                       <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4">
+                        <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
                           {navigation.map((item) => (
                             <p
                               key={item.name}
@@ -99,7 +99,7 @@ export default function UserDashboardPage({
                         </div>
                       </div>
                     </div>
-                    <div className="hidden md:block">
+                    <div className="hidden md:block sm:mb-4">
                       <div className="ml-4 flex items-center md:ml-6">
                         <button
                           type="button"
@@ -201,10 +201,12 @@ export default function UserDashboardPage({
                 <div className="border-t border-gray-700 pb-3 pt-4">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
                         className="h-10 w-10 rounded-full"
                         src={"/farmer.png"}
                         alt=""
+                        width={100}
+                        height={100}
                       />
                     </div>
                     <div className="ml-3">
