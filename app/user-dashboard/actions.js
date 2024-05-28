@@ -135,3 +135,33 @@ export async function getDadosEnquadramentoForm() {
     .select("*");
   return dados;
 }
+
+export async function submitDocumento(id, file) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = `${user.id}/${id}`;
+
+  let { data, error } = await supabase.storage
+    .from("Documentos")
+    .upload(path, file);
+
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
+
+/**
+ * @todo função a ser chamada para VERIFICAR DOCUMENTOS do cliente
+ *  e atribuir status aos documentos na lista de constantes com base nisso
+ */
+
+export async function checkDocumentsStatus() {}
+
+/**
+ * @todo função para ALTERAR O STATUS de um documento após o mesmo ter sido enviado
+ */
+export async function setDocumentStatus() {}

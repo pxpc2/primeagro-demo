@@ -6,7 +6,7 @@ const documentos = [
     id: "1.1",
     nome: "DAP OU CAF ATIVA",
     descricao: "Ver mais",
-    status: "Ativo",
+    status: "Pendente",
   },
   {
     id: "1.2",

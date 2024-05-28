@@ -4,9 +4,9 @@ export default function ErrorPage({ searchParams: { message } }) {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <h1 className="text-2xl">{message}</h1>
-      <Link href={"/login"}>
+      <Link href={"/user-dashboard"}>
         <p className="text-orange-600 hover:text-orange-400">
-          Voltar para Login
+          Voltar para Home
         </p>
       </Link>
     </div>
