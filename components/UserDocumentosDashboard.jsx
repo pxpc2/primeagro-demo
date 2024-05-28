@@ -5,7 +5,7 @@ const documentos = [
     id: "1.1",
     nome: "DAP OU CAF ATIVA",
     descricao: "Ver mais",
-    status: "Pendente",
+    status: "Ativo",
   },
   {
     id: "1.2",
@@ -148,7 +148,11 @@ export default function UserDocumentosDashboard() {
                         href="#"
                         className="text-black-600 hover:text-indigo-500"
                       >
-                        <ArrowUpTrayIcon className="w-4 h-4" />
+                        {doc.status === "Ativo" ? (
+                          <></>
+                        ) : (
+                          <ArrowUpTrayIcon className="w-4 h-4" />
+                        )}
                       </a>
                     </td>
                   </tr>
