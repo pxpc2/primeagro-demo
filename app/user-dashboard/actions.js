@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function completeProfile(formData, enquadramentoStatus) {
+export async function completeProfile(formData, enquadramentoStatus, erradas) {
   const supabase = createClient();
 
   const {
@@ -46,6 +46,7 @@ export async function submitEnquadramentoForm(formData) {
 
   const formValues = {};
   const checkboxValues = [];
+  const erradas = [];
 
   // definir status com base nos formValues
   let aprovadoStatus = true;
@@ -56,6 +57,7 @@ export async function submitEnquadramentoForm(formData) {
       if (value === "on") {
         if (checkboxNumber === "18") {
           aprovadoStatus = false;
+          erradas.push("8");
           checkboxValues.push("nenhum_documento");
         } else {
           checkboxValues.push(`documento${checkboxNumber}`);
@@ -69,24 +71,29 @@ export async function submitEnquadramentoForm(formData) {
   formValues["authuser_id"] = user.id;
 
   for (let key in formValues) {
-    if (!aprovadoStatus) break;
     if (key === "3" && formValues[key] === "Nao") {
       aprovadoStatus = false;
+      erradas.push("3");
     } else if (key === "4" && formValues[key] === "Nao") {
       aprovadoStatus = false;
+      erradas.push("4");
     } else if (
       key === "5" &&
       formValues[key] === "renda anual acima de R$ 299,890,63"
     ) {
       aprovadoStatus = false;
+      erradas.push("5");
     } else if (key === "6" && formValues[key] === "Sim") {
+      erradas.push("6");
       aprovadoStatus = false;
     } else if (key === "7" && formValues[key] === "Sim") {
+      erradas.push("7");
       aprovadoStatus = false;
     }
   }
 
   formValues["aprovado"] = aprovadoStatus;
+  formValues["erradas"] = erradas;
 
   const { error } = await supabase
     .from("enquadramento_forms")

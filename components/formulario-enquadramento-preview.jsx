@@ -42,7 +42,9 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
       </div>
       <div className="mt-6 border-t border-gray-100">
         <dl className="divide-y divide-gray-100">
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               1. Grupo
             </dt>
@@ -58,7 +60,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[2]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3 
+          ${dados["erradas"].includes("3") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               3. É maior de 18 anos e mais jovem que 70 anos?
             </dt>
@@ -66,7 +71,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[3]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
+          ${dados["erradas"].includes("4") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               4. Podem participar do PNCF: Trabalhadores rurais
               não-proprietários, preferencialmente assalariados, parceiros,
@@ -79,7 +87,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[4]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
+          ${dados["erradas"].includes("5") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               5. O PNCF é dividido em 4 linhas, considerando renda anual e
               patrimônio, marque em qual das linhas voce se enquadra.
@@ -88,7 +99,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[5]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
+          ${dados["erradas"].includes("6") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               6. Você é funcionário público?
             </dt>
@@ -96,7 +110,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[6]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
+          ${dados["erradas"].includes("7") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               7. Você já foi assentado da reforma agrária, ou participou de
               algum programa que tenha recursos do Fundo de Terras da Reforma
@@ -106,7 +123,10 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               {dados === undefined ? "" : dados[7]}
             </dd>
           </div>
-          <div className="bg-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+          <div
+            className={`bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3"
+          ${dados["erradas"].includes("8") ? "outline outline-red-600" : ""}`}
+          >
             <dt className="text-sm font-medium leading-6 text-gray-900">
               8. Marque quais dos documentos listados abaixo você possui ou já
               possuiu nos últimos 15 anos que seja possÍvel localizar e
