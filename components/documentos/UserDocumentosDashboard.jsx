@@ -23,7 +23,6 @@ export default function UserDocumentosDashboard({ cliente }) {
     fetchDocuments();
   }, [cliente.authuser_id, reload]);
   const handleDocumentSubmit = () => {
-    // Trigger a re-fetch of documents
     setReload((prev) => !prev);
   };
   return (

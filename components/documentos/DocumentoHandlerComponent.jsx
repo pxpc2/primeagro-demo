@@ -1,7 +1,7 @@
 "use client";
 
 import { submitDocumento } from "@/app/user-dashboard/actions";
-import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export default function DocumentoInstance({ doc, key, status, onSubmit }) {

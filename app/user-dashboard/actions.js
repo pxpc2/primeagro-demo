@@ -151,7 +151,17 @@ export async function submitDocumento(id, file, onSuccess) {
     .upload(path, file, { contentType: "application/pdf" });
 
   if (error) {
-    return redirect("/error?message=" + error.message);
+    if (error.message === "The resource already exists") {
+      return redirect(
+        "/error?message=" +
+          "O documento já foi enviado. Por favor, se deseja alterar, primeiro exclua o existente. Em caso de dúvidas, entre em contato conosco da ConfidensAgro."
+      );
+    } else {
+      return redirect(
+        "/error?message=" +
+          "Ocorreu um erro ao enviar o documento. Por favor, entre em contato."
+      );
+    }
   }
   if (onSuccess) {
     onSuccess();
