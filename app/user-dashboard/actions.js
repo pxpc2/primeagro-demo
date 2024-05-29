@@ -187,8 +187,3 @@ export async function getDocuments(authuser_id) {
   });
   return nomesExistentes;
 }
-
-/**
- * @todo função para ALTERAR O STATUS de um documento após o mesmo ter sido enviado
- */
-export async function setDocumentStatus() {}
