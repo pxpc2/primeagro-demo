@@ -4,7 +4,7 @@ export const ENQUADRAMENTO_APROVADO =
 export const ENQUADRAMENTO_REPROVADO =
   "Você respondeu a 1 ou mais critérios restritivos para enquadramento no PNCF, não podendo desta forma seguir com o seu processo neste momento. Caso tenha ficado alguma dúvida sobre os critérios restritivos, entre em contato conosco através do celular/WhatsApp - 63-9913-14127.";
 
-export const DOCUMENTOS = [
+export let DOCUMENTOS = [
   {
     id: "1.1",
     nome: "DAP OU CAF ATIVA",
@@ -15,7 +15,7 @@ export const DOCUMENTOS = [
     id: "1.2",
     nome: "COMPROVANTE DE ELEGILIBIDADE E EXPERIENCIA RURAL - (VER TIPOS POSSÍVEL EM ANEXO)",
     descricao: "Ver mais",
-    status: "Ativo",
+    status: "Pendente",
   },
   {
     id: "1.3",
@@ -27,7 +27,7 @@ export const DOCUMENTOS = [
     id: "1.4",
     nome: "CPF - COMPROVANTE DE SITUAÇÃO CADASTRAL PROPONENTE.",
     descricao: "Ver mais",
-    status: "Ativo",
+    status: "Pendente",
   },
   {
     id: "1.5",

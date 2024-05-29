@@ -1,21 +1,31 @@
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import DocumentoInstance from "./DocumentoHandlerComponent";
 import { DOCUMENTOS } from "@/utils/constants";
-import { checkDocumentsStatus } from "@/app/user-dashboard/actions";
+import { getDocuments } from "@/app/user-dashboard/actions";
+import { useEffect, useState } from "react";
 
 export default function UserDocumentosDashboard({ cliente }) {
-  checkDocumentsStatus(cliente.authuser_id);
-  DOCUMENTOS.forEach((doc) => {
-    if (doc.status === "Pendente") {
-      doc.corTexto = "text-orange-600";
-      doc.corBg = "bg-orange-50";
-      doc.corRing = "ring-orange-800/40";
-    } else if (doc.status === "Ativo") {
-      doc.corTexto = "text-green-600";
-      doc.corBg = "bg-green-50";
-      doc.corRing = "ring-green-800/40";
-    }
-  });
+  const [docStatus, setDocStatus] = useState({});
+  const [reload, setReload] = useState(false);
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      let docsExistentes = await getDocuments(cliente.authuser_id);
+      let newDocStatus = {};
+      DOCUMENTOS.forEach((doc) => {
+        let n = `${doc.id}.pdf`;
+        let n2 = `${doc.id}.PDF`;
+        newDocStatus[doc.id] =
+          docsExistentes.includes(n) || docsExistentes.includes(n2);
+      });
+      setDocStatus(newDocStatus);
+    };
+
+    fetchDocuments();
+  }, [cliente.authuser_id, reload]);
+  const handleDocumentSubmit = () => {
+    // Trigger a re-fetch of documents
+    setReload((prev) => !prev);
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -69,7 +79,12 @@ export default function UserDocumentosDashboard({ cliente }) {
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {DOCUMENTOS.map((doc) => (
-                  <DocumentoInstance doc={doc} key={doc.id} />
+                  <DocumentoInstance
+                    doc={doc}
+                    key={doc.id}
+                    status={docStatus[doc.id]}
+                    onSubmit={handleDocumentSubmit}
+                  />
                 ))}
               </tbody>
             </table>

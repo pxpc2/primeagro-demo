@@ -1,5 +1,6 @@
 "use server";
 
+import { DOCUMENTOS } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -136,14 +137,14 @@ export async function getDadosEnquadramentoForm() {
   return dados;
 }
 
-export async function submitDocumento(id, file) {
+export async function submitDocumento(id, file, onSuccess) {
   const supabase = createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = `${user.id}/${id}`;
+  const path = `${user.id}/${id}.pdf`;
 
   let { data, error } = await supabase.storage
     .from("Documentos")
@@ -152,6 +153,9 @@ export async function submitDocumento(id, file) {
   if (error) {
     return redirect("/error?message=" + error.message);
   }
+  if (onSuccess) {
+    onSuccess();
+  }
 }
 
 /**
@@ -159,7 +163,7 @@ export async function submitDocumento(id, file) {
  *  e atribuir status aos documentos na lista de constantes com base nisso
  */
 
-export async function checkDocumentsStatus(authuser_id) {
+export async function getDocuments(authuser_id) {
   const supabase = createClient();
   const { data, error } = await supabase.storage
     .from("Documentos")
@@ -167,7 +171,11 @@ export async function checkDocumentsStatus(authuser_id) {
   if (error) {
     return redirect("/error?message=" + error.message);
   }
-  console.log(data);
+  let nomesExistentes = [];
+  data.forEach((doc) => {
+    nomesExistentes.push(doc.name);
+  });
+  return nomesExistentes;
 }
 
 /**

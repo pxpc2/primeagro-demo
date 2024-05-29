@@ -4,7 +4,7 @@ import { submitDocumento } from "@/app/user-dashboard/actions";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function DocumentoInstance({ doc }) {
+export default function DocumentoInstance({ doc, key, status, onSubmit }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = async (event) => {
@@ -16,11 +16,24 @@ export default function DocumentoInstance({ doc }) {
   const handleUpload = async (file) => {
     if (file) {
       await submitDocumento(doc.id, selectedFile);
+      if (onSubmit) {
+        onSubmit();
+      }
     }
   };
 
+  let corTexto = "text-orange-600";
+  let corBg = "bg-orange-50";
+  let corRing = "ring-orange-800/40";
+
+  if (status) {
+    corTexto = "text-green-600";
+    corBg = "bg-green-50";
+    corRing = "ring-green-800/40";
+  }
+
   return (
-    <tr key={doc.id}>
+    <tr key={key}>
       <td className="break-words overflow-auto py-5 pl-4 pr-4 text-sm sm:pl-0">
         <div className="flex items-center">
           <div className="ml-3">
@@ -44,9 +57,9 @@ export default function DocumentoInstance({ doc }) {
       </td>
       <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
         <span
-          className={`inline-flex items-center rounded-md ${doc.corBg} px-2 py-1 text-xs font-medium ${doc.corTexto} ring-1 ring-inset ${doc.corRing} `}
+          className={`inline-flex items-center rounded-md ${corBg} px-2 py-1 text-xs font-medium ${corTexto} ring-1 ring-inset ${corRing} `}
         >
-          {doc.status}
+          {status ? "Ativo" : "Pendente"}
         </span>
       </td>
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
