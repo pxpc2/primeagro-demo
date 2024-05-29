@@ -147,7 +147,7 @@ export async function submitDocumento(id, file) {
 
   let { data, error } = await supabase.storage
     .from("Documentos")
-    .upload(path, file);
+    .upload(path, file, { contentType: "application/pdf" });
 
   if (error) {
     return redirect("/error?message=" + error.message);
@@ -159,7 +159,16 @@ export async function submitDocumento(id, file) {
  *  e atribuir status aos documentos na lista de constantes com base nisso
  */
 
-export async function checkDocumentsStatus() {}
+export async function checkDocumentsStatus(authuser_id) {
+  const supabase = createClient();
+  const { data, error } = await supabase.storage
+    .from("Documentos")
+    .list(authuser_id);
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+  console.log(data);
+}
 
 /**
  * @todo função para ALTERAR O STATUS de um documento após o mesmo ter sido enviado

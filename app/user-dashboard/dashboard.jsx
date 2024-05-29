@@ -258,7 +258,7 @@ export default function UserDashboardPage({
             {selectedTab === "Geral" ? (
               <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
-              <UserDocumentosDashboard />
+              <UserDocumentosDashboard cliente={usuario} />
             ) : (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
