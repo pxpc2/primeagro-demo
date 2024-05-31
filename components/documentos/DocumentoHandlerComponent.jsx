@@ -33,7 +33,7 @@ export default function DocumentoInstance({ doc, key, status, onSubmit }) {
   }
 
   return (
-    <tr key={key}>
+    <tr key={doc.id}>
       <td className="break-words overflow-auto py-5 pl-4 pr-4 text-sm sm:pl-0">
         <div className="flex items-center">
           <div className="ml-3">
