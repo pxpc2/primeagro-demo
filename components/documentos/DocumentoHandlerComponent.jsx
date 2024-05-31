@@ -22,9 +22,9 @@ export default function DocumentoInstance({ doc, key, status, onSubmit }) {
     }
   };
 
-  let corTexto = "text-orange-600";
-  let corBg = "bg-orange-50";
-  let corRing = "ring-orange-800/40";
+  let corTexto = "text-red-600";
+  let corBg = "bg-red-50";
+  let corRing = "ring-red-800/40";
 
   if (status) {
     corTexto = "text-green-600";
