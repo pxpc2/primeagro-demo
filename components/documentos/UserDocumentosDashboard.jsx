@@ -8,7 +8,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const tabs = [
+const tabsData = [
   { name: "Anexos do Beneficiário", id: "beneficiario", current: true },
   { name: "Anexos Técnicos", id: "tecnicos", current: false },
   { name: "Anexos do Vendedor", id: "vendedor", current: false },
@@ -19,6 +19,8 @@ export default function UserDocumentosDashboard({ cliente }) {
   const [docStatus, setDocStatus] = useState({});
   const [reload, setReload] = useState(false);
   const [currentTab, setCurrentTab] = useState("beneficiario");
+  const [tabs, setTabs] = useState(tabsData); // Assuming tabsData is an array of tabs
+
   useEffect(() => {
     const fetchDocuments = async () => {
       let docsExistentes = await getDocuments(cliente.authuser_id);
@@ -55,9 +57,11 @@ export default function UserDocumentosDashboard({ cliente }) {
 
   const handleTabChange = (tabId) => {
     setCurrentTab(tabId);
-    tabs.forEach((tab) => {
-      tab.current = tab.id === tabId;
-    });
+    const updatedTabs = tabs.map((tab) => ({
+      ...tab,
+      current: tab.id === tabId,
+    }));
+    setTabs(updatedTabs);
   };
 
   return (
@@ -85,7 +89,7 @@ export default function UserDocumentosDashboard({ cliente }) {
           aria-label="Tabs"
         >
           {tabs.map((tab, tabIdx) => (
-            <a
+            <p
               key={tab.id}
               href={"#"}
               onClick={() => handleTabChange(tab.id)}
@@ -95,7 +99,7 @@ export default function UserDocumentosDashboard({ cliente }) {
                   : "text-gray-500 hover:text-gray-700",
                 tabIdx === 0 ? "rounded-l-lg" : "",
                 tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                "group relative min-w-0 flex-1 overflow-hidden bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                "group relative min-w-0 flex-1 overflow-hidden hover:cursor-pointer bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
               )}
               aria-current={tab.current ? "page" : undefined}
             >
@@ -107,7 +111,7 @@ export default function UserDocumentosDashboard({ cliente }) {
                   "absolute inset-x-0 bottom-0 h-0.5"
                 )}
               />
-            </a>
+            </p>
           ))}
         </nav>
       </div>

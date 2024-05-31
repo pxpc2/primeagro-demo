@@ -13,7 +13,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
               Nome
             </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              {cliente === undefined ? "" : cliente.primeiro_nome}
+              {cliente === undefined ? "" : cliente.primeiro_nome + " "}
               {cliente === undefined ? "" : cliente.ultimo_nome}
             </dd>
           </div>
