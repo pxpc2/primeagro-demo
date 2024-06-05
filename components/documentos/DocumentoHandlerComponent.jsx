@@ -4,7 +4,7 @@ import { submitDocumento } from "@/app/user-dashboard/actions";
 import { ArrowUpTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function DocumentoInstance({ doc, key, status, onSubmit }) {
+export default function DocumentoInstance({ doc, status, onSubmit }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = async (event) => {
