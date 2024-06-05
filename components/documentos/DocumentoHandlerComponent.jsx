@@ -4,7 +4,7 @@ import { submitDocumento } from "@/app/user-dashboard/actions";
 import { ArrowUpTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
-export default function DocumentoInstance({ doc, status, onSubmit }) {
+export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = async (event) => {
@@ -15,7 +15,7 @@ export default function DocumentoInstance({ doc, status, onSubmit }) {
 
   const handleUpload = async (file) => {
     if (file) {
-      await submitDocumento(doc.id, selectedFile);
+      await submitDocumento(doc.id, selectedFile, authid);
       if (onSubmit) {
         onSubmit();
       }

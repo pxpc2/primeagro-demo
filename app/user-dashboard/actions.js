@@ -137,14 +137,10 @@ export async function getDadosEnquadramentoForm() {
   return dados;
 }
 
-export async function submitDocumento(id, file, onSuccess) {
+export async function submitDocumento(id, file, authid) {
   const supabase = createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const path = `${user.id}/${id}.pdf`;
+  const path = `${authid}/${id}.pdf`;
 
   let { data, error } = await supabase.storage
     .from("Documentos")
@@ -162,9 +158,6 @@ export async function submitDocumento(id, file, onSuccess) {
           "Ocorreu um erro ao enviar o documento. Por favor, entre em contato."
       );
     }
-  }
-  if (onSuccess) {
-    onSuccess();
   }
 }
 

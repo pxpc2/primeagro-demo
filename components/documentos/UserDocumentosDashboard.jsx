@@ -166,6 +166,7 @@ export default function UserDocumentosDashboard({ cliente }) {
                       key={doc.id}
                       status={docStatus[doc.id]}
                       onSubmit={handleDocumentSubmit}
+                      authid={cliente.authuser_id}
                     />
                   ))}
                 </tbody>
