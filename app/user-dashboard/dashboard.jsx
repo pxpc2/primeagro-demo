@@ -11,16 +11,13 @@ import FormularioEnquadramentoPreview from "@/components/formulario-enquadrament
 import DashboardSteps from "@/components/dashboard-steps";
 import PagamentoCard from "@/components/pagamento-card";
 import UserDocumentosDashboard from "@/components/documentos/UserDocumentosDashboard";
+import SpreadSheet from "@/components/projeto/spreadsheet-text";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserDashboardPage({
-  cliente,
-  aplicacoes,
-  dadosEnquadramento,
-}) {
+export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
   const [role, setRole] = useState(null);
   const [selectedTab, setSelectedTab] = useState("Geral");
   const navigation = [
@@ -31,6 +28,7 @@ export default function UserDashboardPage({
       current: selectedTab === "Formulário de Enquadramento",
     },
     { name: "Documentos", href: "#", current: selectedTab === "Documentos" },
+    { name: "Projeto", href: "#", current: selectedTab === "Projeto" },
   ];
   const userNavigation = [
     { name: "Sua Conta", href: "#" },
@@ -88,6 +86,10 @@ export default function UserDashboardPage({
                                 (!usuario.status_enquadramento ||
                                   !usuario.status_pagamento) &&
                                   item.name === "Documentos"
+                                  ? "hidden"
+                                  : "rounded-md px-3 py-2 text-sm hover:cursor-pointer",
+                                item.name === "Projeto" &&
+                                  !usuario.status_documentos
                                   ? "hidden"
                                   : "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
                               )}
@@ -253,12 +255,14 @@ export default function UserDashboardPage({
       </div>
 
       <main className="-mt-32">
-        <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-0">
           <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
             {selectedTab === "Geral" ? (
               <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
               <UserDocumentosDashboard cliente={usuario} />
+            ) : selectedTab === "Projeto" ? (
+              <SpreadSheet />
             ) : (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
