@@ -1,21 +1,35 @@
 "use client";
 
-import { submitDocumento } from "@/app/user-dashboard/actions";
+import { createClient } from "@/utils/supabase/client";
 import { ArrowUpTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
 
 export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
-  const [selectedFile, setSelectedFile] = useState(null);
-
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
     await handleUpload(file);
   };
 
   const handleUpload = async (file) => {
     if (file) {
-      await submitDocumento(doc.id, selectedFile, authid);
+      const supabase = createClient();
+      const path = `${authid}/${doc.id}.pdf`;
+      let { data, error } = await supabase.storage
+        .from("Documentos")
+        .upload(path, file, { contentType: "application/pdf" });
+
+      if (error) {
+        if (error.message === "The resource already exists") {
+          return redirect(
+            "/error?message=" +
+              "O documento já foi enviado. Por favor, se deseja alterar, primeiro exclua o existente. Em caso de dúvidas, entre em contato conosco da ConfidensAgro."
+          );
+        } else {
+          return redirect(
+            "/error?message=" +
+              "Ocorreu um erro ao enviar o documento. Por favor, entre em contato."
+          );
+        }
+      }
       if (onSubmit) {
         onSubmit();
       }

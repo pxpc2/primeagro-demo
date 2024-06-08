@@ -137,10 +137,17 @@ export async function getDadosEnquadramentoForm() {
   return dados;
 }
 
+/* A FUNCAO AQUI FOI MOVIDA DIRETAMENTE PARA O Client Component DocumentoInstance 
+
+
 export async function submitDocumento(id, file, authid) {
   const supabase = createClient();
 
   const path = `${authid}/${id}.pdf`;
+
+  console.log("submitting file");
+  console.log(file);
+  if (file) console.log(file.size);
 
   let { data, error } = await supabase.storage
     .from("Documentos")
@@ -159,7 +166,7 @@ export async function submitDocumento(id, file, authid) {
       );
     }
   }
-}
+}*/
 
 /**
  * @todo função a ser chamada para VERIFICAR DOCUMENTOS do cliente
