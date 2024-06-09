@@ -81,7 +81,7 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                               }}
                               className={classNames(
                                 item.current
-                                  ? "bg-orange-700 text-gray-200 font-medium"
+                                  ? "bg-orange-700 text-gray-200 font-bold"
                                   : "text-gray-200 hover:bg-orange-700 font-normal",
                                 (!usuario.status_enquadramento ||
                                   !usuario.status_pagamento) &&
