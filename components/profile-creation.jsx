@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { SubmitButton } from "../login/submit-button";
-import completeProfile from "./actions";
+import { SubmitButton } from "../app/login/submit-button";
+import completeProfile from "../app/user-dashboard/actions";
 import FormPNCF from "./pncf-form";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";

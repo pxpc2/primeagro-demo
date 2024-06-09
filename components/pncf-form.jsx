@@ -1,7 +1,9 @@
 "use client";
 
-import { SubmitButton } from "../login/submit-button";
-import completeProfile, { submitEnquadramentoForm } from "./actions";
+import { SubmitButton } from "../app/login/submit-button";
+import completeProfile, {
+  submitEnquadramentoForm,
+} from "../app/user-dashboard/actions";
 export default function FormPNCF({ authID, isToggled, onClose, msg }) {
   /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
    do perfil ainda não foram preenchidos */

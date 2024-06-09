@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
-import ProfileCreationPage from "./profile-creation";
+import ProfileCreationPage from "../../components/profile-creation";
 import {
   getAplicacoes,
   getDadosEnquadramentoForm,
