@@ -1,7 +1,11 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { ArrowUpTrayIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpTrayIcon,
+  ArrowPathIcon,
+  EllipsisHorizontalIcon,
+} from "@heroicons/react/24/outline";
 
 export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
   const handleFileChange = async (event) => {
@@ -80,7 +84,7 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
         {doc.status === "Ativo" ? (
           <></>
         ) : (
-          <>
+          <div className="flex flex-row w-full">
             <label
               htmlFor={`file-upload-${doc.id}`}
               className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
@@ -94,7 +98,10 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
                 onChange={handleFileChange}
               />
             </label>
-          </>
+            <label className="ml-2 w-[24px] hover:cursor-pointer">
+              <EllipsisHorizontalIcon />
+            </label>
+          </div>
         )}
       </td>
     </tr>

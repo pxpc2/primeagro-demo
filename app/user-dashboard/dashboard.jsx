@@ -28,7 +28,6 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
       current: selectedTab === "Formulário de Enquadramento",
     },
     { name: "Documentos", href: "#", current: selectedTab === "Documentos" },
-    { name: "Projeto", href: "#", current: selectedTab === "Projeto" },
   ];
   const userNavigation = [
     { name: "Sua Conta", href: "#" },
