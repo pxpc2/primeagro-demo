@@ -24,12 +24,9 @@ export default function Heading({ tabName }) {
           <ol role="list" className="flex items-center space-x-4">
             <li>
               <div className="flex">
-                <a
-                  href="#"
-                  className="text-sm font-medium text-gray-500 hover:text-gray-700"
-                >
+                <p className="text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-default">
                   Projeto
-                </a>
+                </p>
               </div>
             </li>
             <li>
@@ -38,12 +35,9 @@ export default function Heading({ tabName }) {
                   className="h-5 w-5 flex-shrink-0 text-gray-400"
                   aria-hidden="true"
                 />
-                <a
-                  href="#"
-                  className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
-                >
+                <p className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-default">
                   {tabName}
-                </a>
+                </p>
               </div>
             </li>
           </ol>
