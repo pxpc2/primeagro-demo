@@ -1,5 +1,5 @@
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
-import DocumentoInstance from "./DocumentoHandlerComponent";
+import DocumentoInstance from "./DocInstance";
 import { DOCUMENTOS } from "@/utils/constants";
 import { getDocuments } from "@/app/user-dashboard/actions";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ const tabsData = [
   { name: "Anexos do Imóvel Objeto do Crédito", id: "imovel", current: false },
 ];
 
-export default function UserDocumentosDashboard({ cliente }) {
+export default function DocumentosDashboard({ cliente }) {
   const [docStatus, setDocStatus] = useState({});
   const [reload, setReload] = useState(false);
   const [currentTab, setCurrentTab] = useState("beneficiario");

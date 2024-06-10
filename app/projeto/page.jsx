@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
-import { createClient } from "@/utils/supabase/client";
 
 export default function ProjetoPage() {
   const tabs = [

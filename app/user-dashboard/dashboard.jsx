@@ -10,7 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import FormularioEnquadramentoPreview from "@/components/dashboard/formulario-enquadramento-preview";
 import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
-import UserDocumentosDashboard from "@/components/documentos/UserDocumentosDashboard";
+import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -262,7 +262,7 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
             {selectedTab === "Geral" ? (
               <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
-              <UserDocumentosDashboard cliente={usuario} />
+              <DocumentosDashboard cliente={usuario} />
             ) : (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
