@@ -12,6 +12,7 @@ import DashboardSteps from "@/components/dashboard-steps";
 import PagamentoCard from "@/components/pagamento-card";
 import UserDocumentosDashboard from "@/components/documentos/UserDocumentosDashboard";
 import SpreadSheet from "@/components/projeto/spreadsheet-text";
+import { redirect } from "next/navigation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -56,24 +57,22 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
             <>
               <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div className="border-b border-orange-700">
-                  <div className="flex h-36 items-end justify-between px-4 sm:px-0">
+                  <div className="flex h-28 items-end justify-between px-4 sm:px-0">
                     <div className="flex items-end">
                       <div className="flex-shrink-0 mr-8 sm:mb-2">
                         <Link href={"/"}>
                           <Image
-                            className=""
-                            src="/logo-claro.png"
-                            alt="Your Company"
-                            href={"/"}
-                            height={140}
-                            width={140}
+                            src="/logo-04.svg"
+                            alt="ConfidensAgro"
+                            height={200}
+                            width={100}
                           />
                         </Link>
                       </div>
                       <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
                           {navigation.map((item) => (
-                            <p
+                            <a
                               key={item.name}
                               onClick={() => {
                                 setSelectedTab(item.name);
@@ -86,17 +85,20 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                                   !usuario.status_pagamento) &&
                                   item.name === "Documentos"
                                   ? "hidden"
-                                  : "rounded-md px-3 py-2 text-sm hover:cursor-pointer",
-                                item.name === "Projeto" &&
-                                  !usuario.status_documentos
-                                  ? "hidden"
                                   : "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
                               )}
                               aria-current={item.current ? "page" : undefined}
                             >
                               {item.name}
-                            </p>
+                            </a>
                           ))}
+                          <Link
+                            href={"/projeto"}
+                            target="_blank"
+                            className="text-gray-200 hover:bg-orange-700 font-normal rounded-md px-3 py-2 text-sm hover:cursor-pointer border border-orange-600 border-dotted"
+                          >
+                            <button>Projeto</button>
+                          </Link>
                         </div>
                       </div>
                     </div>
