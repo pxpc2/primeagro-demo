@@ -5,6 +5,7 @@ import {
   ArrowUpTrayIcon,
   ArrowPathIcon,
   EllipsisHorizontalIcon,
+  EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
 
 export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
@@ -98,8 +99,8 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
                 onChange={handleFileChange}
               />
             </label>
-            <label className="ml-2 w-[24px] hover:cursor-pointer">
-              <EllipsisHorizontalIcon />
+            <label className="ml-2 w-[24px] hover:cursor-pointer text-gray-500">
+              <EllipsisVerticalIcon />
             </label>
           </div>
         )}
