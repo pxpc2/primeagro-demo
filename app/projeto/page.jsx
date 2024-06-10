@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 export default function ProjetoPage() {
@@ -26,6 +29,8 @@ export default function ProjetoPage() {
     { name: "Imprimir a súmula", href: "#", current: false },
   ];
 
+  const [currentTab, setCurrentTab] = useState("Menu");
+
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
@@ -33,22 +38,41 @@ export default function ProjetoPage() {
   const firstRowTabs = tabs.slice(0, 11);
   const secondRowTabs = tabs.slice(11);
 
+  /**
+   *
+   * @param {*} tabName nome da aba
+   * @returns conteúdo baseado no nome da aba, a cada switch renderiza um component diferente
+   */
+  const renderContent = (tabName) => {
+    switch (tabName) {
+      case "Menu":
+        return (
+          <div className="w-full h-full bg-pncf bg-no-repeat bg-cover bg-top"></div>
+        );
+      default:
+        return <h1>{tabName}</h1>;
+    }
+  };
+
   return (
     <div className="overflow-hidden rounded-lg shadow h-full flex flex-col justify-center">
       <div className="px-4 py-5 sm:px-6">
         <div>
           <div className="sm:hidden">
             <label htmlFor="tabs" className="sr-only">
-              Select a tab
+              Selecione uma aba
             </label>
             <select
               id="tabs"
               name="tabs"
               className="block w-full rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              defaultValue={tabs.find((tab) => tab.current).name}
+              defaultValue={currentTab}
+              onChange={(e) => setCurrentTab(e.target.value)}
             >
               {tabs.map((tab) => (
-                <option key={tab.name}>{tab.name}</option>
+                <option key={tab.name} value={tab.name}>
+                  {tab.name}
+                </option>
               ))}
             </select>
           </div>
@@ -61,22 +85,28 @@ export default function ProjetoPage() {
                 <a
                   key={tab.name}
                   href={tab.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentTab(tab.name);
+                  }}
                   className={classNames(
-                    tab.current
+                    tab.name === currentTab
                       ? "text-gray-900 bg-white"
                       : "text-gray-500 hover:text-gray-700",
                     tabIdx === 0 ? "rounded-tl-lg" : "",
                     tabIdx === firstRowTabs.length - 1 ? "rounded-tr-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border "
+                    "tab flex items-center justify-center border"
                   )}
-                  aria-current={tab.current ? "page" : undefined}
+                  aria-current={tab.name === currentTab ? "page" : undefined}
                 >
                   <span className="whitespace-break-spaces">{tab.name}</span>
                   <span
                     aria-hidden="true"
                     className={classNames(
-                      tab.current ? "bg-orange-500" : "bg-transparent",
+                      tab.name === currentTab
+                        ? "bg-orange-500"
+                        : "bg-transparent",
                       "absolute inset-x-0 bottom-0 h-0.5"
                     )}
                   />
@@ -86,8 +116,12 @@ export default function ProjetoPage() {
                 <a
                   key={tab.name}
                   href={tab.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setCurrentTab(tab.name);
+                  }}
                   className={classNames(
-                    tab.current
+                    tab.name === currentTab
                       ? "text-gray-900 bg-white"
                       : "text-gray-500 hover:text-gray-700",
                     tabIdx === 0 ? "rounded-bl-lg" : "",
@@ -95,13 +129,15 @@ export default function ProjetoPage() {
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
                     "tab flex items-center justify-center border"
                   )}
-                  aria-current={tab.current ? "page" : undefined}
+                  aria-current={tab.name === currentTab ? "page" : undefined}
                 >
                   <span className="whitespace-normal">{tab.name}</span>
                   <span
                     aria-hidden="true"
                     className={classNames(
-                      tab.current ? "bg-orange-500" : "bg-transparent",
+                      tab.name === currentTab
+                        ? "bg-orange-500"
+                        : "bg-transparent",
                       "absolute inset-x-0 bottom-0 h-0.5"
                     )}
                   />
@@ -112,7 +148,7 @@ export default function ProjetoPage() {
         </div>
       </div>
       <div className="bg-gray-50 px-4 py-5 sm:p-6 flex flex-col-reverse w-full h-full items-center justify-center overflow-scroll">
-        <div className="h-full w-full bg-pncf bg-no-repeat bg-center"></div>
+        {renderContent(currentTab)}
       </div>
     </div>
   );
