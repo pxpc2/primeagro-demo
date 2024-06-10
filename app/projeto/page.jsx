@@ -3,32 +3,10 @@
 import { useState } from "react";
 import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
 import Heading from "@/components/projeto/Header";
+import { PROJETO_TABS } from "@/utils/constants";
 
 export default function ProjetoPage() {
-  const tabs = [
-    { name: "Menu", href: "#", current: true },
-    { name: "Pré-análise", href: "#", current: false },
-    { name: "Identificação do Beneficiário", href: "#", current: false },
-    { name: "Inventário", href: "#", current: false },
-    { name: "Dados do Imóvel", href: "#", current: false },
-    { name: "Tipos de Solo", href: "#", current: false },
-    { name: "Investimentos", href: "#", current: false },
-    { name: "Cronograma", href: "#", current: false },
-    { name: "Orçamentos", href: "#", current: false },
-    { name: "SIB", href: "#", current: false },
-    { name: "Uso e suporte da terra", href: "#", current: false },
-    { name: "Total (UA)", href: "#", current: false },
-    { name: "Evolução do rebanho", href: "#", current: false },
-    { name: "Receitas", href: "#", current: false },
-    { name: "Despesas", href: "#", current: false },
-    { name: "Simulador PNCF", href: "#", current: false },
-    { name: "Simulador PRONAF", href: "#", current: false },
-    { name: "Fluxos de Caixa", href: "#", current: false },
-    { name: "Capacidade de Pagamento", href: "#", current: false },
-    { name: "Informações complementares", href: "#", current: false },
-    { name: "Súmula (PAG01)", href: "#", current: false },
-    { name: "Imprimir a súmula", href: "#", current: false },
-  ];
+  const tabs = PROJETO_TABS;
 
   const [currentTab, setCurrentTab] = useState("Menu");
 

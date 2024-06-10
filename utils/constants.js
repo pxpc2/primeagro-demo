@@ -321,3 +321,28 @@ export let DOCUMENTOS = [
     descricao: "Ver mais",
   },
 ];
+
+export const PROJETO_TABS = [
+  { id: 1, name: "Menu", href: "#", current: true },
+  { id: 2, name: "Pré-análise", href: "#", current: false },
+  { id: 3, name: "Identificação do Beneficiário", href: "#", current: false },
+  { id: 4, name: "Inventário", href: "#", current: false },
+  { id: 5, name: "Dados do Imóvel", href: "#", current: false },
+  { id: 6, name: "Tipos de Solo", href: "#", current: false },
+  { id: 7, name: "Investimentos", href: "#", current: false },
+  { id: 8, name: "Cronograma", href: "#", current: false },
+  { id: 9, name: "Orçamentos", href: "#", current: false },
+  { id: 10, name: "SIB", href: "#", current: false },
+  { id: 11, name: "Uso e suporte da terra", href: "#", current: false },
+  { id: 12, name: "Total (UA)", href: "#", current: false },
+  { id: 13, name: "Evolução do rebanho", href: "#", current: false },
+  { id: 14, name: "Receitas", href: "#", current: false },
+  { id: 15, name: "Despesas", href: "#", current: false },
+  { id: 16, name: "Simulador PNCF", href: "#", current: false },
+  { id: 17, name: "Simulador PRONAF", href: "#", current: false },
+  { id: 18, name: "Fluxos de Caixa", href: "#", current: false },
+  { id: 19, name: "Capacidade de Pagamento", href: "#", current: false },
+  { id: 20, name: "Informações complementares", href: "#", current: false },
+  { id: 21, name: "Súmula (PAG01)", href: "#", current: false },
+  { id: 22, name: "Imprimir a súmula", href: "#", current: false },
+];
