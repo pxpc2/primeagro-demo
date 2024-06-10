@@ -1,20 +1,7 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
-
-export default async function ProjetoPage() {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/login");
-  }
-
+export default function ProjetoPage() {
   return (
-    <>
-      <h1>Projeto</h1>
-    </>
+    <div className="w-full h-full flex items-center justify-center">
+      <h1>projeto</h1>
+    </div>
   );
 }
