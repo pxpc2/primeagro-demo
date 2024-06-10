@@ -7,12 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
 import { createClient } from "@/utils/supabase/client";
-import FormularioEnquadramentoPreview from "@/components/formulario-enquadramento-preview";
-import DashboardSteps from "@/components/dashboard-steps";
-import PagamentoCard from "@/components/pagamento-card";
+import FormularioEnquadramentoPreview from "@/components/dashboard/formulario-enquadramento-preview";
+import DashboardSteps from "@/components/dashboard/dashboard-steps";
+import PagamentoCard from "@/components/dashboard/pagamento-card";
 import UserDocumentosDashboard from "@/components/documentos/UserDocumentosDashboard";
-import SpreadSheet from "@/components/projeto/spreadsheet-text";
-import { redirect } from "next/navigation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -95,7 +93,10 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                           <Link
                             href={"/projeto"}
                             target="_blank"
-                            className="text-gray-200 hover:bg-orange-700 font-normal rounded-md px-3 py-2 text-sm hover:cursor-pointer border border-orange-600 border-dotted"
+                            className={classNames(
+                              "text-gray-200 hover:bg-orange-700 font-normal rounded-md px-3 py-2 text-sm hover:cursor-pointer border border-orange-600 border-dotted",
+                              usuario.status_documentos ? "" : "hidden"
+                            )}
                           >
                             <button>Projeto</button>
                           </Link>
@@ -262,8 +263,6 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
               <DashboardSteps cliente={usuario} />
             ) : selectedTab === "Documentos" ? (
               <UserDocumentosDashboard cliente={usuario} />
-            ) : selectedTab === "Projeto" ? (
-              <SpreadSheet />
             ) : (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
@@ -272,7 +271,9 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
             )}
           </div>
           {selectedTab === "Geral" ? (
-            <PagamentoCard cliente={usuario} />
+            <div>
+              <PagamentoCard cliente={usuario} />
+            </div>
           ) : (
             <></>
           )}

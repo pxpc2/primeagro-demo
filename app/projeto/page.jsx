@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
+import { createClient } from "@/utils/supabase/client";
 
 export default function ProjetoPage() {
   const tabs = [
@@ -49,6 +51,8 @@ export default function ProjetoPage() {
         return (
           <div className="w-full h-full bg-pncf bg-no-repeat bg-cover bg-top"></div>
         );
+      case "Pré-análise":
+        return <PreAnaliseTab />;
       default:
         return <h1>{tabName}</h1>;
     }
