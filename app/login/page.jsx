@@ -140,11 +140,7 @@ function LoginForm({ message }) {
             Lembrar dados de acesso
           </label>
         </div>
-        <SubmitButton
-          formAction={signIn}
-          className="w-full hover:bg-orange-500"
-          variant="default"
-        >
+        <SubmitButton formAction={signIn} className="w-full " variant="default">
           Entrar
         </SubmitButton>
       </form>

@@ -90,7 +90,7 @@ export default function RegisterForm({ msg }) {
             </div>
           </div>
           <DialogFooter>
-            <SubmitButton className="hover:bg-orange-500" formAction={signUp}>
+            <SubmitButton className="" formAction={signUp}>
               Registrar
             </SubmitButton>
           </DialogFooter>
