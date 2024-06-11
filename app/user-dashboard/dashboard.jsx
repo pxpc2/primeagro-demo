@@ -20,6 +20,7 @@ import FormularioEnquadramentoPreview from "@/components/dashboard/formulario-en
 import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
 import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
+import { Button } from "@/components/ui/button";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -77,37 +78,39 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                         </Link>
                       </div>
                       <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
+                        <div className="ml-10 flex items-baseline space-x-1 sm:mb-4">
                           {navigation.map((item) => (
-                            <a
-                              key={item.name}
-                              onClick={() => {
-                                setSelectedTab(item.name);
-                              }}
+                            <Button
                               className={classNames(
+                                "bg-orange-800 font-normal bg-opacity-50 hover:bg-orange-900 hover:bg-opacity-30",
                                 item.current
-                                  ? "bg-orange-700 text-gray-200 font-bold"
-                                  : "text-gray-200 hover:bg-orange-700 font-normal",
+                                  ? "shadow-lg bg-orange-900 bg-opacity-30"
+                                  : "",
                                 (!usuario.status_enquadramento ||
                                   !usuario.status_pagamento) &&
                                   item.name === "Documentos"
                                   ? "hidden"
-                                  : "rounded-md px-3 py-2 text-sm hover:cursor-pointer"
+                                  : ""
                               )}
-                              aria-current={item.current ? "page" : undefined}
+                              key={item.name}
+                              onClick={() => {
+                                setSelectedTab(item.name);
+                              }}
                             >
                               {item.name}
-                            </a>
+                            </Button>
                           ))}
                           <Link
                             href={"/projeto"}
                             target="_blank"
                             className={classNames(
-                              "text-gray-200 hover:bg-orange-700 font-normal rounded-md px-3 py-2 text-sm hover:cursor-pointer border border-orange-600 border-dotted",
+                              "text-gray-200 l",
                               usuario.status_documentos ? "" : "hidden"
                             )}
                           >
-                            <button>Projeto</button>
+                            <Button className="" variant="destructive">
+                              Projeto
+                            </Button>
                           </Link>
                         </div>
                       </div>
