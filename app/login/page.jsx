@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { signIn } from "@/app/login/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SignUpForm from "./SignupForm";
 import {
   Form,
@@ -19,20 +19,36 @@ import { SubmitButton } from "./submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RegisterForm from "./signup-form";
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const notify = () =>
+      toast({
+        title: "Erro ao realizar login",
+        description: message,
+        variant: "destructive",
+      });
+    if (message) notify();
+  }, [message, toast]);
   return (
     <div className="flex min-h-full flex-1 bg-white">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
-            <Image
-              className="h-36 w-auto"
-              src="/confidens-logo-verde-laranja.png"
-              alt="Your Company"
-              width={1200}
-              height={1200}
-            />
+            <a href="/login">
+              <Image
+                className="h-36 w-auto"
+                src="/confidens-logo-verde-laranja.png"
+                alt="Your Company"
+                width={1200}
+                height={1200}
+              />
+            </a>
+
             <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-gray-900">
               Entre com sua conta
             </h2>
@@ -72,6 +88,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
 
 function LoginForm({ message }) {
   const form = useForm();
+
   return (
     <Form {...form}>
       <form className="space-y-8">
@@ -131,9 +148,6 @@ function LoginForm({ message }) {
         >
           Entrar
         </SubmitButton>
-        {message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-center">{message}</p>
-        )}
       </form>
     </Form>
   );

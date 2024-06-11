@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import Head from "next/head";
 
 export const metadata = {
@@ -9,6 +10,7 @@ export default function Layout({ children }) {
   return (
     <>
       <main className="w-full h-full">{children}</main>
+      <Toaster />
     </>
   );
 }

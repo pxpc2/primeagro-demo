@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import Head from "next/head";
 import { redirect } from "next/navigation";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = {
   title: "ConfidensAgro - Projeto",
@@ -23,6 +24,7 @@ export default async function Layout({ children }) {
   return (
     <>
       <main className="w-full h-full">{children}</main>
+      <Toaster />
     </>
   );
 }
