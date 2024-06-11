@@ -108,7 +108,7 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                               usuario.status_documentos ? "" : "hidden"
                             )}
                           >
-                            <Button className="" variant="destructive">
+                            <Button className="" variant="outline">
                               Projeto
                             </Button>
                           </Link>
