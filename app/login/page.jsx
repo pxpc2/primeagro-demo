@@ -2,14 +2,27 @@
 
 import Image from "next/image";
 import { signIn } from "@/app/login/actions";
-import { SubmitButton } from "@/app/login/submit-button";
 import { useState } from "react";
 import SignUpForm from "./SignupForm";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useForm, useFormState } from "react-hook-form";
+import { SubmitButton } from "./submit-button";
+import { useFormStatus } from "react-dom";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
   const [showModal, setShowModal] = useState(false);
   const toggleModal = () => {
-    console.log("mudando showModal de " + showModal + " para " + !showModal);
     setShowModal(!showModal);
   };
 
@@ -25,98 +38,22 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               width={1200}
               height={1200}
             />
-            <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-gray-900">
               Entre com sua conta
             </h2>
-            <p className="mt-2 text-sm leading-6 text-gray-500">
-              Não possui conta?{" "}
-              <span className="font-semibold text-orange-600 hover:text-orange-400">
-                <button onClick={toggleModal}>Registrar agora.</button>
-              </span>
-            </p>
+            <div className="flex gap-2 text-xs">
+              Não possui conta?
+              <p
+                className="text-primary hover:cursor-pointer hover:underline"
+                onClick={toggleModal}
+              >
+                Registrar agora.
+              </p>
+            </div>
           </div>
           <div className="mt-10">
             <div>
-              <form action="#" method="POST" className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Usuário
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Senha
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="current-password"
-                      required
-                      className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-600"
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-3 block text-sm leading-6 text-gray-700"
-                    >
-                      Lembrar-me
-                    </label>
-                  </div>
-
-                  <div className="text-sm leading-6">
-                    <a
-                      href="#"
-                      className="font-semibold text-orange-600 hover:text-orange-400"
-                    >
-                      Esqueceu a senha?
-                    </a>
-                  </div>
-                </div>
-
-                <div>
-                  <SubmitButton
-                    formAction={signIn}
-                    className="flex w-full justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-                    pendingText="Entrando..."
-                  >
-                    Entrar
-                  </SubmitButton>
-                  {message && (
-                    <p className="mt-4 p-4 bg-foreground/10 text-center">
-                      {message}
-                    </p>
-                  )}
-                </div>
-              </form>
+              <LoginForm message={message} />
             </div>
           </div>
         </div>
@@ -139,5 +76,79 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
         msg={successmsg}
       />
     </div>
+  );
+}
+
+function LoginForm({ message }) {
+  const form = useForm();
+  return (
+    <Form {...form}>
+      <form className="space-y-8">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>E-mail</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="email@email.com"
+                  {...field}
+                  className=""
+                />
+              </FormControl>
+              <FormDescription>
+                Este é o endereço de e-mail usado na criação de sua conta.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Senha</FormLabel>
+              <FormControl>
+                <Input type="password" {...field} />
+              </FormControl>
+              <div className="flex gap-2">
+                <FormDescription>Esta é a sua senha.</FormDescription>
+                <FormDescription
+                  className="text-indigo-700 hover:underline hover:cursor-pointer"
+                  onClick={() => {
+                    console.log("esqueceu a senha");
+                  }}
+                >
+                  Esqueceu a senha?
+                </FormDescription>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex items-center space-x-2">
+          <Checkbox id="terms" />
+          <label
+            htmlFor="terms"
+            className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Lembrar dados de acesso
+          </label>
+        </div>
+        <SubmitButton
+          formAction={signIn}
+          className="w-full hover:bg-orange-500"
+          variant="default"
+        >
+          Entrar
+        </SubmitButton>
+        {message && (
+          <p className="mt-4 p-4 bg-foreground/10 text-center">{message}</p>
+        )}
+      </form>
+    </Form>
   );
 }
