@@ -24,7 +24,7 @@ export default function PreAnaliseTab() {
   return (
     <div className="h-full w-full flex flex-row justify-evenly">
       <div className="w-full h-full p-4 gap-4">
-        <h2 className="text-center text-white font-semibold p-4 border rounded-md bg-orange-500 bg-opacity-85">
+        <h2 className="text-center text-black p-4 border rounded-md outline-black outline-1 outline-dotted">
           Informações Iniciais
         </h2>
         <div className="mt-4 p-4 bg-gray-50">
@@ -32,7 +32,7 @@ export default function PreAnaliseTab() {
         </div>
       </div>
       <div className="w-full h-full p-4 gap-4">
-        <h2 className="text-center text-white font-semibold p-4 border rounded-md bg-orange-500 bg-opacity-85">
+        <h2 className="text-center text-black  p-4 border rounded-md outline-black outline-dotted outline-1">
           Pré-análise
         </h2>
       </div>

@@ -36,7 +36,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
             <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-gray-900">
               Entre com sua conta
             </h2>
-            <div className="flex gap-2 text-xs">
+            <div className="flex gap-2 text-[0.8rem]">
               Não possui conta?
               <Dialog>
                 <DialogTrigger asChild>
@@ -119,7 +119,7 @@ function LoginForm({ message }) {
           <Checkbox id="terms" />
           <label
             htmlFor="terms"
-            className="text-xs font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-[0.8rem] font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             Lembrar dados de acesso
           </label>
