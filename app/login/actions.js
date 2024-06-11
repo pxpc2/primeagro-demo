@@ -18,8 +18,8 @@ export async function signIn(formData) {
     return redirect(
       `/login?message=${
         error.message === "Email not confirmed"
-          ? "Por favor, verifique seu email para completar o registro."
-          : "Credenciais inválidas. Por favor verifique o email e a senha."
+          ? "Por favor, confirme seu email para completar o registro."
+          : "Por favor, verifique se os dados de acesso se encontram corretos."
       }`
     );
   }
