@@ -14,18 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { SubmitButton } from "./submit-button";
-import { useFormStatus } from "react-dom";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import RegisterForm from "./signup-form";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
-  const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
-
   return (
     <div className="flex min-h-full flex-1 bg-white">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -43,12 +38,16 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
             </h2>
             <div className="flex gap-2 text-xs">
               Não possui conta?
-              <p
-                className="text-primary hover:cursor-pointer hover:underline"
-                onClick={toggleModal}
-              >
-                Registrar agora.
-              </p>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <p className="text-primary hover:cursor-pointer hover:underline">
+                    Registrar agora.
+                  </p>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[800px]">
+                  <RegisterForm msg={successmsg} />
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="mt-10">
@@ -67,14 +66,6 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
           height={50}
         />
       </div>
-
-      <SignUpForm
-        isToggled={showModal}
-        onClose={() => {
-          setShowModal(false);
-        }}
-        msg={successmsg}
-      />
     </div>
   );
 }
@@ -91,12 +82,7 @@ function LoginForm({ message }) {
             <FormItem>
               <FormLabel>E-mail</FormLabel>
               <FormControl>
-                <Input
-                  type="email"
-                  placeholder="email@email.com"
-                  {...field}
-                  className=""
-                />
+                <Input type="email" placeholder="email@email.com" {...field} />
               </FormControl>
               <FormDescription>
                 Este é o endereço de e-mail usado na criação de sua conta.
