@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { signIn } from "@/app/login/actions";
 import { useEffect, useState } from "react";
-import SignUpForm from "./SignupForm";
 import {
   Form,
   FormControl,
