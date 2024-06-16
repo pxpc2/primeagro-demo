@@ -131,7 +131,7 @@ export default function ProjetoPage() {
       <div className="py-4 px-12">
         {currentTab === "Menu" ? "" : <Heading tabName={currentTab} />}
       </div>
-      <div className="bg-gray-100 w-full h-full p-12 overflow-scroll">
+      <div className="bg-gray-100 w-full h-full p-5 overflow-scroll">
         {renderContent(currentTab)}
       </div>
     </div>
