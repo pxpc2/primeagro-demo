@@ -21,6 +21,7 @@ import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
 import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -78,14 +79,14 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                         </Link>
                       </div>
                       <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-1 sm:mb-4">
+                        <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
                           {navigation.map((item) => (
                             <Button
                               className={classNames(
-                                "bg-orange-800 font-normal bg-opacity-50 hover:bg-orange-900 hover:bg-opacity-30",
+                                "inline-flex items-center text-sm font-semibold text-gray-200",
                                 item.current
-                                  ? "shadow-lg bg-orange-900 bg-opacity-30"
-                                  : "",
+                                  ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
+                                  : "hover:bg-orange-700 bg-transparent",
                                 (!usuario.status_enquadramento ||
                                   !usuario.status_pagamento) &&
                                   item.name === "Documentos"
@@ -108,7 +109,7 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                               usuario.status_documentos ? "" : "hidden"
                             )}
                           >
-                            <Button className="" variant="outline">
+                            <Button className="bg-transparent hover:bg-orange-700 text-gray-200">
                               Projeto
                             </Button>
                           </Link>

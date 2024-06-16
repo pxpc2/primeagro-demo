@@ -24,13 +24,13 @@ import { useState } from "react";
 
 export default function PreAnaliseTab() {
   return (
-    <div className="h-full w-full flex flex-row justify-evenly">
-      <div className="w-full h-full p-4 gap-4">
+    <div className=" w-full flex flex-row justify-evenly">
+      <div className="w-full  p-4 gap-4">
         <div className="p-4 bg-gray-50">
           <InformacoesIniciaisForm />
         </div>
       </div>
-      <div className="w-full h-full p-4 gap-4">
+      <div className="w-full  p-4 gap-4">
         <div className="p-4 bg-gray-50">
           <PreAnaliseForm />
         </div>

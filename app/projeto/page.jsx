@@ -26,12 +26,12 @@ export default function ProjetoPage() {
     switch (tabName) {
       case "Menu":
         return (
-          <div className="w-full h-full bg-pncf bg-no-repeat bg-cover bg-top"></div>
+          <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top"></div>
         );
       case "Pré-análise":
         return <PreAnaliseTab />;
       default:
-        return <h1>{tabName}</h1>;
+        return <h1 className="h-screen">{tabName}</h1>;
     }
   };
 
