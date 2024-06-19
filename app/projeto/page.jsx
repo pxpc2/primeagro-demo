@@ -7,7 +7,6 @@ import { PROJETO_TABS } from "@/utils/constants";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
-
   const [currentTab, setCurrentTab] = useState("Menu");
 
   function classNames(...classes) {
@@ -77,7 +76,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-tl-lg" : "",
                     tabIdx === firstRowTabs.length - 1 ? "rounded-tr-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border"
+                    "tab flex items-center justify-center border",
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -88,7 +87,7 @@ export default function ProjetoPage() {
                       tab.name === currentTab
                         ? "bg-orange-500"
                         : "bg-transparent",
-                      "absolute inset-x-0 bottom-0 h-0.5"
+                      "absolute inset-x-0 bottom-0 h-0.5",
                     )}
                   />
                 </a>
@@ -108,7 +107,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-bl-lg" : "",
                     tabIdx === secondRowTabs.length - 1 ? "rounded-br-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border"
+                    "tab flex items-center justify-center border",
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -119,7 +118,7 @@ export default function ProjetoPage() {
                       tab.name === currentTab
                         ? "bg-orange-500"
                         : "bg-transparent",
-                      "absolute inset-x-0 bottom-0 h-0.5"
+                      "absolute inset-x-0 bottom-0 h-0.5",
                     )}
                   />
                 </a>
@@ -127,9 +126,6 @@ export default function ProjetoPage() {
             </nav>
           </div>
         </div>
-      </div>
-      <div className="py-4 px-12">
-        {currentTab === "Menu" ? "" : <Heading tabName={currentTab} />}
       </div>
       <div className="bg-gray-100 w-full h-full p-5 overflow-scroll">
         {renderContent(currentTab)}

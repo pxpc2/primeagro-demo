@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import {
@@ -21,27 +23,45 @@ import {
 } from "../ui/select";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useState } from "react";
+import Heading from "./Header";
 
 export default function PreAnaliseTab() {
+  const [formsDisabled, setFormsDisabled] = useState(true);
+  const form = useForm();
+
+  const onEdit = () => setFormsDisabled(false);
+
+  const onSave = () => {
+    form.handleSubmit((data) => {
+      console.log(data); // Later you can send this to the database
+      setFormsDisabled(true);
+    })();
+  };
   return (
-    <div className=" w-full flex flex-row justify-evenly">
-      <div className="w-full  p-4 gap-4">
-        <div className="p-4 bg-gray-50">
-          <InformacoesIniciaisForm />
+    <div className="p-4">
+      <Heading
+        tabName={"Pré Análise"}
+        onEdit={onEdit}
+        onSave={onSave}
+        isEditing={!formsDisabled}
+      />
+      <div className=" w-full flex flex-row justify-evenly">
+        <div className="w-full py-4  gap-4">
+          <div className="p-4 bg-gray-50">
+            <InformacoesIniciaisForm form={form} formDisabled={formsDisabled} />
+          </div>
         </div>
-      </div>
-      <div className="w-full  p-4 gap-4">
-        <div className="p-4 bg-gray-50">
-          <PreAnaliseForm />
+        <div className="w-full  p-4 gap-4">
+          <div className="p-4 bg-gray-50">
+            <PreAnaliseForm form={form} formDisabled={formsDisabled} />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function InformacoesIniciaisForm() {
-  const form = useForm();
-
+function InformacoesIniciaisForm({ formDisabled, form }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -52,7 +72,12 @@ function InformacoesIniciaisForm() {
             <FormItem>
               <FormLabel>1. Número Protocolo Obter Crédito</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="15337531" {...field} disabled />
+                <Input
+                  type="text"
+                  placeholder="15337531"
+                  {...field}
+                  disabled={formDisabled}
+                />
               </FormControl>
               <FormDescription>Número do protocolo.</FormDescription>
               <FormMessage />
@@ -67,7 +92,7 @@ function InformacoesIniciaisForm() {
               <FormItem>
                 <FormLabel>2. Data do protocolo</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input type="date" {...field} disabled={formDisabled} />
                 </FormControl>
                 <FormDescription>Data de início do protocolo.</FormDescription>
                 <FormMessage />
@@ -86,6 +111,7 @@ function InformacoesIniciaisForm() {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={formDisabled}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -142,7 +168,7 @@ function InformacoesIniciaisForm() {
                   type="text"
                   placeholder="Boa Vista"
                   {...field}
-                  disabled
+                  disabled={formDisabled}
                 />
               </FormControl>
               <FormDescription>Nome de documentação do imóvel.</FormDescription>
@@ -162,7 +188,7 @@ function InformacoesIniciaisForm() {
                     type="text"
                     {...field}
                     placeholder="19.3932"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormDescription>
@@ -183,7 +209,7 @@ function InformacoesIniciaisForm() {
                     type="text"
                     {...field}
                     placeholder="500,000.00"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormDescription>
@@ -202,7 +228,12 @@ function InformacoesIniciaisForm() {
               <FormItem>
                 <FormLabel>7. Área a ser adquirida (ha)</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} placeholder="9.6966" disabled />
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="9.6966"
+                    disabled={formDisabled}
+                  />
                 </FormControl>
                 <FormDescription>
                   Área total a ser adquirida, em hectares.
@@ -222,7 +253,7 @@ function InformacoesIniciaisForm() {
                     type="text"
                     {...field}
                     placeholder="PNCF SOCIAL"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormDescription>Linha de crédito do PNCF.</FormDescription>
@@ -242,7 +273,7 @@ function InformacoesIniciaisForm() {
                   type="text"
                   placeholder="ZACARIAS ENZO FERRARI DE LIMA"
                   {...field}
-                  disabled
+                  disabled={formDisabled}
                 />
               </FormControl>
               <FormDescription>
@@ -259,7 +290,7 @@ function InformacoesIniciaisForm() {
             <FormItem>
               <FormLabel>10. Nome social</FormLabel>
               <FormControl>
-                <Input type="text" {...field} disabled />
+                <Input type="text" {...field} disabled={formDisabled} />
               </FormControl>
               <FormDescription>Nome social do beneficiário.</FormDescription>
               <FormMessage />
@@ -274,7 +305,12 @@ function InformacoesIniciaisForm() {
               <FormItem>
                 <FormLabel>11. Data de nascimento</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} placeholder="9.6966" disabled />
+                  <Input
+                    type="date"
+                    {...field}
+                    placeholder="9.6966"
+                    disabled={formDisabled}
+                  />
                 </FormControl>
                 <FormDescription>
                   Data de nascimento do beneficiário.
@@ -292,7 +328,12 @@ function InformacoesIniciaisForm() {
                   12. Tempo de exerc. na ativ. agropecuária (ano)
                 </FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} placeholder="5" disabled />
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="5"
+                    disabled={formDisabled}
+                  />
                 </FormControl>
                 <FormDescription>
                   Tempo em que o beneficiário exerce atividade(s)
@@ -315,7 +356,7 @@ function InformacoesIniciaisForm() {
                     type="text"
                     {...field}
                     placeholder="8,560.00"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormDescription>
@@ -336,7 +377,7 @@ function InformacoesIniciaisForm() {
                     type="text"
                     {...field}
                     placeholder="25,000.00"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormDescription>
@@ -355,7 +396,12 @@ function InformacoesIniciaisForm() {
               <FormItem>
                 <FormLabel>15. Número do lote a ser adquirido</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} placeholder="1" disabled />
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="1"
+                    disabled={formDisabled}
+                  />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
@@ -369,7 +415,12 @@ function InformacoesIniciaisForm() {
               <FormItem>
                 <FormLabel>16. Número total de lotes do imóvel</FormLabel>
                 <FormControl>
-                  <Input type="text" {...field} placeholder="2" disabled />
+                  <Input
+                    type="text"
+                    {...field}
+                    placeholder="2"
+                    disabled={formDisabled}
+                  />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
@@ -385,8 +436,7 @@ function InformacoesIniciaisForm() {
   );
 }
 
-function PreAnaliseForm() {
-  const form = useForm();
+function PreAnaliseForm({ formDisabled, form }) {
   const [text17, setText17] = useState("Preenche o requisito");
   const handleRadio17Change = (value) => {
     if (value === "nao") {
@@ -510,6 +560,7 @@ function PreAnaliseForm() {
                     }}
                     defaultValue="nao"
                     className="flex flex-row space-x-1"
+                    disabled={formDisabled}
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
@@ -555,6 +606,7 @@ function PreAnaliseForm() {
                       handleRadio18Change(value);
                     }}
                     defaultValue="nao"
+                    disabled={formDisabled}
                     className="flex flex-row space-x-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
@@ -601,6 +653,7 @@ function PreAnaliseForm() {
                       handleRadio19Change(value);
                     }}
                     defaultValue="nao"
+                    disabled={formDisabled}
                     className="flex flex-row space-x-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
@@ -675,7 +728,7 @@ function PreAnaliseForm() {
         <div className="flex flex-row space-x-20 align-middle items-center justify-between ">
           <FormField
             control={form.control}
-            name="18-radioGroupServidorPublico"
+            name="20-idadeProtocoloObterCredito"
             render={({ field }) => (
               <FormItem className="grid grid-row-4 items-center">
                 <FormLabel className="col-span-3">
@@ -714,6 +767,7 @@ function PreAnaliseForm() {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    disabled={formDisabled}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -751,7 +805,7 @@ function PreAnaliseForm() {
                     type="text"
                     {...field}
                     placeholder="1100122"
-                    disabled
+                    disabled={formDisabled}
                   />
                 </FormControl>
                 <FormMessage />
