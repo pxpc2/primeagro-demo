@@ -15,6 +15,14 @@ export async function getProjetoFormsData() {
   } = await supabase.auth.getUser();
 
   // fazer um loop por cada tabela de aba
+  const formData = {};
+
+  let { data: aba_preanalise, err } = await supabase
+    .from("aba_preanalise")
+    .select("*");
+  formData.aba_preanalise = aba_preanalise;
+
+  return formData;
 }
 
 export async function submitPreAnaliseForm({ formData }) {
@@ -25,10 +33,6 @@ export async function submitPreAnaliseForm({ formData }) {
 
   const authUserID = user.id;
   const mappedData = {};
-
-  let { data: aba_preanalise, err } = await supabase
-    .from("aba_preanalise")
-    .select("authuser_id");
 
   Object.entries(formData).forEach(([key, value]) => {
     const match = key.match(/^(\d+)-/);

@@ -1,13 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
 import Heading from "@/components/projeto/Header";
 import { PROJETO_TABS } from "@/utils/constants";
+import { getProjetoFormsData } from "./actions";
+import { Loader2 } from "lucide-react";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
   const [currentTab, setCurrentTab] = useState("Menu");
+  const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProjetoFormsData();
+      setFormData(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -28,11 +41,22 @@ export default function ProjetoPage() {
           <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top"></div>
         );
       case "Pré-análise":
-        return <PreAnaliseTab />;
+        return <PreAnaliseTab defaultValues={formData?.aba_preanalise} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center align-middle text-center">
+        <div className="flex flex-col gap-4 items-center text-center justify-center">
+          <h1 className="text-xl font-semibold">Carregando o seu projeto</h1>
+          <Loader2 className="animate-spin  sm:h-[30%] sm:w-[30%] w-5 h-5 text-black" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="overflow-hidden rounded-lg shadow h-full flex flex-col justify-center">

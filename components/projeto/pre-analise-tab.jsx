@@ -22,21 +22,110 @@ import {
   SelectValue,
 } from "../ui/select";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Heading from "./Header";
 import { submitPreAnaliseForm } from "@/app/projeto/actions";
 
-export default function PreAnaliseTab() {
+const getFieldNameByNumber = (number) => {
+  const fieldNames = {
+    1: "protocoloObterCredito",
+    2: "dataProtocolo",
+    3: "municipioImovel",
+    4: "nomeImovel",
+    5: "areaTotalImovel",
+    6: "valorTotalImovel",
+    7: "areaSerAdquirida",
+    8: "linhaPNCF",
+    9: "candidato",
+    10: "nomeSocial",
+    11: "dataNascimento",
+    12: "tempoExerc",
+    13: "rendaFamiliarAnual",
+    14: "patrimonio",
+    15: "numeroDoLote",
+    16: "numeroTotalLotes",
+    17: "radioGroupJaFoiBeneficiario",
+    18: "radioGroupServidorPublico",
+    19: "radioGroupIndigena",
+    20: "idadeProtocoloObterCredito",
+    21: "agenteFinanceiro",
+    22: "agenciaInteresse",
+  };
+  return fieldNames[number];
+};
+
+const parseFormData = (defaultValues) => {
+  const transformed = {};
+  for (const key in defaultValues) {
+    if (key.startsWith("campo_")) {
+      const numberPart = key.split("_")[1];
+      const formFieldKey = `${numberPart}-${getFieldNameByNumber(numberPart)}`;
+      transformed[formFieldKey] = defaultValues[key];
+    }
+  }
+  return transformed;
+};
+
+export default function PreAnaliseTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
-  const form = useForm();
+  const [loading, setLoading] = useState(false);
+  const parsed = parseFormData(defaultValues[0]);
+  const [text17, setText17] = useState(
+    parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
+      ? "Preenche o requisito"
+      : "Não preenche o requisito",
+  );
+  const [text18, setText18] = useState(
+    parsed["18-radioGroupServidorPublico"] === "nao"
+      ? "Preenche o requisito"
+      : "Não preenche o requisito",
+  );
+  const [text19, setText19] = useState(
+    parsed["19-radioGroupIndigena"] === "nao"
+      ? "Preenche o requisito"
+      : "Não preenche o requisito",
+  );
+  const form = useForm({
+    defaultValues: parsed,
+  });
+
+  const handleRadioChange = (value, setText) => {
+    if (value === "nao") {
+      setText("Preenche o requisito");
+    } else if (value === "sim") {
+      setText("Não preenche o requisito");
+    }
+  };
+
+  useEffect(() => {
+    if (defaultValues) {
+      const parsed = parseFormData(defaultValues[0]);
+      form.reset(parsed);
+      setText17(
+        parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
+          ? "Preenche o requisito"
+          : "Não preenche o requisito",
+      );
+      setText18(
+        parsed["18-radioGroupServidorPublico"] === "nao"
+          ? "Preenche o requisito"
+          : "Não preenche o requisito",
+      );
+      setText19(
+        parsed["19-radioGroupIndigena"] === "nao"
+          ? "Preenche o requisito"
+          : "Não preenche o requisito",
+      );
+    }
+  }, [defaultValues, form]);
 
   const onEdit = () => setFormsDisabled(false);
-
   const onSave = () => {
+    setLoading(true);
     form.handleSubmit(async (data) => {
-      console.log(data); // Log the form data
       await submitPreAnaliseForm({ formData: data });
       setFormsDisabled(true);
+      setLoading(false);
     })();
   };
   return (
@@ -46,6 +135,7 @@ export default function PreAnaliseTab() {
         onEdit={onEdit}
         onSave={onSave}
         isEditing={!formsDisabled}
+        isLoading={loading}
       />
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full py-4  gap-4">
@@ -55,7 +145,17 @@ export default function PreAnaliseTab() {
         </div>
         <div className="w-full  p-4 gap-4">
           <div className="p-4 bg-gray-50">
-            <PreAnaliseForm form={form} formDisabled={formsDisabled} />
+            <PreAnaliseForm
+              form={form}
+              formDisabled={formsDisabled}
+              text17={text17}
+              text18={text18}
+              text19={text19}
+              setText17={setText17}
+              setText18={setText18}
+              setText19={setText19}
+              handleRadioChange={handleRadioChange}
+            />
           </div>
         </div>
       </div>
@@ -76,7 +176,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="15337531"
                   {...field}
                   disabled={formDisabled}
                   value={field.value || ""}
@@ -123,7 +222,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Selecionar município" />
+                        <SelectValue />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -155,7 +254,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="1100122"
                     disabled
                     value={field.value || ""}
                   />
@@ -175,7 +273,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="Boa Vista"
                   {...field}
                   disabled={formDisabled}
                   value={field.value || ""}
@@ -197,7 +294,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="19.3932"
                     disabled={formDisabled}
                     value={field.value || ""}
                   />
@@ -219,7 +315,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="500,000.00"
                     disabled={formDisabled}
                     value={field.value || ""}
                   />
@@ -243,7 +338,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="9.6966"
                     disabled={formDisabled}
                     value={field.value || ""}
                   />
@@ -265,7 +359,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="PNCF SOCIAL"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -285,7 +378,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="ZACARIAS ENZO FERRARI DE LIMA"
                   {...field}
                   disabled={formDisabled}
                   value={field.value || ""}
@@ -329,7 +421,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="date"
                     {...field}
                     value={field.value || ""}
-                    placeholder="9.6966"
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -352,7 +443,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="5"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -377,7 +467,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="8,560.00"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -399,7 +488,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="25,000.00"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -423,7 +511,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="1"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -443,7 +530,6 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="2"
                     value={field.value || ""}
                     disabled={formDisabled}
                   />
@@ -462,31 +548,17 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
   );
 }
 
-function PreAnaliseForm({ formDisabled, form }) {
-  const [text17, setText17] = useState("Preenche o requisito");
-  const handleRadio17Change = (value) => {
-    if (value === "nao") {
-      setText17("Preenche o requisito");
-    } else if (value === "sim") {
-      setText17("Não preenche o requisito");
-    }
-  };
-  const [text18, setText18] = useState("Preenche o requisito");
-  const handleRadio18Change = (value) => {
-    if (value === "nao") {
-      setText18("Preenche o requisito");
-    } else if (value === "sim") {
-      setText18("Não preenche o requisito");
-    }
-  };
-  const [text19, setText19] = useState("Preenche o requisito");
-  const handleRadio19Change = (value) => {
-    if (value === "nao") {
-      setText19("Preenche o requisito");
-    } else if (value === "sim") {
-      setText19("Não preenche o requisito");
-    }
-  };
+function PreAnaliseForm({
+  formDisabled,
+  form,
+  text17,
+  text18,
+  text19,
+  handleRadioChange,
+  setText17,
+  setText18,
+  setText19,
+}) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -500,7 +572,6 @@ function PreAnaliseForm({ formDisabled, form }) {
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="0.323"
                     {...field}
                     disabled
                     value={field.value || ""}
@@ -520,7 +591,6 @@ function PreAnaliseForm({ formDisabled, form }) {
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Acima da fração mínima do parcelamento"
                     {...field}
                     value={field.value || ""}
                     disabled
@@ -543,7 +613,6 @@ function PreAnaliseForm({ formDisabled, form }) {
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="Sem impedimento - Área a ser adquirida abaixo de 4 módulos fiscais"
                   {...field}
                   value={field.value || ""}
                   disabled
@@ -566,7 +635,6 @@ function PreAnaliseForm({ formDisabled, form }) {
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="Elaborar o Laudo de Avaliação na modalidade simples"
                   {...field}
                   disabled
                   value={field.value || ""}
@@ -591,7 +659,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   <RadioGroup
                     onValueChange={(value) => {
                       field.onChange(value);
-                      handleRadio17Change(value);
+                      handleRadioChange(value, setText17);
                     }}
                     className="flex flex-row space-x-1"
                     disabled={formDisabled}
@@ -638,7 +706,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   <RadioGroup
                     onValueChange={(value) => {
                       field.onChange(value);
-                      handleRadio18Change(value);
+                      handleRadioChange(value, setText18);
                     }}
                     disabled={formDisabled}
                     value={field.value || ""}
@@ -685,7 +753,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   <RadioGroup
                     onValueChange={(value) => {
                       field.onChange(value);
-                      handleRadio19Change(value);
+                      handleRadioChange(value, setText19);
                     }}
                     value={field.value || ""}
                     disabled={formDisabled}
@@ -772,7 +840,6 @@ function PreAnaliseForm({ formDisabled, form }) {
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="32"
                     {...field}
                     disabled={formDisabled}
                     className="col-span-1"
@@ -802,7 +869,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Banco do Brasil" />
+                        <SelectValue />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -835,7 +902,6 @@ function PreAnaliseForm({ formDisabled, form }) {
                   <Input
                     type="text"
                     {...field}
-                    placeholder="1100122"
                     disabled={formDisabled}
                     value={field.value || ""}
                   />
