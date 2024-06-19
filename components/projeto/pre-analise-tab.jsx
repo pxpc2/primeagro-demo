@@ -24,6 +24,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useState } from "react";
 import Heading from "./Header";
+import { submitPreAnaliseForm } from "@/app/projeto/actions";
 
 export default function PreAnaliseTab() {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -32,8 +33,9 @@ export default function PreAnaliseTab() {
   const onEdit = () => setFormsDisabled(false);
 
   const onSave = () => {
-    form.handleSubmit((data) => {
-      console.log(data); // Later you can send this to the database
+    form.handleSubmit(async (data) => {
+      console.log(data); // Log the form data
+      await submitPreAnaliseForm({ formData: data });
       setFormsDisabled(true);
     })();
   };
@@ -77,6 +79,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   placeholder="15337531"
                   {...field}
                   disabled={formDisabled}
+                  value={field.value || ""}
                 />
               </FormControl>
               <FormDescription>Número do protocolo.</FormDescription>
@@ -92,7 +95,12 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
               <FormItem>
                 <FormLabel>2. Data do protocolo</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} disabled={formDisabled} />
+                  <Input
+                    type="date"
+                    {...field}
+                    disabled={formDisabled}
+                    value={field.value || ""}
+                  />
                 </FormControl>
                 <FormDescription>Data de início do protocolo.</FormDescription>
                 <FormMessage />
@@ -149,6 +157,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     {...field}
                     placeholder="1100122"
                     disabled
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormDescription>Código IBGE do município.</FormDescription>
@@ -169,6 +178,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   placeholder="Boa Vista"
                   {...field}
                   disabled={formDisabled}
+                  value={field.value || ""}
                 />
               </FormControl>
               <FormDescription>Nome de documentação do imóvel.</FormDescription>
@@ -189,6 +199,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     {...field}
                     placeholder="19.3932"
                     disabled={formDisabled}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormDescription>
@@ -210,6 +221,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     {...field}
                     placeholder="500,000.00"
                     disabled={formDisabled}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormDescription>
@@ -233,6 +245,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     {...field}
                     placeholder="9.6966"
                     disabled={formDisabled}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormDescription>
@@ -253,6 +266,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="PNCF SOCIAL"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -274,6 +288,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   placeholder="ZACARIAS ENZO FERRARI DE LIMA"
                   {...field}
                   disabled={formDisabled}
+                  value={field.value || ""}
                 />
               </FormControl>
               <FormDescription>
@@ -290,7 +305,12 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
             <FormItem>
               <FormLabel>10. Nome social</FormLabel>
               <FormControl>
-                <Input type="text" {...field} disabled={formDisabled} />
+                <Input
+                  type="text"
+                  {...field}
+                  disabled={formDisabled}
+                  value={field.value || ""}
+                />
               </FormControl>
               <FormDescription>Nome social do beneficiário.</FormDescription>
               <FormMessage />
@@ -308,6 +328,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                   <Input
                     type="date"
                     {...field}
+                    value={field.value || ""}
                     placeholder="9.6966"
                     disabled={formDisabled}
                   />
@@ -332,6 +353,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="5"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -356,6 +378,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="8,560.00"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -377,6 +400,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="25,000.00"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -400,6 +424,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="1"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -419,6 +444,7 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                     type="text"
                     {...field}
                     placeholder="2"
+                    value={field.value || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
@@ -472,7 +498,13 @@ function PreAnaliseForm({ formDisabled, form }) {
               <FormItem>
                 <FormLabel>Qtd. de mód. fiscais do imóvel</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="0.323" {...field} disabled />
+                  <Input
+                    type="text"
+                    placeholder="0.323"
+                    {...field}
+                    disabled
+                    value={field.value || ""}
+                  />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
@@ -490,6 +522,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                     type="text"
                     placeholder="Acima da fração mínima do parcelamento"
                     {...field}
+                    value={field.value || ""}
                     disabled
                   />
                 </FormControl>
@@ -512,6 +545,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   type="text"
                   placeholder="Sem impedimento - Área a ser adquirida abaixo de 4 módulos fiscais"
                   {...field}
+                  value={field.value || ""}
                   disabled
                 />
               </FormControl>
@@ -535,6 +569,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                   placeholder="Elaborar o Laudo de Avaliação na modalidade simples"
                   {...field}
                   disabled
+                  value={field.value || ""}
                 />
               </FormControl>
               <FormDescription></FormDescription>
@@ -558,9 +593,9 @@ function PreAnaliseForm({ formDisabled, form }) {
                       field.onChange(value);
                       handleRadio17Change(value);
                     }}
-                    defaultValue="nao"
                     className="flex flex-row space-x-1"
                     disabled={formDisabled}
+                    value={field.value || ""}
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
@@ -605,8 +640,8 @@ function PreAnaliseForm({ formDisabled, form }) {
                       field.onChange(value);
                       handleRadio18Change(value);
                     }}
-                    defaultValue="nao"
                     disabled={formDisabled}
+                    value={field.value || ""}
                     className="flex flex-row space-x-1"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
@@ -652,7 +687,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                       field.onChange(value);
                       handleRadio19Change(value);
                     }}
-                    defaultValue="nao"
+                    value={field.value || ""}
                     disabled={formDisabled}
                     className="flex flex-row space-x-1"
                   >
@@ -739,21 +774,17 @@ function PreAnaliseForm({ formDisabled, form }) {
                     type="text"
                     placeholder="32"
                     {...field}
-                    disabled
+                    disabled={formDisabled}
                     className="col-span-1"
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button
-            variant={
-              text18 === "Preenche o requisito" ? "outline" : "destructive"
-            }
-            disabled
-          >
-            {text18}
+          <Button variant={"outline"} disabled>
+            Preenche o requisito
           </Button>
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -766,8 +797,8 @@ function PreAnaliseForm({ formDisabled, form }) {
                   <FormLabel>21. Agente Financeiro</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
                     disabled={formDisabled}
+                    value={field.value || ""}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -806,6 +837,7 @@ function PreAnaliseForm({ formDisabled, form }) {
                     {...field}
                     placeholder="1100122"
                     disabled={formDisabled}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormMessage />
