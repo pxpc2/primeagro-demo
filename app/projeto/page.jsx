@@ -6,6 +6,7 @@ import Heading from "@/components/projeto/Header";
 import { PROJETO_TABS } from "@/utils/constants";
 import { getProjetoFormsData } from "./actions";
 import { Loader2 } from "lucide-react";
+import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -42,6 +43,8 @@ export default function ProjetoPage() {
         );
       case "Pré-análise":
         return <PreAnaliseTab defaultValues={formData?.aba_preanalise} />;
+      case "Identificação do Beneficiário":
+        return <IdentificacaoBeneficiarioTab />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
