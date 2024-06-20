@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         pncf: "url('/pncf.png')",
+        pncf2: "url('/Banner-PNCF.png')",
       },
       colors: {
         border: "hsl(var(--border))",

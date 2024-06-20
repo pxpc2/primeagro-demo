@@ -20,10 +20,18 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RegisterForm from "./signup-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
   const { toast } = useToast();
-
+  const { setTheme } = useTheme();
   useEffect(() => {
     const notify = () =>
       toast({
@@ -34,7 +42,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
     if (message) notify();
   }, [message, toast]);
   return (
-    <div className="flex min-h-full flex-1 bg-white">
+    <div className="flex min-h-full flex-1 bg-background">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
@@ -48,7 +56,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               />
             </a>
 
-            <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-gray-900">
+            <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-popover-foreground">
               Entre com sua conta
             </h2>
             <div className="flex gap-2 text-[0.8rem]">
@@ -69,6 +77,28 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
             <div>
               <LoginForm message={message} />
             </div>
+          </div>
+          <div className="pt-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Ativar tema</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Claro
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Escuro
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  Sistema
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
