@@ -104,17 +104,23 @@ export default function PreAnaliseTab({ defaultValues }) {
       setText17(
         parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
           ? "Preenche o requisito"
-          : "Não preenche o requisito",
+          : parsed["17-radioGroupJaFoiBeneficiario"] === "sim"
+            ? "Não preenche o requisito"
+            : "",
       );
       setText18(
         parsed["18-radioGroupServidorPublico"] === "nao"
           ? "Preenche o requisito"
-          : "Não preenche o requisito",
+          : parsed["18-radioGroupServidorPublico"] === "sim"
+            ? "Não preenche o requisito"
+            : "",
       );
       setText19(
         parsed["19-radioGroupIndigena"] === "nao"
           ? "Preenche o requisito"
-          : "Não preenche o requisito",
+          : parsed["19-radioGroupIndigena"] === "sim"
+            ? "Não preenche o requisito"
+            : "",
       );
     }
   }, [defaultValues, form]);
@@ -685,9 +691,12 @@ function PreAnaliseForm({
           />
           <Button
             variant={
-              text17 === "Preenche o requisito" ? "outline" : "destructive"
+              text17 === "Preenche o requisito"
+                ? "outline"
+                : text17 === ""
+                  ? "ghost"
+                  : "destructive"
             }
-            disabled
           >
             {text17}
           </Button>
@@ -732,9 +741,12 @@ function PreAnaliseForm({
           />
           <Button
             variant={
-              text18 === "Preenche o requisito" ? "outline" : "destructive"
+              text18 === "Preenche o requisito"
+                ? "outline"
+                : text18 === ""
+                  ? "ghost"
+                  : "destructive"
             }
-            disabled
           >
             {text18}
           </Button>
@@ -779,9 +791,12 @@ function PreAnaliseForm({
           />
           <Button
             variant={
-              text19 === "Preenche o requisito" ? "outline" : "destructive"
+              text19 === "Preenche o requisito"
+                ? "outline"
+                : text19 === ""
+                  ? "ghost"
+                  : "destructive"
             }
-            disabled
           >
             {text19}
           </Button>

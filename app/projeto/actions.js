@@ -43,8 +43,6 @@ export async function submitPreAnaliseForm({ formData }) {
       mappedData[key] = value;
     }
   });
-
-  console.log(mappedData);
   const { error } = await supabase
     .from("aba_preanalise")
     .upsert([{ ...mappedData, authuser_id: authUserID }], {

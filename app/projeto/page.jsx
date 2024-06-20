@@ -52,7 +52,7 @@ export default function ProjetoPage() {
       <div className="w-full h-screen flex items-center justify-center align-middle text-center">
         <div className="flex flex-col gap-4 items-center text-center justify-center">
           <h1 className="text-xl font-semibold">Carregando o seu projeto</h1>
-          <Loader2 className="animate-spin  sm:h-[30%] sm:w-[30%] w-5 h-5 text-black" />
+          <Loader2 className="animate-spin  sm:h-[20%] sm:w-[20%] w-5 h-5 text-black" />
         </div>
       </div>
     );
