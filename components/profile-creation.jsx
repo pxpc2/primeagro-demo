@@ -5,6 +5,17 @@ import completeProfile from "../app/user-dashboard/actions";
 import FormPNCF from "./pncf-form";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import EnquadramentoForm from "./enquadramentoForm";
 export default function ProfileCreationPage({ authID }) {
   /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
    do perfil ainda não foram preenchidos */
@@ -33,20 +44,17 @@ export default function ProfileCreationPage({ authID }) {
           <div className="flex items-center flex-col justify-center align-middle h-full">
             <h1 className="font-medium pt-20">Qual o seu tipo de conta?</h1>
             <div className="w-full flex items-center gap-11 justify-center py-10">
-              <button
-                type="button"
-                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
-                onClick={toggleModal}
-              >
-                Sou beneficiário
-              </button>
-              <button
-                type="button"
-                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-orange-500 hover:text-gray-200"
-                onClick={showAvaliador}
-              >
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="default">Sou beneficiário</Button>
+                </DialogTrigger>
+                <DialogContent className="w-full h-full">
+                  <EnquadramentoForm />
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" onClick={showAvaliador}>
                 Sou avaliador técnico
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -57,14 +65,6 @@ export default function ProfileCreationPage({ authID }) {
           </h1>
         )}
       </div>
-
-      <FormPNCF
-        isToggled={showModal}
-        onClose={() => {
-          setShowModal(false);
-        }}
-        msg={"oi"}
-      />
     </div>
   );
 }
