@@ -45,13 +45,15 @@ export async function submitEnquadramentoForm(formData) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const formValues = {};
-  const checkboxValues = [];
-  const erradas = [];
+  //const formValues = {};
+  //const checkboxValues = [];
+  //const erradas = [];
 
+  console.log(formData);
   // definir status com base nos formValues
   let aprovadoStatus = true;
 
+  /*
   formData.forEach((value, key) => {
     if (key.startsWith("8-doc")) {
       const checkboxNumber = key.replace("8-doc", "");
@@ -103,7 +105,7 @@ export async function submitEnquadramentoForm(formData) {
     return redirect("/error?message=" + error.message);
   }
 
-  return await completeProfile(formData, aprovadoStatus);
+  return await completeProfile(formData, aprovadoStatus);*/
 }
 
 /**
@@ -137,7 +139,7 @@ export async function getDadosEnquadramentoForm() {
   return dados;
 }
 
-/* A FUNCAO AQUI FOI MOVIDA DIRETAMENTE PARA O Client Component DocumentoInstance 
+/* A FUNCAO AQUI FOI MOVIDA DIRETAMENTE PARA O Client Component DocumentoInstance
 
 
 export async function submitDocumento(id, file, authid) {
