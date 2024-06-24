@@ -1,30 +1,37 @@
 "use server";
 
-import { DOCUMENTOS } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function completeProfile(formData, enquadramentoStatus, erradas) {
+export async function completeProfile(
+  formValues,
+  aprovadoStatus,
+  authuser_id,
+  user_email
+) {
+  const clienteData = {};
+
+  Object.entries(formValues).forEach(([key, value]) => {
+    if (key === "primeiroNome") {
+      clienteData["primeiro_nome"] = value;
+    } else if (key === "orgaoExpedidor") {
+      clienteData["orgao_expedidor"] = value;
+    } else if (key === "estadoCivil") {
+      clienteData["estado_civil"] = value;
+    } else if (key === "enderecoLinha") {
+      clienteData["endereco"] = value;
+    } else {
+      if (!key.startsWith("campo") && key !== "docs") clienteData[key] = value;
+    }
+  });
+
+  clienteData["authuser_id"] = authuser_id;
+  clienteData["email"] = user_email;
+  clienteData["status_enquadramento"] = aprovadoStatus;
+  clienteData["status_pagamento"] = false;
+  clienteData["status_documentos"] = false;
+
   const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const clienteData = {
-    primeiro_nome: formData.get("first-name"),
-    ultimo_nome: formData.get("last-name"),
-    estado: formData.get("state"),
-    cidade: formData.get("city"),
-    codigo_postal: formData.get("postal-code"),
-    authuser_id: user.id,
-    email: user.email,
-    endereco: formData.get("street-address"),
-    status_enquadramento: enquadramentoStatus,
-    status_documentos: false,
-    status_pagamento: false,
-  };
-
   const { error } = await supabase.from("clientes").insert(clienteData);
   if (error) {
     return redirect("/error?message=" + error.message);
@@ -38,74 +45,63 @@ export async function completeProfile(formData, enquadramentoStatus, erradas) {
  * @param {*} formData dados do formulário
  * @returns redirecionamento p/ dashboard com msg
  */
-export async function submitEnquadramentoForm(formData) {
+export async function submitEnquadramentoForm({ formData }) {
   const supabase = createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  //const formValues = {};
-  //const checkboxValues = [];
-  //const erradas = [];
-
-  console.log(formData);
-  // definir status com base nos formValues
+  const fullData = {};
+  const enquadramentoValues = {};
+  const erradas = [];
   let aprovadoStatus = true;
 
-  /*
-  formData.forEach((value, key) => {
-    if (key.startsWith("8-doc")) {
-      const checkboxNumber = key.replace("8-doc", "");
-      if (value === "on") {
-        if (checkboxNumber === "18") {
-          aprovadoStatus = false;
-          erradas.push("8");
-          checkboxValues.push("nenhum_documento");
-        } else {
-          checkboxValues.push(`documento${checkboxNumber}`);
+  Object.entries(formData).forEach(([key, value]) => {
+    fullData[key] = value;
+    let docs = [],
+      i = 0;
+    if (key.startsWith("campo")) enquadramentoValues[key] = value;
+    if (key === "campo3" && value === "nao") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "campo4" && value === "nao") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "campo7" && value === "renda-acima") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "campo5" && value === "sim") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "campo8" && value === "sim") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "docs") {
+      let flag = false;
+      Object.entries(formData[key]).forEach(([k, v]) => {
+        if (v) {
+          flag = true;
+          docs[i++] = k;
         }
+      });
+      if (!flag) {
+        erradas.push(key);
+        aprovadoStatus = false;
       }
-    } else if (!isNaN(parseInt(key[0]))) {
-      formValues[key] = value;
+      enquadramentoValues["docs"] = docs;
     }
   });
-  formValues["8"] = checkboxValues;
-  formValues["authuser_id"] = user.id;
-
-  for (let key in formValues) {
-    if (key === "3" && formValues[key] === "Nao") {
-      aprovadoStatus = false;
-      erradas.push("3");
-    } else if (key === "4" && formValues[key] === "Nao") {
-      aprovadoStatus = false;
-      erradas.push("4");
-    } else if (
-      key === "5" &&
-      formValues[key] === "renda anual acima de R$ 299,890,63"
-    ) {
-      aprovadoStatus = false;
-      erradas.push("5");
-    } else if (key === "6" && formValues[key] === "Sim") {
-      erradas.push("6");
-      aprovadoStatus = false;
-    } else if (key === "7" && formValues[key] === "Sim") {
-      erradas.push("7");
-      aprovadoStatus = false;
-    }
-  }
-
-  formValues["aprovado"] = aprovadoStatus;
-  formValues["erradas"] = erradas;
+  enquadramentoValues["authuser_id"] = user.id;
+  enquadramentoValues["erradas"] = erradas;
 
   const { error } = await supabase
     .from("enquadramento_forms")
-    .insert(formValues);
+    .insert(enquadramentoValues);
   if (error) {
     return redirect("/error?message=" + error.message);
   }
 
-  return await completeProfile(formData, aprovadoStatus);*/
+  return await completeProfile(fullData, aprovadoStatus, user.id, user.email);
 }
 
 /**
@@ -138,37 +134,6 @@ export async function getDadosEnquadramentoForm() {
     .select("*");
   return dados;
 }
-
-/* A FUNCAO AQUI FOI MOVIDA DIRETAMENTE PARA O Client Component DocumentoInstance
-
-
-export async function submitDocumento(id, file, authid) {
-  const supabase = createClient();
-
-  const path = `${authid}/${id}.pdf`;
-
-  console.log("submitting file");
-  console.log(file);
-  if (file) console.log(file.size);
-
-  let { data, error } = await supabase.storage
-    .from("Documentos")
-    .upload(path, file, { contentType: "application/pdf" });
-
-  if (error) {
-    if (error.message === "The resource already exists") {
-      return redirect(
-        "/error?message=" +
-          "O documento já foi enviado. Por favor, se deseja alterar, primeiro exclua o existente. Em caso de dúvidas, entre em contato conosco da ConfidensAgro."
-      );
-    } else {
-      return redirect(
-        "/error?message=" +
-          "Ocorreu um erro ao enviar o documento. Por favor, entre em contato."
-      );
-    }
-  }
-}*/
 
 /**
  * @todo função a ser chamada para VERIFICAR DOCUMENTOS do cliente
