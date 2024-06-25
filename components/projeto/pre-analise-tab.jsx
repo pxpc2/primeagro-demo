@@ -73,17 +73,17 @@ export default function PreAnaliseTab({ defaultValues }) {
   const [text17, setText17] = useState(
     parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
       ? "Preenche o requisito"
-      : "Não preenche o requisito",
+      : "Não preenche o requisito"
   );
   const [text18, setText18] = useState(
     parsed["18-radioGroupServidorPublico"] === "nao"
       ? "Preenche o requisito"
-      : "Não preenche o requisito",
+      : "Não preenche o requisito"
   );
   const [text19, setText19] = useState(
     parsed["19-radioGroupIndigena"] === "nao"
       ? "Preenche o requisito"
-      : "Não preenche o requisito",
+      : "Não preenche o requisito"
   );
   const form = useForm({
     defaultValues: parsed,
@@ -100,27 +100,31 @@ export default function PreAnaliseTab({ defaultValues }) {
   useEffect(() => {
     if (defaultValues) {
       const parsed = parseFormData(defaultValues[0]);
+      console.log("default sem parsing: ");
+      console.log(defaultValues[0]);
+      console.log("\n\ndefault apos parsing: ");
+      console.log(parsed);
       form.reset(parsed);
       setText17(
         parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
           ? "Preenche o requisito"
           : parsed["17-radioGroupJaFoiBeneficiario"] === "sim"
-            ? "Não preenche o requisito"
-            : "",
+          ? "Não preenche o requisito"
+          : ""
       );
       setText18(
         parsed["18-radioGroupServidorPublico"] === "nao"
           ? "Preenche o requisito"
           : parsed["18-radioGroupServidorPublico"] === "sim"
-            ? "Não preenche o requisito"
-            : "",
+          ? "Não preenche o requisito"
+          : ""
       );
       setText19(
         parsed["19-radioGroupIndigena"] === "nao"
           ? "Preenche o requisito"
           : parsed["19-radioGroupIndigena"] === "sim"
-            ? "Não preenche o requisito"
-            : "",
+          ? "Não preenche o requisito"
+          : ""
       );
     }
   }, [defaultValues, form]);
@@ -694,8 +698,8 @@ function PreAnaliseForm({
               text17 === "Preenche o requisito"
                 ? "outline"
                 : text17 === ""
-                  ? "ghost"
-                  : "destructive"
+                ? "ghost"
+                : "destructive"
             }
           >
             {text17}
@@ -744,8 +748,8 @@ function PreAnaliseForm({
               text18 === "Preenche o requisito"
                 ? "outline"
                 : text18 === ""
-                  ? "ghost"
-                  : "destructive"
+                ? "ghost"
+                : "destructive"
             }
           >
             {text18}
@@ -794,8 +798,8 @@ function PreAnaliseForm({
               text19 === "Preenche o requisito"
                 ? "outline"
                 : text19 === ""
-                  ? "ghost"
-                  : "destructive"
+                ? "ghost"
+                : "destructive"
             }
           >
             {text19}

@@ -1,4 +1,12 @@
+/**
+ *
+ * @todo CRIAR NOVO PREVIEW COM NOVO FORMATO DOS DADOS (veja o console.log)
+ * @returns tabela com respostas indicando erros se existirem, e permitindo responder novamente
+ *  (gerar um novo form reduzido para apenas as numeradas, sem dados básicos)
+ */
 export default function FormularioEnquadramentoPreview({ dados, cliente }) {
+  console.log("DADOS DENTRO DO PREVIEW: ");
+  console.log(dados);
   return (
     <div>
       <div className="px-4 sm:px-0">
