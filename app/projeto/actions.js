@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 
 /**
  *
@@ -24,6 +25,37 @@ export async function getProjetoFormsData() {
     .from("aba_preanalise")
     .select("*");
   formData.aba_preanalise = aba_preanalise;
+
+  let { data: aba_identificacao_beneficiario, err2 } = await supabase
+    .from("aba_identificacao_beneficiario")
+    .select("*");
+
+  if (aba_identificacao_beneficiario.length === 0) {
+    let { data: cl, err } = await supabase
+      .from("clientes")
+      .select()
+      .eq("authuser_id", user.id);
+    const dadosCliente = cl[0];
+    const dadosClienteParsed = {
+      campo1: `${dadosCliente.primeiro_nome} ${dadosCliente.sobrenome}`,
+      campo2: dadosCliente.cpf,
+      campo3: dadosCliente.rg,
+      campo4: dadosCliente.orgao_expedidor,
+      campo6: dadosCliente.genero,
+      campo7: dadosCliente.etnia,
+      campo8: dadosCliente.estado_civil,
+      campo9: dadosCliente.naturalidade,
+      campo10: dadosCliente.endereco,
+      campo11: dadosCliente.cep,
+      campo13: dadosCliente.bairro,
+      campo14: dadosCliente.uf,
+      campo16: dadosCliente.telefone,
+      campo17: dadosCliente.email,
+    };
+    formData.aba_identificacao_beneficiario = dadosClienteParsed;
+  } else {
+    formData.aba_identificacao_beneficiario = aba_identificacao_beneficiario;
+  }
 
   return formData;
 }

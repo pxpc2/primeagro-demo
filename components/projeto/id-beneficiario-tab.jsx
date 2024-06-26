@@ -14,10 +14,29 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
-export default function IdentificacaoBeneficiarioTab() {
+export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const form = useForm();
+  const IDENTIFICAO_BENEFICIARIO_PARSED_FIELDS = {
+    "1candidatoNome": defaultValues.campo1,
+    "2candidatoCPF": defaultValues.campo2,
+    "3candidatoRG": defaultValues.campo3,
+    "4candidatoOrgaoExp": defaultValues.campo4,
+    "6candidatoGenero": defaultValues.campo6,
+    "7candidatoEtnia": defaultValues.campo7,
+    "8candidatoEstadoCivil": defaultValues.campo8,
+    "9candidatoNaturalidade": defaultValues.campo9,
+    "10candidatoLogradouro": defaultValues.campo10,
+    "11candidatoCEP": defaultValues.campo11,
+    "13candidatoBairro": defaultValues.campo13,
+    "14candidatoUF": defaultValues.campo14,
+    "16candidatoTelefone": defaultValues.campo16,
+    "17candidatoEmail": defaultValues.campo17,
+  };
+
+  const form = useForm({
+    defaultValues: IDENTIFICAO_BENEFICIARIO_PARSED_FIELDS,
+  });
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
@@ -59,10 +78,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5 gap-4">
           <FormField
             control={form.control}
-            name="candidatoNome"
+            name="1candidatoNome"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>1. Nome</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -78,10 +97,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoCPF"
+            name="2candidatoCPF"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>CPF</FormLabel>
+                <FormLabel>2. CPF</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -97,10 +116,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoRG"
+            name="3candidatoRG"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>RG</FormLabel>
+                <FormLabel>3. RG</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -116,10 +135,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoOrgaoExp"
+            name="4candidatoOrgaoExp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Orgão Expedidor</FormLabel>
+                <FormLabel>4. Orgão Expedidor</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -137,10 +156,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5 gap-4">
           <FormField
             control={form.control}
-            name="candidatoNomeSocial"
+            name="5candidatoNomeSocial"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Nome Social</FormLabel>
+                <FormLabel>5. Nome Social</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -156,10 +175,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoGenero"
+            name="6candidatoGenero"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Gênero</FormLabel>
+                <FormLabel>6. Gênero</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -175,10 +194,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoEtnia"
+            name="7candidatoEtnia"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Etnia (cor/raça)</FormLabel>
+                <FormLabel>7. Etnia (cor/raça)</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -194,10 +213,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoEstadoCivil"
+            name="8candidatoEstadoCivil"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Estado Civíl</FormLabel>
+                <FormLabel>8. Estado Civíl</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -215,10 +234,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5">
           <FormField
             control={form.control}
-            name="candidatoNaturalidade"
+            name="9candidatoNaturalidade"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Naturalidade</FormLabel>
+                <FormLabel>9. Naturalidade</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -236,10 +255,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5 gap-4">
           <FormField
             control={form.control}
-            name="candidatoNaturalidade"
+            name="10candidatoLogradouro"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Logradouro</FormLabel>
+                <FormLabel>10. Logradouro</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -255,10 +274,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoNaturalidade"
+            name="11candidatoCEP"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>CEP</FormLabel>
+                <FormLabel>11. CEP</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -275,10 +294,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
 
           <FormField
             control={form.control}
-            name="candidatoNaturalidade"
+            name="12candidatoNumero"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Número</FormLabel>
+                <FormLabel>12. Número</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -294,10 +313,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoNaturalidade"
+            name="13candidatoBairro"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Bairro</FormLabel>
+                <FormLabel>13. Bairro</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -315,10 +334,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-4 gap-4">
           <FormField
             control={form.control}
-            name="candidatoUF"
+            name="14candidatoUF"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>UF</FormLabel>
+                <FormLabel>14. UF</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -334,10 +353,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoComplemento"
+            name="15candidatoComplemento"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Complemento</FormLabel>
+                <FormLabel>15. Complemento</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -355,10 +374,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
         <div className="grid grid-cols-4 gap-4">
           <FormField
             control={form.control}
-            name="candidatoTelefone"
+            name="16candidatoTelefone"
             render={({ field }) => (
               <FormItem className="col-span-1">
-                <FormLabel>Telefone</FormLabel>
+                <FormLabel>16. Telefone</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -374,10 +393,10 @@ function DadosCandidatoForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="candidatoEmail"
+            name="17candidatoEmail"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>E-mail</FormLabel>
+                <FormLabel>17. E-mail</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -404,10 +423,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5 gap-4">
           <FormField
             control={form.control}
-            name="conjugeNome"
+            name="18conjugeNome"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>18. Nome</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -423,10 +442,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="conjugeCPF"
+            name="19conjugeCPF"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>CPF</FormLabel>
+                <FormLabel>19. CPF</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -442,10 +461,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="conjugeRG"
+            name="20conjugeRG"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>RG</FormLabel>
+                <FormLabel>20. RG</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -461,10 +480,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="conjugeOrgaoExp"
+            name="21conjugeOrgaoExp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Orgão Expedidor</FormLabel>
+                <FormLabel>21. Orgão Expedidor</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -482,10 +501,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
         <div className="grid grid-cols-5 gap-4">
           <FormField
             control={form.control}
-            name="conjugeNomeSocial"
+            name="22conjugeNomeSocial"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Nome Social</FormLabel>
+                <FormLabel>22. Nome Social</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -501,10 +520,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="conjugeRegimeCasamento"
+            name="23conjugeRegimeCasamento"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Regime de casamento</FormLabel>
+                <FormLabel>23. Regime de casamento</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -520,10 +539,10 @@ function DadosConjugeForm({ form, formsDisabled }) {
           />
           <FormField
             control={form.control}
-            name="conjugeTelefone"
+            name="24conjugeTelefone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telefone</FormLabel>
+                <FormLabel>24. Telefone</FormLabel>
                 <FormControl>
                   <Input
                     type="text"

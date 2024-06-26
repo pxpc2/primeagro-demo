@@ -43,7 +43,11 @@ export default function ProjetoPage() {
       case "Pré-análise":
         return <PreAnaliseTab defaultValues={formData?.aba_preanalise} />;
       case "Identificação do Beneficiário":
-        return <IdentificacaoBeneficiarioTab />;
+        return (
+          <IdentificacaoBeneficiarioTab
+            defaultValues={formData?.aba_identificacao_beneficiario}
+          />
+        );
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }

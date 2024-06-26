@@ -351,10 +351,10 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="banco-do-brasil">
+                                  <SelectItem value="brasileiro">
                                     Brasileiro
                                   </SelectItem>
-                                  <SelectItem value="caixa-economica">
+                                  <SelectItem value="estrangeiro">
                                     Estrangeiro
                                   </SelectItem>
                                 </SelectContent>
