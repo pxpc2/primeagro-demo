@@ -1,9 +1,5 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Head from "next/head";
-import { ThemeProvider } from "@/components/theme-provider";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "ConfidensAgro",
@@ -33,17 +29,7 @@ export default function RootLayout({ children }) {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={"h-full w-full antialiased"}>
-        {" "}
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <body className={"h-full w-full antialiased"}>{children}</body>
     </html>
   );
 }

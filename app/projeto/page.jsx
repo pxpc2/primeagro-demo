@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
-import Heading from "@/components/projeto/Header";
 import { PROJETO_TABS } from "@/utils/constants";
 import { getProjetoFormsData } from "./actions";
 import { Loader2 } from "lucide-react";
@@ -103,7 +102,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-tl-lg" : "",
                     tabIdx === firstRowTabs.length - 1 ? "rounded-tr-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border",
+                    "tab flex items-center justify-center border"
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -114,7 +113,7 @@ export default function ProjetoPage() {
                       tab.name === currentTab
                         ? "bg-orange-500"
                         : "bg-transparent",
-                      "absolute inset-x-0 bottom-0 h-0.5",
+                      "absolute inset-x-0 bottom-0 h-0.5"
                     )}
                   />
                 </a>
@@ -134,7 +133,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-bl-lg" : "",
                     tabIdx === secondRowTabs.length - 1 ? "rounded-br-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border",
+                    "tab flex items-center justify-center border"
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -145,7 +144,7 @@ export default function ProjetoPage() {
                       tab.name === currentTab
                         ? "bg-orange-500"
                         : "bg-transparent",
-                      "absolute inset-x-0 bottom-0 h-0.5",
+                      "absolute inset-x-0 bottom-0 h-0.5"
                     )}
                   />
                 </a>

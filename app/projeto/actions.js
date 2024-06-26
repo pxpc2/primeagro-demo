@@ -4,6 +4,9 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 /**
+ *
+ * @todo deve buscar todos os dados obrigatórios que já tenha no banco (por ex: dados básicos)
+ *
  * Buscar todos os dados do projeto do usuário em questão antes de abrir /projeto.
  * RLS configurado para retornar somente os seus dados, exceto se for usuário gerente/técnico.
  */
