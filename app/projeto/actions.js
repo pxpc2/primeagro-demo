@@ -87,3 +87,21 @@ export async function submitPreAnaliseForm({ formData }) {
     return redirect("/error?message=" + error.message);
   }
 }
+
+export async function submitIdentificacaoBeneficiarioForm({ formData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const authUserID = user.id;
+
+  const { error } = await supabase
+    .from("aba_identificacao_beneficiario")
+    .upsert([{ ...formData, authuser_id: authUserID }], {
+      onConflict: ["authuser_id"],
+    });
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
