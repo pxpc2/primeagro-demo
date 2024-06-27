@@ -100,10 +100,6 @@ export default function PreAnaliseTab({ defaultValues }) {
   useEffect(() => {
     if (defaultValues) {
       const parsed = parseFormData(defaultValues[0]);
-      console.log("default sem parsing: ");
-      console.log(defaultValues[0]);
-      console.log("\n\ndefault apos parsing: ");
-      console.log(parsed);
       form.reset(parsed);
       setText17(
         parsed["17-radioGroupJaFoiBeneficiario"] === "nao"

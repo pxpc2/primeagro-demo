@@ -19,7 +19,8 @@ export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
-    defaultValues: defaultValues[0],
+    defaultValues:
+      defaultValues[0] === undefined ? defaultValues : defaultValues[0],
   });
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {

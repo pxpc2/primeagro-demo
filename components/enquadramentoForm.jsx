@@ -37,6 +37,7 @@ import { submitEnquadramentoForm } from "@/app/user-dashboard/actions";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { CheckIcon } from "@heroicons/react/24/solid";
+import { redirect } from "next/navigation";
 
 export default function EnquadramentoForm({ authID, onClose, msg }) {
   const docs = [
@@ -127,6 +128,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
     form.handleSubmit(async (data) => {
       await submitEnquadramentoForm({ formData: data });
       setLoading(false);
+      redirect("/user-dashboard");
     })();
   };
 
