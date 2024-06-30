@@ -57,6 +57,8 @@ export async function getProjetoFormsData() {
     formData.aba_identificacao_beneficiario = aba_identificacao_beneficiario;
   }
 
+  formData.aba_dadosImovel = {};
+
   return formData;
 }
 

@@ -6,6 +6,7 @@ import { PROJETO_TABS } from "@/utils/constants";
 import { getProjetoFormsData } from "./actions";
 import { Loader2 } from "lucide-react";
 import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-tab";
+import DadosImovelTab from "@/components/projeto/dados-imovel-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -48,6 +49,8 @@ export default function ProjetoPage() {
             defaultValues={formData?.aba_identificacao_beneficiario}
           />
         );
+      case "Dados do Imóvel":
+        return <DadosImovelTab defaultValues={formData?.aba_dadosImovel} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
