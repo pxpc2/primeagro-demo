@@ -328,7 +328,7 @@ export const PROJETO_TABS = [
   { id: 3, name: "Identificação do Beneficiário", href: "#", current: false },
   { id: 4, name: "Inventário", href: "#", current: false },
   { id: 5, name: "Dados do Imóvel", href: "#", current: false },
-  { id: 6, name: "Tipos de Solo", href: "#", current: false },
+  { id: 6, name: "Tipos de solo", href: "#", current: false },
   { id: 7, name: "Investimentos", href: "#", current: false },
   { id: 8, name: "Cronograma", href: "#", current: false },
   { id: 9, name: "Orçamentos", href: "#", current: false },
