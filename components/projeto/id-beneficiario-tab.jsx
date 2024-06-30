@@ -14,6 +14,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { submitIdentificacaoBeneficiarioForm } from "@/app/projeto/actions";
+import { Textarea } from "../ui/textarea";
 
 export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -542,6 +543,66 @@ function DadosConjugeForm({ form, formsDisabled }) {
             )}
           />
         </div>
+        <FormField
+          control={form.control}
+          name="campo25"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full bg-blue-600 py-2 cursor-default">
+                HISTÓRICO DA FORMAÇÃO DO GRUPAMENTO
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-none text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo26"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full bg-blue-600 py-2 cursor-default">
+                JUSTIFICATIVA
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-none text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo27"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full bg-blue-600 py-2 cursor-default">
+                MERCADO E COMERCIALIZAÇÃO
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-none text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </form>
     </Form>
   );
