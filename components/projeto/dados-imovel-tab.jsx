@@ -13,6 +13,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 
 export default function DadosImovelTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -43,6 +45,11 @@ export default function DadosImovelTab({ defaultValues }) {
         <div className="p-4 bg-gray-50 flex flex-col gap-8">
           <p className="text-indigo-800 font-semibold">Dados do imóvel:</p>
           <DadosImovelCampos form={form} formsDisabled={formsDisabled} />
+          <BlueFields
+            form={form}
+            formsDisabled={formsDisabled}
+            className="py-2 sm:py-6"
+          />
         </div>
       </div>
     </div>
@@ -407,6 +414,38 @@ function DadosImovelCampos({ form, formsDisabled }) {
             </FormItem>
           )}
         />
+      </form>
+    </Form>
+  );
+}
+
+function BlueFields({ form, formsDisabled }) {
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 pt-8">
+        <div className="w-full">
+          <FormField
+            control={form.control}
+            name="campo19"
+            render={({ field }) => (
+              <FormItem className="text-center text-white w-full">
+                <button className="w-full bg-blue-600 py-2">
+                  INDICAÇÕES DE ACESSO AO IMÓVEL
+                </button>
+                <FormControl>
+                  <Textarea
+                    className="resize-none"
+                    {...field}
+                    disabled={formsDisabled}
+                    placeholder="SAINDO DA SEDE DO MUNICIPIO PELA BR-020, NO KM-48 ENTRA NA ESTRADA QUE VAI PARA O ALEGRE E ANDA MAIS 12 KM EM ENTRADA DE CARROÇAL ATÉ A FAZENDA MONTE ALEGRE."
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </form>
     </Form>
   );
