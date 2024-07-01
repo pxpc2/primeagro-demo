@@ -6,6 +6,7 @@ import {
   getAplicacoes,
   getDadosEnquadramentoForm,
   getUserRole,
+  isAdmin,
 } from "./actions";
 
 export default async function UserProtectedPage() {
@@ -29,12 +30,10 @@ export default async function UserProtectedPage() {
   const aps = await getAplicacoes();
   const dadosEnquadramento = await getDadosEnquadramentoForm();
 
-  //const userRole = await getUserRole();
-  // invés de pegar userRole, a gente tem que simplesmente só permitir as coisas de acordo com as policies
-
-  //ou seja, na userdashboardpage, a gente mostra tudo... mas só vai aparecer oq o seu user for permitido.
-
-  //console.log(userRole);
+  let { data: user_role, err } = await supabase
+    .from("user_roles")
+    .select("*")
+    .eq("user_id", user.id);
 
   return (
     <UserDashboardPage

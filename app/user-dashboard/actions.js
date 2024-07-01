@@ -117,6 +117,7 @@ export async function getAplicacoes() {
 }
 
 export async function getUserRole(id) {
+  console.log("user id: " + id);
   const supabase = createClient();
   let { data: user_roles, error } = await supabase
     .from("user_roles")

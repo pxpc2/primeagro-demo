@@ -553,7 +553,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
               </button>
               <FormControl>
                 <Textarea
-                  className="resize-none text-black"
+                  className="resize-y text-black"
                   {...field}
                   disabled={formsDisabled}
                 />
@@ -573,7 +573,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
               </button>
               <FormControl>
                 <Textarea
-                  className="resize-none text-black"
+                  className="resize-y text-black"
                   {...field}
                   disabled={formsDisabled}
                 />
@@ -593,7 +593,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
               </button>
               <FormControl>
                 <Textarea
-                  className="resize-none text-black"
+                  className="resize-y text-black"
                   {...field}
                   disabled={formsDisabled}
                 />

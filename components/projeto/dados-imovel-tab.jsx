@@ -429,15 +429,36 @@ function BlueFields({ form, formsDisabled }) {
             name="campo19"
             render={({ field }) => (
               <FormItem className="text-center text-white w-full">
-                <button className="w-full bg-blue-600 py-2">
+                <button className="w-full bg-blue-600 py-2 cursor-default">
                   INDICAÇÕES DE ACESSO AO IMÓVEL
                 </button>
                 <FormControl>
                   <Textarea
-                    className="resize-none"
+                    className="resize-y text-black"
                     {...field}
                     disabled={formsDisabled}
                     placeholder="SAINDO DA SEDE DO MUNICIPIO PELA BR-020, NO KM-48 ENTRA NA ESTRADA QUE VAI PARA O ALEGRE E ANDA MAIS 12 KM EM ENTRADA DE CARROÇAL ATÉ A FAZENDA MONTE ALEGRE."
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="grid grid-cols-3">
+          <FormField
+            control={form.control}
+            name="campo20"
+            render={({ field }) => (
+              <FormItem className="col-span-1">
+                <FormLabel>Distância do município mais próximo (Km)</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    {...field}
+                    value={field.value || ""}
+                    disabled={formsDisabled}
                   />
                 </FormControl>
                 <FormDescription></FormDescription>

@@ -44,6 +44,16 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
     { name: "Sair", href: "#" },
   ];
 
+  const adminNav = [
+    { name: "Geral", href: "#", current: selectedTab === "Geral" },
+    {
+      name: "Beneficiários",
+      href: "#",
+      current: selectedTab === "Beneficiários",
+    },
+    { name: "Técnicos", href: "#", current: selectedTab === "Técnicos" },
+  ];
+
   const usuario = cliente[0];
 
   const supabase = createClient();
@@ -54,6 +64,7 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
         const jwt = jwtDecode(session.access_token);
         const userRole = jwt.user_role;
         setRole(userRole);
+        console.log(userRole);
       }
     }
   );
@@ -80,39 +91,60 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                       </div>
                       <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
-                          {navigation.map((item) => (
-                            <Button
+                          {role === "gerente"
+                            ? adminNav.map((item) => (
+                                <Button
+                                  className={classNames(
+                                    "inline-flex items-center text-sm font-semibold text-gray-200",
+                                    item.current
+                                      ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
+                                      : "hover:bg-orange-700 bg-transparent"
+                                  )}
+                                  key={item.name}
+                                  onClick={() => {
+                                    setSelectedTab(item.name);
+                                  }}
+                                >
+                                  {item.name}
+                                </Button>
+                              ))
+                            : navigation.map((item) => (
+                                <Button
+                                  className={classNames(
+                                    "inline-flex items-center text-sm font-semibold text-gray-200",
+                                    item.current
+                                      ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
+                                      : "hover:bg-orange-700 bg-transparent",
+                                    (!usuario.status_enquadramento ||
+                                      !usuario.status_pagamento) &&
+                                      item.name === "Documentos"
+                                      ? "hidden"
+                                      : ""
+                                  )}
+                                  key={item.name}
+                                  onClick={() => {
+                                    setSelectedTab(item.name);
+                                  }}
+                                >
+                                  {item.name}
+                                </Button>
+                              ))}
+                          {role === "gerente" ? (
+                            <></>
+                          ) : (
+                            <Link
+                              href={"/projeto"}
+                              target="_blank"
                               className={classNames(
-                                "inline-flex items-center text-sm font-semibold text-gray-200",
-                                item.current
-                                  ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
-                                  : "hover:bg-orange-700 bg-transparent",
-                                (!usuario.status_enquadramento ||
-                                  !usuario.status_pagamento) &&
-                                  item.name === "Documentos"
-                                  ? "hidden"
-                                  : ""
+                                "text-gray-200 l",
+                                usuario.status_documentos ? "" : "hidden"
                               )}
-                              key={item.name}
-                              onClick={() => {
-                                setSelectedTab(item.name);
-                              }}
                             >
-                              {item.name}
-                            </Button>
-                          ))}
-                          <Link
-                            href={"/projeto"}
-                            target="_blank"
-                            className={classNames(
-                              "text-gray-200 l",
-                              usuario.status_documentos ? "" : "hidden"
-                            )}
-                          >
-                            <Button className="bg-transparent hover:bg-orange-700 text-gray-200">
-                              Projeto
-                            </Button>
-                          </Link>
+                              <Button className="bg-transparent hover:bg-orange-700 text-gray-200">
+                                Projeto
+                              </Button>
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -270,27 +302,31 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
       </div>
 
       <main className="-mt-32">
-        <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-0">
-          <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+        {usuario.email === "admin@admin" ? (
+          <h1>PAINEL DE ADMINISTRADOR</h1>
+        ) : (
+          <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-0">
+            <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
+              {selectedTab === "Geral" ? (
+                <DashboardSteps cliente={usuario} />
+              ) : selectedTab === "Documentos" ? (
+                <DocumentosDashboard cliente={usuario} />
+              ) : (
+                <FormularioEnquadramentoPreview
+                  dados={dadosEnquadramento[0]}
+                  cliente={usuario}
+                />
+              )}
+            </div>
             {selectedTab === "Geral" ? (
-              <DashboardSteps cliente={usuario} />
-            ) : selectedTab === "Documentos" ? (
-              <DocumentosDashboard cliente={usuario} />
+              <div>
+                <PagamentoCard cliente={usuario} />
+              </div>
             ) : (
-              <FormularioEnquadramentoPreview
-                dados={dadosEnquadramento[0]}
-                cliente={usuario}
-              />
+              <></>
             )}
           </div>
-          {selectedTab === "Geral" ? (
-            <div>
-              <PagamentoCard cliente={usuario} />
-            </div>
-          ) : (
-            <></>
-          )}
-        </div>
+        )}
       </main>
     </div>
   );
