@@ -107,3 +107,7 @@ export async function submitIdentificacaoBeneficiarioForm({ formData }) {
     return redirect("/error?message=" + error.message);
   }
 }
+
+export async function submitDadosImovelForm({ formData }) {
+  console.log(formData);
+}

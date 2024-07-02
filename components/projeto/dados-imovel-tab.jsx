@@ -12,9 +12,20 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import { submitDadosImovelForm } from "@/app/projeto/actions";
 
 export default function DadosImovelTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -27,7 +38,7 @@ export default function DadosImovelTab({ defaultValues }) {
     setLoading(true);
     form.handleSubmit(async (data) => {
       console.log(data);
-      //await submitIdentificacaoBeneficiarioForm({ formData: data });
+      await submitDadosImovelForm({ formData: data });
       setFormsDisabled(true);
       setLoading(false);
     })();
@@ -42,7 +53,7 @@ export default function DadosImovelTab({ defaultValues }) {
         isLoading={loading}
       />
       <div className="w-full py-4 flex flex-col gap-8">
-        <div className="p-4 bg-gray-50 flex flex-col gap-8">
+        <div className="p-4  flex flex-col gap-8">
           <p className="text-indigo-800 font-semibold">Dados do imóvel:</p>
           <DadosImovelCampos form={form} formsDisabled={formsDisabled} />
           <BlueFields
@@ -429,8 +440,8 @@ function BlueFields({ form, formsDisabled }) {
             name="campo19"
             render={({ field }) => (
               <FormItem className="text-center text-white w-full">
-                <button className="w-full bg-blue-600 py-2 cursor-default">
-                  INDICAÇÕES DE ACESSO AO IMÓVEL
+                <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                  Indicações de acesso ao imóvel
                 </button>
                 <FormControl>
                   <Textarea
@@ -467,8 +478,321 @@ function BlueFields({ form, formsDisabled }) {
             )}
           />
         </div>
+        <CondicoesTable form={form} formsDisabled={formsDisabled} />
+        <FormField
+          control={form.control}
+          name="campo21"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Eletrificação existente (tipo, distribuição até onde chega)
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo22"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Abastecimento de água existente (para uso domestico)
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo23"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Recursos hídricos existente (perenes / não perenes)
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo24"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Matas, capoeiras e áreas de extrativismo vegetal
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo25"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Outros recursos naturais
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <p className="text-indigo-800 font-semibold pt-2 sm:pt-6">
+          Complementação dos dados do imóvel:
+        </p>
+        <FormField
+          control={form.control}
+          name="campo26"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Providencias necessárias para melhorar as condições de acesso
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo27"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Providencias para melhorar a eletrificação existentes -
+                Planejado
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo28"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Abastecimento de água - Planejado
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo29"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Recursos hídricos (perenes / não perenes) - Planejado
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo30"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Matas, capoeiras e áreas de extrativismo vegetal - Planejado
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="campo31"
+          render={({ field }) => (
+            <FormItem className="text-center text-white w-full">
+              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                Outros recursos naturais - Planejados / recomendados
+              </button>
+              <FormControl>
+                <Textarea
+                  className="resize-y text-black"
+                  {...field}
+                  disabled={formsDisabled}
+                />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </form>
     </Form>
+  );
+}
+
+const condicoesList = [
+  {
+    id: "estrada-pavimentada",
+    condicao: "Estrada Pavimentada",
+    km: "22",
+    transitavel: "12 meses",
+  },
+  {
+    id: "estrada-terra-condicoes-boas",
+    condicao: "Estrada de terra em boas condições",
+    km: "10",
+    transitavel: "12 meses",
+  },
+  {
+    id: "estrada-terra-condicoes-regulares",
+    condicao: "Estrada de terra em condições regulares",
+  },
+  {
+    id: "estrada-terra-condicoes-pessimas",
+    condicao: "Estrada de terra em péssimas condições",
+  },
+  { id: "trilha", condicao: "Trilha", km: "25" },
+  { id: "fluvial-lacustre", condicao: "Fluvial / lacustre" },
+];
+
+function CondicoesTable({ form, formsDisabled }) {
+  return (
+    <Table>
+      <TableHeader className="bg-blue-700">
+        <TableRow className="">
+          <TableHead className=" text-white">Condições de acesso</TableHead>
+          <TableHead className="text-white">KM</TableHead>
+          <TableHead className="text-white">Transitável (meses)</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {condicoesList.map((k) => (
+          <TableRow key={k.id}>
+            <TableCell colSpan={1} className="font-medium">
+              {k.condicao}
+            </TableCell>
+            <TableCell colSpan={1}>
+              <FormField
+                control={form.control}
+                name={`campo-${k.id}-km`}
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormControl>
+                      <Input
+                        type="text"
+                        {...field}
+                        value={field.value || k.km}
+                        disabled={formsDisabled}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TableCell>
+            <TableCell>
+              <FormField
+                control={form.control}
+                name={`campo-${k.id}-transitavel`}
+                render={({ field }) => (
+                  <FormItem className="col-span-1">
+                    <FormControl>
+                      <Input
+                        type="text"
+                        {...field}
+                        value={field.value || k.transitavel}
+                        disabled={formsDisabled}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 
