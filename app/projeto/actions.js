@@ -18,18 +18,29 @@ export async function getProjetoFormsData() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // fazer um loop por cada tabela de aba
   const formData = {};
 
-  let { data: aba_preanalise, err } = await supabase
-    .from("aba_preanalise")
-    .select("*");
-  formData.aba_preanalise = aba_preanalise;
+  formData.aba_preanalise = await getPreAnalise();
+  formData.aba_identificacao_beneficiario =
+    await getIdentificacaoBeneficiario();
+  formData.aba_inventario = {};
+  formData.aba_inventario.benfeitoriasImovel =
+    await getInventarioBenfeitoriasImovel();
 
-  let { data: aba_identificacao_beneficiario, err2 } = await supabase
+  formData.aba_dadosImovel = {};
+
+  return formData;
+}
+
+async function getIdentificacaoBeneficiario() {
+  const supabase = createClient();
+  let { data: aba_identificacao_beneficiario, err } = await supabase
     .from("aba_identificacao_beneficiario")
     .select("*");
-
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
   if (aba_identificacao_beneficiario.length === 0) {
     let { data: cl, err } = await supabase
       .from("clientes")
@@ -52,14 +63,30 @@ export async function getProjetoFormsData() {
       campo16: dadosCliente.telefone,
       campo17: dadosCliente.email,
     };
-    formData.aba_identificacao_beneficiario = dadosClienteParsed;
+    return dadosClienteParsed;
   } else {
-    formData.aba_identificacao_beneficiario = aba_identificacao_beneficiario;
+    return aba_identificacao_beneficiario;
   }
+}
 
-  formData.aba_dadosImovel = {};
+async function getPreAnalise() {
+  const supabase = createClient();
+  let { data: aba_preanalise, err } = await supabase
+    .from("aba_preanalise")
+    .select("*");
+  return aba_preanalise;
+}
 
-  return formData;
+async function getInventarioBenfeitoriasImovel() {
+  const supabase = createClient();
+  let { data: aba_inventario_benfeitoriasImovel, err } = await supabase
+    .from("aba_inventario_benfeitoriasImovel")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return aba_inventario_benfeitoriasImovel;
 }
 
 export async function submitPreAnaliseForm({ formData }) {

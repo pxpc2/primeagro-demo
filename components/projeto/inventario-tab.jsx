@@ -17,11 +17,11 @@ import { Button } from "../ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 
-export default function InventarioTab({ defaultValues }) {
+export default function InventarioTab({ data }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
-    defaultValues: defaultValues,
+    defaultValues: data,
   });
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
@@ -54,6 +54,7 @@ export default function InventarioTab({ defaultValues }) {
           <EquipamentosExistentesImovelTable
             form={form}
             formsDisabled={formsDisabled}
+            data={data.benfeitoriasImovel}
           />
         </div>
       </div>
@@ -61,81 +62,53 @@ export default function InventarioTab({ defaultValues }) {
   );
 }
 
-function EquipamentosExistentesImovelTable({ form, formsDisabled }) {
-  const ex = [
-    {
-      SEQ: "INV001",
-      descricao: "casa",
-      declarado: "sim",
-      unidade: "m2",
-      quantidade: 3,
-      valor: "10,000.00",
-      estadoConservacao: "bom",
-    },
-    {
-      SEQ: "INV002",
-      paymentStatus: "",
-      declarado: "sim",
-      unidade: "m2",
-      quantidade: 156,
-      valor: "10,000.00",
-      estadoConservacao: "bom",
-    },
-    {
-      SEQ: "INV003",
-      descricao: "",
-      declarado: "sim",
-      unidade: "m2",
-      quantidade: 1,
-      valor: "10,000.00",
-      estadoConservacao: "bom",
-    },
-    {
-      SEQ: "INV004",
-      descricao: "",
-      declarado: "sim",
-      unidade: "m2",
-      quantidade: 12,
-      valor: "10,000.00",
-      estadoConservacao: "bom",
-    },
-  ];
+function EquipamentosExistentesImovelTable({ form, formsDisabled, data }) {
+  console.log(data);
   return (
-    <Table>
+    <Table className="border-collapse">
       <TableCaption>
         Lista de benfeitorias/equipamentos relacionados ao imóvel
       </TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">SEQ</TableHead>
+          <TableHead className="text-center">SEQ</TableHead>
           <TableHead className="text-center">Descrição</TableHead>
           <TableHead className="text-center">
             Declarado pelo proprietário?
           </TableHead>
           <TableHead className="text-center">Unidade</TableHead>
           <TableHead className="text-center">Quantidade</TableHead>
-          <TableHead className="text-right">Valor (R$)</TableHead>
+          <TableHead className="text-center">Valor (R$)</TableHead>
           <TableHead className="text-center">Estado de conservação</TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {ex.map((item) => (
-          <TableRow key={item.SEQ}>
-            <TableCell className="font-medium">{item.SEQ}</TableCell>
-            <TableCell className="text-center">{item.descricao}</TableCell>
-            <TableCell className="text-center">{item.declarado}</TableCell>
-            <TableCell className="text-center">{item.unidade}</TableCell>
-            <TableCell className="text-center">{item.quantidade}</TableCell>
-            <TableCell className="text-right">{item.valor}</TableCell>
-            <TableCell className="text-center">
-              {item.estadoConservacao}
-            </TableCell>
-            <TableCell>
-              <MoreHorizontal className="hover:cursor-pointer" />
-            </TableCell>
-          </TableRow>
-        ))}
+        {data.length > 0 &&
+          data.map((item) => (
+            <TableRow key={item.SEQ}>
+              <TableCell className="font-medium text-center">
+                {item.SEQ}
+              </TableCell>
+              <TableCell className="text-center max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
+                {item.descricao}
+              </TableCell>
+              <TableCell className="text-center">
+                {item.declarado_pelo_proprietario ? "Sim" : "Não"}
+              </TableCell>
+              <TableCell className="text-center">
+                {item.unidade_medida}
+              </TableCell>
+              <TableCell className="text-center">{item.quantidade}</TableCell>
+              <TableCell className="text-center">{item.valor}</TableCell>
+              <TableCell className="text-center">
+                {item.estado_conservacao}
+              </TableCell>
+              <TableCell>
+                <MoreHorizontal className="hover:cursor-pointer" />
+              </TableCell>
+            </TableRow>
+          ))}
       </TableBody>
       <TableFooter>
         <div className="pt-4">

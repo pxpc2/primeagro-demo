@@ -53,7 +53,7 @@ export default function ProjetoPage() {
       case "Dados do Imóvel":
         return <DadosImovelTab defaultValues={formData?.aba_dadosImovel} />;
       case "Inventário":
-        return <InventarioTab defaultValues={formData?.aba_inventario} />;
+        return <InventarioTab data={formData?.aba_inventario} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
