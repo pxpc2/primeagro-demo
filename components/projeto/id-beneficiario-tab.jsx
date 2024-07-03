@@ -33,7 +33,7 @@ export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
     })();
   };
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white">
       <Heading
         tabName={"Identificação do Beneficiário"}
         onEdit={onEdit}
@@ -41,8 +41,8 @@ export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
         isEditing={!formsDisabled}
         isLoading={loading}
       />
-      <div className="w-full py-4 flex flex-col gap-8">
-        <div className="p-4 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 bg-gray-50 sm:py-2 flex flex-col gap-8">
+        <div className="p-4  flex flex-col gap-8">
           <p className="text-indigo-800 font-semibold">
             Dados do candidato(a):{" "}
           </p>

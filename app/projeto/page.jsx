@@ -7,6 +7,7 @@ import { getProjetoFormsData } from "./actions";
 import { Loader2 } from "lucide-react";
 import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-tab";
 import DadosImovelTab from "@/components/projeto/dados-imovel-tab";
+import InventarioTab from "@/components/projeto/inventario-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -39,7 +40,7 @@ export default function ProjetoPage() {
     switch (tabName) {
       case "Menu":
         return (
-          <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top"></div>
+          <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top over "></div>
         );
       case "Pré-análise":
         return <PreAnaliseTab defaultValues={formData?.aba_preanalise} />;
@@ -51,6 +52,8 @@ export default function ProjetoPage() {
         );
       case "Dados do Imóvel":
         return <DadosImovelTab defaultValues={formData?.aba_dadosImovel} />;
+      case "Inventário":
+        return <InventarioTab defaultValues={formData?.aba_inventario} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
@@ -160,7 +163,7 @@ export default function ProjetoPage() {
           </div>
         </div>
       </div>
-      <div className="bg-gray-100 w-full h-full p-5 overflow-scroll">
+      <div className="bg-gray-50 w-full h-full p-5 overflow-hidden">
         {renderContent(currentTab)}
       </div>
     </div>

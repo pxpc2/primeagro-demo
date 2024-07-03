@@ -135,7 +135,7 @@ export default function PreAnaliseTab({ defaultValues }) {
     })();
   };
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white">
       <Heading
         tabName={"Pré Análise"}
         onEdit={onEdit}
@@ -144,8 +144,8 @@ export default function PreAnaliseTab({ defaultValues }) {
         isLoading={loading}
       />
       <div className=" w-full flex flex-row justify-evenly">
-        <div className="w-full py-4  gap-4">
-          <div className="p-4 bg-gray-50">
+        <div className="w-full p-4  gap-4">
+          <div className="p-4 bg-gray-50 ">
             <InformacoesIniciaisForm form={form} formDisabled={formsDisabled} />
           </div>
         </div>
