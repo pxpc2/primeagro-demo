@@ -9,27 +9,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
-import { SubmitButton } from "@/app/login/submit-button";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
@@ -38,87 +27,9 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { redirect } from "next/navigation";
+import { DOCUMENTOS_ENQUADRAMENTO } from "@/utils/constants";
 
 export default function EnquadramentoForm({ authID, onClose, msg }) {
-  const docs = [
-    {
-      id: "doc1",
-      label:
-        "Comprovante de matrícula ou ficha de insc. em escola rural, ata ou boletim escolar do trabalhador ou dos filhos.",
-    },
-    {
-      id: "doc2",
-      label: "Ficha de associado em cooperativa.",
-    },
-    {
-      id: "doc3",
-      label:
-        "Comprovante de participação como beneficiário em programas governamentais para áreas rurais do estado ou do município.",
-    },
-    {
-      id: "doc4",
-      label:
-        "Comprovante de recebimento de assistência ou de acompanhamento de empresa de assistência técnica e extensão rural.",
-    },
-    {
-      id: "doc5",
-      label: "Escritura pública de imóvel rural",
-    },
-    {
-      id: "doc6",
-      label: "Recibo de pagamento de contribuição federativa ou confederativa.",
-    },
-    {
-      id: "doc7",
-      label:
-        "Registro de processos administrativos ou judiciais, inclusive inquéritos, como testemunha, autor ou réu.",
-    },
-    {
-      id: "doc8",
-      label:
-        "Ficha de registro em livros de casas de saúde, hospitais, postos de saúde, ou do programa dos agentes comunitários de saúde.",
-    },
-    {
-      id: "doc9",
-      label: "Carteira de Vacinação (com endereço rural).",
-    },
-    {
-      id: "doc10",
-      label: "Título de propriedade de imóvel rural.",
-    },
-    {
-      id: "doc11",
-      label:
-        "Recibo ou nota fiscal de compra de implementos ou de insumos agrícolas.",
-    },
-    {
-      id: "doc12",
-      label: "Publicação na imprensa ou informativos de circulação pública.",
-    },
-    {
-      id: "doc13",
-      label:
-        "Registro em documentos de associações de produtores rurais, comunitárias, recreativas, desportivas ou religiosas.",
-    },
-    {
-      id: "doc14",
-      label: "Carteira de trabalho (quando possuir vínculo CLT)",
-    },
-    {
-      id: "doc15",
-      label: "Título de Aforamento",
-    },
-    {
-      id: "doc16",
-      label:
-        "Declaração de aptidão ao Pronaf (DAP) ou Cadastro de agricultura familiar (CAF) - Atualizadas ou antigas (expiradas).",
-    },
-    {
-      id: "doc17",
-      label:
-        "Contratos firmados e registrados de arrendamento, parcerias, meação ou posseiros.",
-    },
-  ];
   /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
    do perfil ainda não foram preenchidos */
   const form = useForm();
@@ -532,22 +443,22 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="nenhumGrupo">
+                                <SelectItem value="Nenhum grupo">
                                   Não faço parte de nenhum grupo ainda.
                                 </SelectItem>
-                                <SelectItem value="visitanteAgrotins">
+                                <SelectItem value="Visitante AGROTINS - 2024">
                                   Visitante AGROTINS - 2024
                                 </SelectItem>
-                                <SelectItem value="grupoTerraPorto">
+                                <SelectItem value="G01 - PNCF - Grupo da Terra-Porto/Terezinha">
                                   G01 - PNCF - Grupo da Terra-Porto/Terezinha
                                 </SelectItem>
-                                <SelectItem value="grupoAltoSerra">
+                                <SelectItem value="G02 - PNCF - Alto da Serra - Ap. Rio Negro">
                                   G02 - PNCF - Alto da Serra - Ap. Rio Negro
                                 </SelectItem>
-                                <SelectItem value="Ananas">
+                                <SelectItem value="G04 - Ananás-01-Bico">
                                   G04 - Ananás-01-Bico
                                 </SelectItem>
-                                <SelectItem value="Sandolandia">
+                                <SelectItem value="G05 - Sandolândia 01">
                                   G05 - Sandolândia 01
                                 </SelectItem>
                               </SelectContent>
@@ -646,7 +557,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 >
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="sim" />
+                                      <RadioGroupItem value="Sim" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Sim
@@ -654,7 +565,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   </FormItem>
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="nao" />
+                                      <RadioGroupItem value="Não" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Não
@@ -685,7 +596,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 >
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="sim" />
+                                      <RadioGroupItem value="Sim" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Sim
@@ -693,7 +604,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   </FormItem>
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="nao" />
+                                      <RadioGroupItem value="Não" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Não
@@ -724,7 +635,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 >
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="sim" />
+                                      <RadioGroupItem value="Sim" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Sim
@@ -732,7 +643,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   </FormItem>
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="nao" />
+                                      <RadioGroupItem value="Não" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Não
@@ -770,7 +681,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                               >
                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                   <FormControl>
-                                    <RadioGroupItem value="sim" />
+                                    <RadioGroupItem value="Sim" />
                                   </FormControl>
                                   <FormLabel className="font-normal">
                                     Sim
@@ -778,7 +689,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 </FormItem>
                                 <FormItem className="flex items-center space-x-3 space-y-0">
                                   <FormControl>
-                                    <RadioGroupItem value="nao" />
+                                    <RadioGroupItem value="Não" />
                                   </FormControl>
                                   <FormLabel className="font-normal">
                                     Não
@@ -811,24 +722,36 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="PNCF - Social">
+                                <SelectItem
+                                  value="PNCF - Social (Renda Anual de até R$ 27.775,99
+                                  e Patrimônio de até R$ 70 mil)"
+                                >
                                   PNCF - Social (Renda Anual de até R$ 27.775,99
                                   e Patrimônio de até R$ 70 mil).
                                 </SelectItem>
-                                <SelectItem value="PNCF - Mais">
+                                <SelectItem
+                                  value="PNCF - Mais (Renda Anual de até R$ 55.551,98 e
+                                  Patrimônio de até R$ 140 mil)"
+                                >
                                   PNCF - Mais (Renda Anual de até R$ 55.551,98 e
                                   Patrimônio de até R$ 140 mil).
                                 </SelectItem>
-                                <SelectItem value="PNCF - Jovem Terra da Juventude">
+                                <SelectItem value="PNCF - Jovem Terra da Juventude (Renda Anual de até R$ 55.551,98 e Patrimônio de até R$ 140 mil).">
                                   PNCF - Jovem Terra da Juventude (Renda Anual
                                   de até R$ 55.551,98 e Patrimônio de até R$ 140
                                   mil).
                                 </SelectItem>
-                                <SelectItem value="PNCF - Empreendedor">
+                                <SelectItem
+                                  value="PNCF - Empreendedor (Renda Anual de até R$
+                                  299.890,63 e Patrimônio de até R$ 500 mil)"
+                                >
                                   PNCF - Empreendedor (Renda Anual de até R$
                                   299.890,63 e Patrimônio de até R$ 500 mil).
                                 </SelectItem>
-                                <SelectItem value="renda-acima">
+                                <SelectItem
+                                  value="Tenho renda anual acima de R$ 299,890,63 - Não
+                                  me enquadro em nenhuma das opções."
+                                >
                                   Tenho renda anual acima de R$ 299,890,63 - Não
                                   me enquadro em nenhuma das opções.
                                 </SelectItem>
@@ -861,7 +784,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 >
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="sim" />
+                                      <RadioGroupItem value="Sim" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Sim
@@ -869,7 +792,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   </FormItem>
                                   <FormItem className="flex items-center space-x-3 space-y-0">
                                     <FormControl>
-                                      <RadioGroupItem value="nao" />
+                                      <RadioGroupItem value="Não" />
                                     </FormControl>
                                     <FormLabel className="font-normal">
                                       Não
@@ -884,7 +807,6 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       </div>
                       <FormField
                         control={form.control}
-                        rules={{ required: "Campo obrigatório." }}
                         name="campo9"
                         render={() => (
                           <FormItem>
@@ -897,7 +819,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 branco caso possua nenhum)
                               </FormLabel>
                             </div>
-                            {docs.map((doc) => (
+                            {DOCUMENTOS_ENQUADRAMENTO.map((doc) => (
                               <FormField
                                 key={doc.id}
                                 control={form.control}
@@ -929,7 +851,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                     </div>
                   </div>
                   <DialogFooter className="pt-12">
-                    <Button onClick={onSubmit}>
+                    <Button type="submit">
                       {loading ? (
                         <Loader2 className="animate-spin h-5 w-5 text-white" />
                       ) : (

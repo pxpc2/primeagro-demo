@@ -58,13 +58,14 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
 
   const supabase = createClient();
 
+  console.log(dadosEnquadramento);
+
   const { subscription: authListener } = supabase.auth.onAuthStateChange(
     async (event, session) => {
       if (session) {
         const jwt = jwtDecode(session.access_token);
         const userRole = jwt.user_role;
         setRole(userRole);
-        console.log(userRole);
       }
     }
   );

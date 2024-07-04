@@ -3,42 +3,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function completeProfile(
-  formValues,
-  aprovadoStatus,
-  authuser_id,
-  user_email
-) {
-  const clienteData = {};
-
-  Object.entries(formValues).forEach(([key, value]) => {
-    if (key === "primeiroNome") {
-      clienteData["primeiro_nome"] = value;
-    } else if (key === "orgaoExpedidor") {
-      clienteData["orgao_expedidor"] = value;
-    } else if (key === "estadoCivil") {
-      clienteData["estado_civil"] = value;
-    } else if (key === "enderecoLinha") {
-      clienteData["endereco"] = value;
-    } else {
-      if (!key.startsWith("campo") && key !== "docs") clienteData[key] = value;
-    }
-  });
-
-  clienteData["authuser_id"] = authuser_id;
-  clienteData["email"] = user_email;
-  clienteData["status_enquadramento"] = aprovadoStatus;
-  clienteData["status_pagamento"] = false;
-  clienteData["status_documentos"] = false;
-
-  const supabase = createClient();
-  const { error } = await supabase.from("clientes").insert(clienteData);
-  if (error) {
-    return redirect("/error?message=" + error.message);
-  }
-  return redirect("/user-dashboard");
-}
-
 /**
  * Cria uma nova entrada na tabela dos formulários de enquadramento relacionada a um authuser_id
  *
@@ -46,21 +10,45 @@ export async function completeProfile(
  * @returns redirecionamento p/ dashboard com msg
  */
 export async function submitEnquadramentoForm({ formData }) {
+  console.log(formData);
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const fullData = {};
-  const enquadramentoValues = {};
+  const dadosBasicos = {
+    primeiroNome: formData.primeiroNome,
+    sobrenome: formData.sobrenome,
+    cpf: formData.cpf,
+    rg: formData.rg,
+    orgaoExpedidor: formData.orgaoExpedidor,
+    genero: formData.genero,
+    etnia: formData.etnia,
+    estadoCivil: formData.estadoCivil,
+    naturalidade: formData.naturalidade,
+    telefone: formData.telefone,
+    enderecoLinha: formData.enderecoLinha,
+    bairro: formData.bairro,
+    uf: formData.uf,
+  };
+
+  const dadosEnquadramento = {
+    campo1: formData.campo1,
+    campo2: formData.campo2,
+    campo3: formData.campo3,
+    campo4: formData.campo4,
+    campo5: formData.campo5,
+    campo6: formData.campo6,
+    campo7: formData.campo7,
+    campo8: formData.campo8,
+    docs: formData.docs,
+  };
+
+  const enquadramentoValues = { ...dadosEnquadramento };
   const erradas = [];
   let aprovadoStatus = true;
 
-  Object.entries(formData).forEach(([key, value]) => {
-    fullData[key] = value;
-    let docs = [],
-      i = 0;
-    if (key.startsWith("campo")) enquadramentoValues[key] = value;
+  Object.entries(dadosEnquadramento).forEach(([key, value]) => {
     if (key === "campo3" && value === "nao") {
       aprovadoStatus = false;
       erradas.push(key);
@@ -76,21 +64,18 @@ export async function submitEnquadramentoForm({ formData }) {
     } else if (key === "campo8" && value === "sim") {
       aprovadoStatus = false;
       erradas.push(key);
-    } else if (key === "docs") {
-      let flag = false;
-      Object.entries(formData[key]).forEach(([k, v]) => {
-        if (v) {
-          flag = true;
-          docs[i++] = k;
-        }
-      });
-      if (!flag) {
-        erradas.push(key);
-        aprovadoStatus = false;
-      }
-      enquadramentoValues["docs"] = docs;
     }
   });
+
+  if (!Object.values(dadosEnquadramento.docs).some((doc) => doc)) {
+    erradas.push("docs");
+    aprovadoStatus = false;
+  }
+
+  enquadramentoValues["docs"] = Object.entries(dadosEnquadramento.docs)
+    .filter(([k, v]) => v)
+    .map(([k, v]) => k);
+
   enquadramentoValues["authuser_id"] = user.id;
   enquadramentoValues["erradas"] = erradas;
 
@@ -101,7 +86,47 @@ export async function submitEnquadramentoForm({ formData }) {
     return redirect("/error?message=" + error.message);
   }
 
-  return await completeProfile(fullData, aprovadoStatus, user.id, user.email);
+  return await completeProfile(
+    dadosBasicos,
+    aprovadoStatus,
+    user.id,
+    user.email
+  );
+}
+
+export async function completeProfile(
+  dadosBasicos,
+  aprovadoStatus,
+  authuser_id,
+  user_email
+) {
+  const clienteData = {
+    primeiro_nome: dadosBasicos.primeiroNome,
+    sobrenome: dadosBasicos.sobrenome,
+    cpf: dadosBasicos.cpf,
+    rg: dadosBasicos.rg,
+    orgao_expedidor: dadosBasicos.orgaoExpedidor,
+    genero: dadosBasicos.genero,
+    etnia: dadosBasicos.etnia,
+    estado_civil: dadosBasicos.estadoCivil,
+    naturalidade: dadosBasicos.naturalidade,
+    telefone: dadosBasicos.telefone,
+    endereco: dadosBasicos.enderecoLinha,
+    bairro: dadosBasicos.bairro,
+    uf: dadosBasicos.uf,
+    authuser_id: authuser_id,
+    email: user_email,
+    status_enquadramento: aprovadoStatus,
+    status_pagamento: false,
+    status_documentos: false,
+  };
+
+  const supabase = createClient();
+  const { error } = await supabase.from("clientes").insert(clienteData);
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+  return redirect("/user-dashboard");
 }
 
 /**

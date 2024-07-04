@@ -322,6 +322,86 @@ export let DOCUMENTOS = [
   },
 ];
 
+export const DOCUMENTOS_ENQUADRAMENTO = [
+  {
+    id: "doc1",
+    label:
+      "Comprovante de matrícula ou ficha de insc. em escola rural, ata ou boletim escolar do trabalhador ou dos filhos.",
+  },
+  {
+    id: "doc2",
+    label: "Ficha de associado em cooperativa.",
+  },
+  {
+    id: "doc3",
+    label:
+      "Comprovante de participação como beneficiário em programas governamentais para áreas rurais do estado ou do município.",
+  },
+  {
+    id: "doc4",
+    label:
+      "Comprovante de recebimento de assistência ou de acompanhamento de empresa de assistência técnica e extensão rural.",
+  },
+  {
+    id: "doc5",
+    label: "Escritura pública de imóvel rural",
+  },
+  {
+    id: "doc6",
+    label: "Recibo de pagamento de contribuição federativa ou confederativa.",
+  },
+  {
+    id: "doc7",
+    label:
+      "Registro de processos administrativos ou judiciais, inclusive inquéritos, como testemunha, autor ou réu.",
+  },
+  {
+    id: "doc8",
+    label:
+      "Ficha de registro em livros de casas de saúde, hospitais, postos de saúde, ou do programa dos agentes comunitários de saúde.",
+  },
+  {
+    id: "doc9",
+    label: "Carteira de Vacinação (com endereço rural).",
+  },
+  {
+    id: "doc10",
+    label: "Título de propriedade de imóvel rural.",
+  },
+  {
+    id: "doc11",
+    label:
+      "Recibo ou nota fiscal de compra de implementos ou de insumos agrícolas.",
+  },
+  {
+    id: "doc12",
+    label: "Publicação na imprensa ou informativos de circulação pública.",
+  },
+  {
+    id: "doc13",
+    label:
+      "Registro em documentos de associações de produtores rurais, comunitárias, recreativas, desportivas ou religiosas.",
+  },
+  {
+    id: "doc14",
+    label: "Carteira de trabalho (quando possuir vínculo CLT)",
+  },
+  {
+    id: "doc15",
+    label: "Título de Aforamento",
+  },
+  {
+    id: "doc16",
+    label:
+      "Declaração de aptidão ao Pronaf (DAP) ou Cadastro de agricultura familiar (CAF) - Atualizadas ou antigas (expiradas).",
+  },
+  {
+    id: "doc17",
+    label:
+      "Contratos firmados e registrados de arrendamento, parcerias, meação ou posseiros.",
+  },
+];
+
 export const PROJETO_TABS = [
   { id: 1, name: "Menu", href: "#", current: true },
   { id: 2, name: "Pré-análise", href: "#", current: false },
