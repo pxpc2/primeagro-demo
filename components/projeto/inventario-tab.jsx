@@ -14,8 +14,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { MoreHorizontal } from "lucide-react";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { CirclePlusIcon, MoreHorizontal } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import {
+  Select,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { SelectContent } from "@radix-ui/react-select";
+import { submitBenfeitoriaImovel } from "@/app/projeto/actions";
 
 export default function InventarioTab({ data }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -23,15 +45,21 @@ export default function InventarioTab({ data }) {
   const form = useForm({
     defaultValues: data,
   });
+  const [tableData, setTableData] = useState(data.benfeitoriasImovel || []);
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
+
     form.handleSubmit(async (data) => {
       console.log(data);
+      await submitBenfeitoriaImovel({ tableData: tableData });
       //await submitDadosImovelForm({ formData: data });
       setFormsDisabled(true);
       setLoading(false);
     })();
+  };
+  const handleAddNewItem = (newItem) => {
+    setTableData([...tableData, newItem]);
   };
 
   return (
@@ -54,7 +82,8 @@ export default function InventarioTab({ data }) {
           <EquipamentosExistentesImovelTable
             form={form}
             formsDisabled={formsDisabled}
-            data={data.benfeitoriasImovel}
+            data={tableData}
+            onAddNewItem={handleAddNewItem}
           />
         </div>
       </div>
@@ -62,8 +91,28 @@ export default function InventarioTab({ data }) {
   );
 }
 
-function EquipamentosExistentesImovelTable({ form, formsDisabled, data }) {
-  console.log(data);
+function EquipamentosExistentesImovelTable({
+  formsDisabled,
+  data,
+  onAddNewItem,
+}) {
+  const form = useForm();
+  const handleDialogSubmit = form.handleSubmit((newData) => {
+    console.log(newData);
+    const newItem = {
+      SEQ: data.length + 1,
+      descricao: newData.descricao,
+      declarado_pelo_proprietario:
+        newData.declarado_pelo_proprietario === "sim",
+      unidade_medida: newData.unidade,
+      quantidade: newData.qtd,
+      valor: newData.valor,
+      estado_conservacao: newData.estadoConservacao,
+    };
+    console.log(newItem);
+    onAddNewItem(newItem);
+    form.reset();
+  });
   return (
     <Table className="border-collapse">
       <TableCaption>
@@ -110,11 +159,118 @@ function EquipamentosExistentesImovelTable({ form, formsDisabled, data }) {
             </TableRow>
           ))}
       </TableBody>
-      <TableFooter>
-        <div className="pt-4">
-          <Button variant="outline">
-            <PlusCircledIcon />
-          </Button>
+      <TableFooter className="justify-center border-t flex ">
+        <div className="mt-4">
+          {formsDisabled ? (
+            <></>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="" className="gap-1">
+                  <CirclePlusIcon className="h-3.5 w-3.5" />
+                  Inserir novo
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Nova benfeitoria/equipamento</DialogTitle>
+                  <DialogDescription>
+                    Insira os dados relativos ao equipamento existente
+                    coletivo/benfeitoria do imóvel.
+                  </DialogDescription>
+                </DialogHeader>
+                <form
+                  onSubmit={handleDialogSubmit}
+                  className="flex flex-col gap-4 py-4"
+                >
+                  <div className="items-center gap-4">
+                    <Label htmlFor="descricao">Descrição</Label>
+                    <Textarea
+                      id="descricao"
+                      placeholder="Escreva a descrição do equipamento"
+                      {...form.register("descricao")}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <Label htmlFor="declaradoPeloUsuario">
+                      Declarado pelo proprietário?
+                    </Label>
+                    <RadioGroup
+                      defaultValue="sim"
+                      className="flex flex-row"
+                      {...form.register("declarado_pelo_proprietario")}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="sim"
+                          id="sim"
+                          {...form.register("declarado_pelo_proprietario")}
+                        />
+                        <Label htmlFor="sim">Sim</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="nao"
+                          id="nao"
+                          {...form.register("declarado_pelo_proprietario")}
+                        />
+                        <Label htmlFor="nao">Não</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                  <div className="items-center gap-4">
+                    <Label htmlFor="unidade">Unidade</Label>
+                    <Input
+                      id="unidade"
+                      placeholder="ex: m2"
+                      {...form.register("unidade")}
+                    />
+                  </div>
+                  <div className="items-center gap-4">
+                    <Label htmlFor="qtd">Quantidade</Label>
+                    <Input id="qtd" {...form.register("qtd")} />
+                  </div>
+                  <div className="items-center gap-4">
+                    <Label htmlFor="valor">Valor</Label>
+                    <Input id="valor" {...form.register("valor")} />
+                  </div>
+                  <div className="items-center gap-4">
+                    <Label htmlFor="estadoConservacao">
+                      Estado de conservação
+                    </Label>
+                    <Select
+                      onValueChange={(value) =>
+                        form.setValue("estadoConservacao", value)
+                      }
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem
+                            value="bom"
+                            {...form.register("estadoConservacao")}
+                          >
+                            Bom
+                          </SelectItem>
+                          <SelectItem
+                            value="ruim"
+                            {...form.register("estadoConservacao")}
+                          >
+                            Ruim
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit">Save changes</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
       </TableFooter>
     </Table>

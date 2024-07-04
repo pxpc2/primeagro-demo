@@ -138,3 +138,52 @@ export async function submitIdentificacaoBeneficiarioForm({ formData }) {
 export async function submitDadosImovelForm({ formData }) {
   console.log(formData);
 }
+
+export async function submitBenfeitoriaImovel({ tableData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  // separar novos de antigos (com ou sem ID)
+  const newEntries = tableData.filter((entry) => !entry.id);
+  const existingEntries = tableData.filter((entry) => entry.id);
+
+  const newEntriesWithAuthUser = newEntries.map((entry) => ({
+    ...entry,
+    authuser_id: authUserID,
+  }));
+
+  // update existentes
+  if (existingEntries.length > 0) {
+    let { error } = await supabase
+      .from("aba_inventario_benfeitoriasImovel")
+      .upsert(existingEntries, { onConflict: ["id"] });
+    if (error) {
+      console.log(error);
+      return redirect("/error?message=" + error.message);
+    }
+  }
+
+  // inserir novos
+  if (newEntriesWithAuthUser.length > 0) {
+    let { error } = await supabase
+      .from("aba_inventario_benfeitoriasImovel")
+      .insert(newEntriesWithAuthUser);
+    if (error) {
+      console.log(error);
+      return redirect("/error?message=" + error.message);
+    }
+  }
+
+  let { err } = await supabase
+    .from("aba_inventario_benfeitoriasImovel")
+    .upsert([{ ...tableData, authuser_id: authUserID }], {
+      onConflict: ["id"],
+    });
+  if (err) {
+    console.log(err);
+    return redirect("/error?message=" + err.message);
+  }
+}
