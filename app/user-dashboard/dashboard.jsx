@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Disclosure,
   DisclosureButton,
@@ -21,7 +21,6 @@ import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
 import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

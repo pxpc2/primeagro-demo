@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/toaster";
-import Head from "next/head";
 
 export const metadata = {
   title: "ConfidensAgro - Login",

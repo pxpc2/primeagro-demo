@@ -2,12 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 import ProfileCreationPage from "../../components/profile-creation";
-import {
-  getAplicacoes,
-  getDadosEnquadramentoForm,
-  getUserRole,
-  isAdmin,
-} from "./actions";
+import { getAplicacoes, getDadosEnquadramentoForm } from "./actions";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();

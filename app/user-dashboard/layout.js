@@ -1,5 +1,3 @@
-import Head from "next/head";
-
 export const metadata = {
   title: "ConfidensAgro - Dashboard",
   description: "Consultoria e Crédito Rural",
@@ -8,7 +6,7 @@ export const metadata = {
 export default function Layout({ children }) {
   return (
     <>
-      <main className="w-full h-full">{children}</main>
+      <main className="w-full h-full bg-gray-100">{children}</main>
     </>
   );
 }
