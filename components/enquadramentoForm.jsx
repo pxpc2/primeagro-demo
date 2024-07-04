@@ -122,14 +122,21 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
   /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
    do perfil ainda não foram preenchidos */
   const form = useForm();
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = form;
   const [loading, setLoading] = useState(false);
-  const onSubmit = () => {
+  const onSubmit = async (data) => {
     setLoading(true);
-    form.handleSubmit(async (data) => {
+    try {
       await submitEnquadramentoForm({ formData: data });
-      setLoading(false);
       redirect("/user-dashboard");
-    })();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,12 +155,13 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
           <div className="px-4 py-5 sm:p-6">
             <div className="divide-y divide-gray-900/10">
               <Form {...form}>
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="divide-y divide-gray-200">
                     <div className="grid gap-4">
                       <div className="grid grid-cols-2 gap-4 pt-4">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="primeiroNome"
                           render={({ field }) => (
                             <FormItem>
@@ -170,6 +178,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="sobrenome"
                           render={({ field }) => (
                             <FormItem>
@@ -186,6 +195,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-7 gap-4 pt-4">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="cpf"
                           render={({ field }) => (
                             <FormItem className="col-span-3">
@@ -200,6 +210,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="rg"
                           render={({ field }) => (
                             <FormItem className="col-span-2">
@@ -214,6 +225,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="orgaoExpedidor"
                           render={({ field }) => (
                             <FormItem className="col-span-2">
@@ -236,6 +248,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-3 gap-4 pt-4">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="genero"
                           render={({ field }) => (
                             <FormItem>
@@ -267,6 +280,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="etnia"
                           render={({ field }) => (
                             <FormItem>
@@ -299,6 +313,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="estadoCivil"
                           render={({ field }) => (
                             <FormItem>
@@ -339,6 +354,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="naturalidade"
                           render={({ field }) => (
                             <FormItem>
@@ -368,6 +384,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="telefone"
                           render={({ field }) => (
                             <FormItem>
@@ -382,6 +399,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       </div>
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="enderecoLinha"
                         render={({ field }) => (
                           <FormItem>
@@ -403,6 +421,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-4 gap-4 pb-8">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="bairro"
                           render={({ field }) => (
                             <FormItem className="col-span-2">
@@ -420,6 +439,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="uf"
                           render={({ field }) => (
                             <FormItem className="col-span-2">
@@ -495,6 +515,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                     <div className="pt-8 flex gap-4 flex-col">
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="campo1"
                         render={({ field }) => (
                           <FormItem>
@@ -538,6 +559,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       />
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="campo2"
                         render={({ field }) => (
                           <FormItem>
@@ -609,6 +631,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-3">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="campo3"
                           render={({ field }) => (
                             <FormItem>
@@ -645,6 +668,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="campo4"
                           render={({ field }) => (
                             <FormItem>
@@ -683,6 +707,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                         />
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="campo5"
                           render={({ field }) => (
                             <FormItem className="py-2">
@@ -722,6 +747,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       </div>
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="campo6"
                         render={({ field }) => (
                           <FormItem className="py-2">
@@ -766,6 +792,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       />
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="campo7"
                         render={({ field }) => (
                           <FormItem>
@@ -815,6 +842,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       <div className="grid grid-cols-1">
                         <FormField
                           control={form.control}
+                          rules={{ required: "Campo obrigatório." }}
                           name="campo8"
                           render={({ field }) => (
                             <FormItem className="py-2">
@@ -856,6 +884,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                       </div>
                       <FormField
                         control={form.control}
+                        rules={{ required: "Campo obrigatório." }}
                         name="campo9"
                         render={() => (
                           <FormItem>
