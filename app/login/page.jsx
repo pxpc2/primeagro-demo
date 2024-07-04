@@ -14,13 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { SubmitButton } from "./submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RegisterForm from "./signup-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Loader2, Moon, Sun } from "lucide-react";
 
 export default function LoginPage({ searchParams: { message, successmsg } }) {
   const { toast } = useToast();
@@ -86,13 +85,28 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
 }
 
 function LoginForm({ message }) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm();
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = form;
+
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      await signIn(data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
-      <form className="space-y-8">
+      <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
+          rules={{ required: "E-mail obrigatório." }}
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -109,6 +123,7 @@ function LoginForm({ message }) {
         />
         <FormField
           control={form.control}
+          rules={{ required: "Senha obrigatória." }}
           name="password"
           render={({ field }) => (
             <FormItem>
@@ -140,9 +155,13 @@ function LoginForm({ message }) {
             Lembrar dados de acesso
           </label>
         </div>
-        <SubmitButton formAction={signIn} className="w-full " variant="default">
-          Entrar
-        </SubmitButton>
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            "Entrar"
+          )}
+        </Button>
       </form>
     </Form>
   );

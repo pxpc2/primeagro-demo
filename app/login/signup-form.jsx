@@ -1,16 +1,11 @@
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SubmitButton } from "./submit-button";
 import { signUp } from "./actions";
 import {
   Form,
@@ -21,11 +16,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function RegisterForm({ msg }) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm();
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = form;
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+    try {
+      await signUp(data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div>
       <DialogHeader>
@@ -35,10 +44,11 @@ export default function RegisterForm({ msg }) {
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-8">
             <FormField
               control={form.control}
+              rules={{ required: "E-mail obrigatório." }}
               name="email"
               render={({ field }) => (
                 <FormItem>
@@ -61,6 +71,7 @@ export default function RegisterForm({ msg }) {
             <div className="grid grid-cols-2 gap-4 pt-4">
               <FormField
                 control={form.control}
+                rules={{ required: "Senha obrigatória." }}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -75,6 +86,7 @@ export default function RegisterForm({ msg }) {
               />
               <FormField
                 control={form.control}
+                rules={{ required: "Por favor, confirme sua senha." }}
                 name="password-repeat"
                 render={({ field }) => (
                   <FormItem>
@@ -90,9 +102,13 @@ export default function RegisterForm({ msg }) {
             </div>
           </div>
           <DialogFooter>
-            <SubmitButton className="" formAction={signUp}>
-              Registrar
-            </SubmitButton>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Registrar"
+              )}
+            </Button>
           </DialogFooter>
           {msg && (
             <p className="mt-4 p-4 bg-foreground/10 text-center">{msg}</p>

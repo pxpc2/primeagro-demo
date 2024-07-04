@@ -176,14 +176,4 @@ export async function submitBenfeitoriaImovel({ tableData }) {
       return redirect("/error?message=" + error.message);
     }
   }
-
-  let { err } = await supabase
-    .from("aba_inventario_benfeitoriasImovel")
-    .upsert([{ ...tableData, authuser_id: authUserID }], {
-      onConflict: ["id"],
-    });
-  if (err) {
-    console.log(err);
-    return redirect("/error?message=" + err.message);
-  }
 }
