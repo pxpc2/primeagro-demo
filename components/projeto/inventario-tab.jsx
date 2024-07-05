@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { CirclePlusIcon, MoreHorizontal } from "lucide-react";
+import { CirclePlusIcon, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -79,6 +88,17 @@ export default function InventarioTab({ data }) {
     })();
   };
 
+  const handleCancel = () => {
+    form.reset({
+      benfeitorias_coletivas_numero_familias_irao_adquirir:
+        data.aba_inventario[0]
+          ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
+      benfeitorias_coletivas_valor_por_familia:
+        data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
+    });
+    setFormsDisabled(true);
+  };
+
   const handleAddNewItem = (newItem) => {
     setTableData([...tableData, newItem]);
   };
@@ -112,6 +132,7 @@ export default function InventarioTab({ data }) {
         onSave={onSave}
         isEditing={!formsDisabled}
         isLoading={loading}
+        onCancel={handleCancel}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
@@ -274,9 +295,29 @@ function EquipamentosExistentesImovelTable({
               <TableCell className="text-center">
                 {item.estado_conservacao}
               </TableCell>
-              <TableCell>
-                <MoreHorizontal className="hover:cursor-pointer" />
-              </TableCell>
+              {!formsDisabled ? (
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <MoreHorizontal className="hover:cursor-pointer hover:bg-gray-200 hover:shadow-md rounded-md p-0.5" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="hover:cursor-pointer">
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="hover:cursor-pointer">
+                        <Trash className="mr-2 h-4 w-4 text-red-500" />
+                        Deletar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              ) : (
+                <></>
+              )}
             </TableRow>
           ))}
       </TableBody>

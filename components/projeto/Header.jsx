@@ -1,21 +1,10 @@
 import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from "@headlessui/react";
-import {
   CheckIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import { Loader2 } from "lucide-react";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { Button } from "../ui/button";
 
 export default function Heading({
   tabName,
@@ -23,6 +12,7 @@ export default function Heading({
   onSave,
   isEditing,
   isLoading,
+  onCancel,
 }) {
   return (
     <div className="lg:flex lg:items-center lg:justify-between">
@@ -66,23 +56,31 @@ export default function Heading({
             </button>
           </span>
         ) : (
-          <span className="sm:ml-3">
-            <button
-              type="button"
-              onClick={onSave}
-              className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm w-full font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              {isLoading ? (
-                <Loader2 className="animate-spin h-5 w-5 text-white" />
-              ) : (
-                <CheckIcon
-                  className="-ml-0.5 mr-1.5 h-5 w-5"
-                  aria-hidden="true"
-                />
-              )}
-              {isLoading ? "" : "Salvar"}
-            </button>
-          </span>
+          <div className="flex flex-row gap-6">
+            <span className="sm:-ml-3">
+              <Button variant="outline" onClick={onCancel}>
+                Cancelar
+              </Button>
+            </span>
+
+            <span className="sm:-ml-3">
+              <button
+                type="button"
+                onClick={onSave}
+                className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm w-full font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                {isLoading ? (
+                  <Loader2 className="animate-spin h-5 w-5 text-white" />
+                ) : (
+                  <CheckIcon
+                    className="-ml-0.5 mr-1.5 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                )}
+                {isLoading ? "" : "Salvar"}
+              </button>
+            </span>
+          </div>
         )}
       </div>
     </div>
