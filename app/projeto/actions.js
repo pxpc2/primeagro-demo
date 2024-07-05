@@ -22,9 +22,7 @@ export async function getProjetoFormsData() {
   formData.aba_preanalise = await getPreAnalise();
   formData.aba_identificacao_beneficiario =
     await getIdentificacaoBeneficiario();
-  formData.aba_inventario = {};
-  formData.aba_inventario.benfeitoriasImovel =
-    await getInventarioBenfeitoriasImovel();
+  formData.aba_inventario = await getInventario();
 
   formData.aba_dadosImovel = {};
 
@@ -141,7 +139,33 @@ export async function submitDadosImovelForm({ formData }) {
   console.log(formData);
 }
 
+async function getInventario() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: aba_inventario, error } = await supabase
+    .from("aba_inventario")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  const benfeitoriasImovel = await getInventarioBenfeitoriasImovel();
+
+  return {
+    aba_inventario,
+    benfeitoriasImovel,
+  };
+}
+
 export async function submitInventario({ data, tableData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   await submitBenfeitoriaImovel({ tableData: tableData });
   let totalValor = 0;
   tableData?.map((entry) => {
@@ -155,13 +179,33 @@ export async function submitInventario({ data, tableData }) {
       }
     }
   });
-  console.log("Total valor:", totalValor);
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
       data.benfeitorias_coletivas_valor_por_familia,
     benfeitorias_coletivas_numero_familias_irao_adquirir:
       data.benfeitorias_coletivas_numero_familias_irao_adquirir,
   };
+
+  const authUserID = user.id;
+
+  const { error } = await supabase.from("aba_inventario").upsert(
+    [
+      {
+        benfeitorias_coletivas_valor_por_familia:
+          data.benfeitorias_coletivas_valor_por_familia,
+        benfeitorias_coletivas_numero_familias_irao_adquirir:
+          data.benfeitorias_coletivas_numero_familias_irao_adquirir,
+        authuser_id: authUserID,
+      },
+    ],
+    {
+      onConflict: ["authuser_id"],
+    }
+  );
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+  return dados;
 }
 
 export async function submitBenfeitoriaImovel({ tableData }) {

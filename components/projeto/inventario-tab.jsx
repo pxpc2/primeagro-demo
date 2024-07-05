@@ -52,10 +52,17 @@ import {
 } from "../ui/form";
 
 export default function InventarioTab({ data }) {
+  console.log(data);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
-    defaultValues: data,
+    defaultValues: {
+      benfeitorias_coletivas_numero_familias_irao_adquirir:
+        data.aba_inventario[0]
+          ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
+      benfeitorias_coletivas_valor_por_familia:
+        data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
+    },
   });
   const [tableData, setTableData] = useState(data.benfeitoriasImovel || []);
   const onEdit = () => setFormsDisabled(false);
@@ -63,9 +70,10 @@ export default function InventarioTab({ data }) {
     setLoading(true);
 
     form.handleSubmit(async (data) => {
-      console.log(data);
-      await submitInventario({ data: data, tableData: tableData });
-      //await submitDadosImovelForm({ formData: data });
+      await submitInventario({
+        data: data,
+        tableData: tableData,
+      });
       setFormsDisabled(true);
       setLoading(false);
     })();
