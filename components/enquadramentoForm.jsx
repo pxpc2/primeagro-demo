@@ -722,17 +722,11 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem
-                                  value="PNCF - Social (Renda Anual de até R$ 27.775,99
-                                  e Patrimônio de até R$ 70 mil)"
-                                >
+                                <SelectItem value="PNCF - Social (Renda Anual de até R$ 27.775,99 e Patrimônio de até R$ 70 mil)">
                                   PNCF - Social (Renda Anual de até R$ 27.775,99
                                   e Patrimônio de até R$ 70 mil).
                                 </SelectItem>
-                                <SelectItem
-                                  value="PNCF - Mais (Renda Anual de até R$ 55.551,98 e
-                                  Patrimônio de até R$ 140 mil)"
-                                >
+                                <SelectItem value="PNCF - Mais (Renda Anual de até R$ 55.551,98 e Patrimônio de até R$ 140 mil)">
                                   PNCF - Mais (Renda Anual de até R$ 55.551,98 e
                                   Patrimônio de até R$ 140 mil).
                                 </SelectItem>
@@ -741,17 +735,11 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                   de até R$ 55.551,98 e Patrimônio de até R$ 140
                                   mil).
                                 </SelectItem>
-                                <SelectItem
-                                  value="PNCF - Empreendedor (Renda Anual de até R$
-                                  299.890,63 e Patrimônio de até R$ 500 mil)"
-                                >
+                                <SelectItem value="PNCF - Empreendedor (Renda Anual de até R$ 299.890,63 e Patrimônio de até R$ 500 mil)">
                                   PNCF - Empreendedor (Renda Anual de até R$
                                   299.890,63 e Patrimônio de até R$ 500 mil).
                                 </SelectItem>
-                                <SelectItem
-                                  value="Tenho renda anual acima de R$ 299,890,63 - Não
-                                  me enquadro em nenhuma das opções."
-                                >
+                                <SelectItem value="Tenho renda anual acima de R$ 299,890,63 - Não me enquadro em nenhuma das opções.">
                                   Tenho renda anual acima de R$ 299,890,63 - Não
                                   me enquadro em nenhuma das opções.
                                 </SelectItem>

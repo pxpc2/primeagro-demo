@@ -2,8 +2,6 @@ import { DOCUMENTOS_ENQUADRAMENTO } from "@/utils/constants";
 import React from "react";
 
 export default function FormularioEnquadramentoPreview({ dados, cliente }) {
-  console.log(dados);
-
   const questionMap = {
     campo1: "Grupo",
     campo2: "Estado que pretende comprar a propriedade",
@@ -44,7 +42,9 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
         <div
           key={key}
           className={`${bgColor} px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3 ${
-            dados.erradas && dados.erradas.includes(key)
+            dados.erradas &&
+            (dados.erradas.includes(key) ||
+              (key === "campo9" && dados.erradas.includes("docs")))
               ? "outline outline-red-600"
               : ""
           }`}
@@ -53,7 +53,11 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
             {index + 1}. {questionMap[key]}
           </dt>
           <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-            {answer}
+            {key === "campo9" && dados.erradas.includes("docs") ? (
+              <p>Não pussuo nenhum documento da lista.</p>
+            ) : (
+              <p>{answer}</p>
+            )}
           </dd>
         </div>
       );

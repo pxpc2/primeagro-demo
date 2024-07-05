@@ -57,8 +57,6 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
 
   const supabase = createClient();
 
-  console.log(dadosEnquadramento);
-
   const { subscription: authListener } = supabase.auth.onAuthStateChange(
     async (event, session) => {
       if (session) {

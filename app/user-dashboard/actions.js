@@ -49,19 +49,23 @@ export async function submitEnquadramentoForm({ formData }) {
   let aprovadoStatus = true;
 
   Object.entries(dadosEnquadramento).forEach(([key, value]) => {
-    if (key === "campo3" && value === "nao") {
+    if (key === "campo3" && value === "Não") {
       aprovadoStatus = false;
       erradas.push(key);
-    } else if (key === "campo4" && value === "nao") {
+    } else if (key === "campo4" && value === "Não") {
       aprovadoStatus = false;
       erradas.push(key);
-    } else if (key === "campo7" && value === "renda-acima") {
+    } else if (key === "campo5" && value === "Sim") {
       aprovadoStatus = false;
       erradas.push(key);
-    } else if (key === "campo5" && value === "sim") {
+    } else if (
+      key === "campo7" &&
+      value ===
+        "Tenho renda anual acima de R$ 299,890,63 - Não me enquadro em nenhuma das opções."
+    ) {
       aprovadoStatus = false;
       erradas.push(key);
-    } else if (key === "campo8" && value === "sim") {
+    } else if (key === "campo8" && value === "Sim") {
       aprovadoStatus = false;
       erradas.push(key);
     }
