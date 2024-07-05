@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Heading from "./Header";
 import { useForm } from "react-hook-form";
 import {
@@ -37,7 +37,19 @@ import {
   SelectValue,
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import { submitBenfeitoriaImovel } from "@/app/projeto/actions";
+import {
+  submitBenfeitoriaImovel,
+  submitInventario,
+} from "@/app/projeto/actions";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 
 export default function InventarioTab({ data }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -52,15 +64,37 @@ export default function InventarioTab({ data }) {
 
     form.handleSubmit(async (data) => {
       console.log(data);
-      await submitBenfeitoriaImovel({ tableData: tableData });
+      await submitInventario({ data: data, tableData: tableData });
       //await submitDadosImovelForm({ formData: data });
       setFormsDisabled(true);
       setLoading(false);
     })();
   };
+
   const handleAddNewItem = (newItem) => {
     setTableData([...tableData, newItem]);
   };
+  const getValorTotal = useCallback(() => {
+    return tableData.reduce((total, item) => {
+      const valor = parseFloat(item.valor.replace(/\./g, "").replace(",", "."));
+      return total + (isNaN(valor) ? 0 : valor);
+    }, 0);
+  }, [tableData]);
+
+  const [valorTotal, setValorTotal] = useState(getValorTotal);
+  const getValorPorFamilia = useCallback((total, numFamilies) => {
+    if (numFamilies > 0) {
+      return (total / numFamilies).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
+    return "0,00";
+  }, []);
+
+  useEffect(() => {
+    setValorTotal(getValorTotal());
+  }, [tableData, getValorTotal]);
 
   return (
     <div className="p-4 bg-white">
@@ -86,6 +120,69 @@ export default function InventarioTab({ data }) {
             onAddNewItem={handleAddNewItem}
           />
         </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 pt-8"
+          >
+            <div className="flex w-full flex-row justify-end gap-10">
+              <FormField
+                control={form.control}
+                name="benfeitorias_coletivas_numero_familias_irao_adquirir"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Nº de famílias que irão adquirir as benfeitorias
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value}
+                        disabled={formsDisabled}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value);
+                          const qtdFamilias = parseInt(value, 10);
+                          if (!isNaN(qtdFamilias) && qtdFamilias > 0) {
+                            const valorPorFamilia = getValorPorFamilia(
+                              valorTotal,
+                              qtdFamilias
+                            );
+                            form.setValue(
+                              "benfeitorias_coletivas_valor_por_familia",
+                              valorPorFamilia
+                            );
+                          } else {
+                            form.setValue(
+                              "benfeitorias_coletivas_valor_por_familia",
+                              ""
+                            );
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="benfeitorias_coletivas_valor_por_familia"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Valor das benfeitorias por família</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value} disabled />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );
@@ -113,6 +210,22 @@ function EquipamentosExistentesImovelTable({
     onAddNewItem(newItem);
     form.reset();
   });
+  const formatBRL = (value) => {
+    if (!value) return value;
+    value = value.replace(/\D/g, "");
+    value = (Number(value) / 100).toFixed(2).replace(".", ",");
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const handleValorChange = (e) => {
+    const inputValue = e.target.value;
+    const formattedValue = formatBRL(inputValue);
+    form.setValue("valor", formattedValue);
+  };
+  const handleQuantidadeChange = (e) => {
+    const inputValue = e.target.value.replace(/\D/g, "");
+    form.setValue("qtd", inputValue);
+  };
   return (
     <Table className="border-collapse">
       <TableCaption>
@@ -173,8 +286,10 @@ function EquipamentosExistentesImovelTable({
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Nova benfeitoria/equipamento</DialogTitle>
-                  <DialogDescription>
+                  <DialogTitle className="font-bold">
+                    Nova benfeitoria/equipamento
+                  </DialogTitle>
+                  <DialogDescription className="pt-2">
                     Insira os dados relativos ao equipamento existente
                     coletivo/benfeitoria do imóvel.
                   </DialogDescription>
@@ -228,11 +343,24 @@ function EquipamentosExistentesImovelTable({
                   </div>
                   <div className="items-center gap-4">
                     <Label htmlFor="qtd">Quantidade</Label>
-                    <Input id="qtd" {...form.register("qtd")} />
+                    <Input
+                      id="qtd"
+                      type="number"
+                      {...form.register("qtd")}
+                      onChange={handleQuantidadeChange}
+                      value={form.watch("qtd")}
+                      placeholder="1"
+                    />
                   </div>
                   <div className="items-center gap-4">
-                    <Label htmlFor="valor">Valor</Label>
-                    <Input id="valor" {...form.register("valor")} />
+                    <Label htmlFor="valor">Valo total (R$)</Label>
+                    <Input
+                      id="valor"
+                      {...form.register("valor")}
+                      onChange={handleValorChange}
+                      value={form.watch("valor")}
+                      placeholder="0,00"
+                    />
                   </div>
                   <div className="items-center gap-4">
                     <Label htmlFor="estadoConservacao">
@@ -265,7 +393,7 @@ function EquipamentosExistentesImovelTable({
                     </Select>
                   </div>
                   <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <Button type="submit">Adicionar</Button>
                   </DialogFooter>
                 </form>
               </DialogContent>
@@ -275,4 +403,8 @@ function EquipamentosExistentesImovelTable({
       </TableFooter>
     </Table>
   );
+}
+
+function onSubmit(values) {
+  console.log("enviando formulário...");
 }

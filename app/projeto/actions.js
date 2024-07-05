@@ -141,7 +141,31 @@ export async function submitDadosImovelForm({ formData }) {
   console.log(formData);
 }
 
+export async function submitInventario({ data, tableData }) {
+  await submitBenfeitoriaImovel({ tableData: tableData });
+  let totalValor = 0;
+  tableData?.map((entry) => {
+    if (entry.valor) {
+      const valor = parseFloat(
+        entry.valor.replace(/\./g, "").replace(",", ".")
+      ); // centavos vira . invés de , e remove o .
+      if (!isNaN(valor)) {
+        // bom checar se deu pra formatar
+        totalValor += valor;
+      }
+    }
+  });
+  console.log("Total valor:", totalValor);
+  const dados = {
+    benfeitorias_coletivas_valor_por_familia:
+      data.benfeitorias_coletivas_valor_por_familia,
+    benfeitorias_coletivas_numero_familias_irao_adquirir:
+      data.benfeitorias_coletivas_numero_familias_irao_adquirir,
+  };
+}
+
 export async function submitBenfeitoriaImovel({ tableData }) {
+  //console.log(tableData);
   const supabase = createClient();
   const {
     data: { user },
