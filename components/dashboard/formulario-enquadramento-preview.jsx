@@ -2,7 +2,6 @@ import { DOCUMENTOS_ENQUADRAMENTO } from "@/utils/constants";
 import React from "react";
 
 export default function FormularioEnquadramentoPreview({ dados, cliente }) {
-  console.log("DADOS DENTRO DO PREVIEW: ");
   console.log(dados);
 
   const questionMap = {

@@ -34,6 +34,9 @@ export async function getProjetoFormsData() {
 
 async function getIdentificacaoBeneficiario() {
   const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   let { data: aba_identificacao_beneficiario, err } = await supabase
     .from("aba_identificacao_beneficiario")
     .select("*");
