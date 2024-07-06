@@ -61,7 +61,6 @@ import {
 } from "../ui/form";
 
 export default function InventarioTab({ data }) {
-  console.log(data);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -100,7 +99,7 @@ export default function InventarioTab({ data }) {
   };
 
   const handleAddNewItem = (newItem) => {
-    setTableData([...tableData, newItem]);
+    setTableData((prevData) => [...prevData, newItem]);
   };
   const getValorTotal = useCallback(() => {
     return tableData.reduce((total, item) => {
@@ -123,6 +122,20 @@ export default function InventarioTab({ data }) {
   useEffect(() => {
     setValorTotal(getValorTotal());
   }, [tableData, getValorTotal]);
+
+  useEffect(() => {
+    const qtdFamilias = parseInt(
+      form.getValues("benfeitorias_coletivas_numero_familias_irao_adquirir"),
+      10
+    );
+    if (!isNaN(qtdFamilias) && qtdFamilias > 0) {
+      const valorPorFamilia = getValorPorFamilia(valorTotal, qtdFamilias);
+      form.setValue(
+        "benfeitorias_coletivas_valor_por_familia",
+        valorPorFamilia
+      );
+    }
+  }, [valorTotal, form, getValorPorFamilia]);
 
   return (
     <div className="p-4 bg-white">
@@ -150,10 +163,7 @@ export default function InventarioTab({ data }) {
           />
         </div>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 pt-8"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="flex w-full flex-row justify-end gap-10">
               <FormField
                 control={form.control}
@@ -235,7 +245,6 @@ function EquipamentosExistentesImovelTable({
       valor: newData.valor,
       estado_conservacao: newData.estadoConservacao,
     };
-    console.log(newItem);
     onAddNewItem(newItem);
     form.reset();
   });
@@ -269,7 +278,7 @@ function EquipamentosExistentesImovelTable({
           </TableHead>
           <TableHead className="text-center">Unidade</TableHead>
           <TableHead className="text-center">Quantidade</TableHead>
-          <TableHead className="text-center">Valor (R$)</TableHead>
+          <TableHead className="text-center">Valor total (R$)</TableHead>
           <TableHead className="text-center">Estado de conservação</TableHead>
           <TableHead></TableHead>
         </TableRow>
