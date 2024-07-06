@@ -61,6 +61,8 @@ import {
 } from "../ui/form";
 
 export default function InventarioTab({ data }) {
+  const [editingItem, setEditingItem] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -85,6 +87,10 @@ export default function InventarioTab({ data }) {
       setFormsDisabled(true);
       setLoading(false);
     })();
+  };
+  const handleEditItem = (item) => {
+    setEditingItem(item);
+    setIsDialogOpen(true);
   };
 
   const handleCancel = () => {
@@ -160,6 +166,10 @@ export default function InventarioTab({ data }) {
             formsDisabled={formsDisabled}
             data={tableData}
             onAddNewItem={handleAddNewItem}
+            onEditItem={handleEditItem}
+            setEditingItem={setEditingItem}
+            editingItem={editingItem}
+            setTableData={setTableData}
           />
         </div>
         <Form {...form}>
@@ -231,6 +241,10 @@ function EquipamentosExistentesImovelTable({
   formsDisabled,
   data,
   onAddNewItem,
+  editingItem,
+  setEditingItem,
+  setTableData,
+  onEditItem,
 }) {
   const form = useForm();
   const handleDialogSubmit = form.handleSubmit((newData) => {
@@ -245,7 +259,15 @@ function EquipamentosExistentesImovelTable({
       valor: newData.valor,
       estado_conservacao: newData.estadoConservacao,
     };
-    onAddNewItem(newItem);
+    if (editingItem) {
+      const updatedData = data.map((item) =>
+        item.SEQ === editingItem.SEQ ? newItem : item
+      );
+      setTableData(updatedData);
+    } else {
+      onAddNewItem(newItem);
+    }
+    setEditingItem(null);
     form.reset();
   });
   const formatBRL = (value) => {
@@ -306,23 +328,37 @@ function EquipamentosExistentesImovelTable({
               </TableCell>
               {!formsDisabled ? (
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreHorizontal className="hover:cursor-pointer hover:bg-gray-200 hover:shadow-md rounded-md p-0.5" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem className="hover:cursor-pointer">
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Editar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="hover:cursor-pointer">
-                        <Trash className="mr-2 h-4 w-4 text-red-500" />
-                        Deletar
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Dialog>
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger>
+                        <MoreHorizontal className="hover:cursor-pointer hover:bg-gray-200 hover:shadow-md rounded-md p-0.5" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DialogTrigger asChild>
+                          <DropdownMenuItem
+                            className="hover:cursor-pointer"
+                            onClick={() => onEditItem(item)}
+                          >
+                            <Pencil className="mr-2 h-4 w-4" />
+                            Editar
+                          </DropdownMenuItem>
+                        </DialogTrigger>
+                        <DropdownMenuItem className="hover:cursor-pointer">
+                          <Trash className="mr-2 h-4 w-4 text-red-500" />
+                          Deletar
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <AddBenfeitoriaColetivaDialog
+                      form={form}
+                      handleDialogSubmit={handleDialogSubmit}
+                      handleQuantidadeChange={handleQuantidadeChange}
+                      handleValorChange={handleValorChange}
+                      editingItem={editingItem}
+                    />
+                  </Dialog>
                 </TableCell>
               ) : (
                 <></>
@@ -342,124 +378,150 @@ function EquipamentosExistentesImovelTable({
                   Inserir novo
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle className="font-bold">
-                    Nova benfeitoria/equipamento
-                  </DialogTitle>
-                  <DialogDescription className="pt-2">
-                    Insira os dados relativos ao equipamento existente
-                    coletivo/benfeitoria do imóvel.
-                  </DialogDescription>
-                </DialogHeader>
-                <form
-                  onSubmit={handleDialogSubmit}
-                  className="flex flex-col gap-4 py-4"
-                >
-                  <div className="items-center gap-4">
-                    <Label htmlFor="descricao">Descrição</Label>
-                    <Textarea
-                      id="descricao"
-                      placeholder="Escreva a descrição do equipamento"
-                      {...form.register("descricao")}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <Label htmlFor="declaradoPeloUsuario">
-                      Declarado pelo proprietário?
-                    </Label>
-                    <RadioGroup
-                      defaultValue="sim"
-                      className="flex flex-row"
-                      {...form.register("declarado_pelo_proprietario")}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="sim"
-                          id="sim"
-                          {...form.register("declarado_pelo_proprietario")}
-                        />
-                        <Label htmlFor="sim">Sim</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="nao"
-                          id="nao"
-                          {...form.register("declarado_pelo_proprietario")}
-                        />
-                        <Label htmlFor="nao">Não</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                  <div className="items-center gap-4">
-                    <Label htmlFor="unidade">Unidade</Label>
-                    <Input
-                      id="unidade"
-                      placeholder="ex: m2"
-                      {...form.register("unidade")}
-                    />
-                  </div>
-                  <div className="items-center gap-4">
-                    <Label htmlFor="qtd">Quantidade</Label>
-                    <Input
-                      id="qtd"
-                      type="number"
-                      {...form.register("qtd")}
-                      onChange={handleQuantidadeChange}
-                      value={form.watch("qtd")}
-                      placeholder="1"
-                    />
-                  </div>
-                  <div className="items-center gap-4">
-                    <Label htmlFor="valor">Valo total (R$)</Label>
-                    <Input
-                      id="valor"
-                      {...form.register("valor")}
-                      onChange={handleValorChange}
-                      value={form.watch("valor")}
-                      placeholder="0,00"
-                    />
-                  </div>
-                  <div className="items-center gap-4">
-                    <Label htmlFor="estadoConservacao">
-                      Estado de conservação
-                    </Label>
-                    <Select
-                      onValueChange={(value) =>
-                        form.setValue("estadoConservacao", value)
-                      }
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectItem
-                            value="bom"
-                            {...form.register("estadoConservacao")}
-                          >
-                            Bom
-                          </SelectItem>
-                          <SelectItem
-                            value="ruim"
-                            {...form.register("estadoConservacao")}
-                          >
-                            Ruim
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Adicionar</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
+              <AddBenfeitoriaColetivaDialog
+                form={form}
+                handleDialogSubmit={handleDialogSubmit}
+                handleQuantidadeChange={handleQuantidadeChange}
+                handleValorChange={handleValorChange}
+              />
             </Dialog>
           )}
         </div>
       </TableFooter>
     </Table>
+  );
+}
+
+function AddBenfeitoriaColetivaDialog({
+  form,
+  handleDialogSubmit,
+  handleQuantidadeChange,
+  handleValorChange,
+  editingItem,
+}) {
+  useEffect(() => {
+    if (editingItem) {
+      form.setValue("descricao", editingItem.descricao);
+      form.setValue(
+        "declarado_pelo_proprietario",
+        editingItem.declarado_pelo_proprietario ? "sim" : "nao"
+      );
+      form.setValue("unidade", editingItem.unidade_medida);
+      form.setValue("qtd", editingItem.quantidade);
+      form.setValue("valor", editingItem.valor);
+      form.setValue("estadoConservacao", editingItem.estado_conservacao);
+    } else {
+      form.reset();
+    }
+  }, [editingItem, form]);
+  return (
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle className="font-bold">
+          {editingItem
+            ? "Editar benfeitoria/equipamento"
+            : "Nova benfeitoria/equipamento"}
+        </DialogTitle>
+        <DialogDescription className="pt-2">
+          Insira os dados relativos ao equipamento existente
+          coletivo/benfeitoria do imóvel.
+        </DialogDescription>
+      </DialogHeader>
+      <form onSubmit={handleDialogSubmit} className="flex flex-col gap-4 py-4">
+        <div className="items-center gap-4">
+          <Label htmlFor="descricao">Descrição</Label>
+          <Textarea
+            id="descricao"
+            placeholder="Escreva a descrição do equipamento"
+            {...form.register("descricao")}
+          />
+        </div>
+        <div className="flex flex-col gap-4">
+          <Label htmlFor="declaradoPeloUsuario">
+            Declarado pelo proprietário?
+          </Label>
+          <RadioGroup
+            defaultValue="sim"
+            className="flex flex-row"
+            {...form.register("declarado_pelo_proprietario")}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="sim"
+                id="sim"
+                {...form.register("declarado_pelo_proprietario")}
+              />
+              <Label htmlFor="sim">Sim</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem
+                value="nao"
+                id="nao"
+                {...form.register("declarado_pelo_proprietario")}
+              />
+              <Label htmlFor="nao">Não</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        <div className="items-center gap-4">
+          <Label htmlFor="unidade">Unidade</Label>
+          <Input
+            id="unidade"
+            placeholder="ex: m2"
+            {...form.register("unidade")}
+          />
+        </div>
+        <div className="items-center gap-4">
+          <Label htmlFor="qtd">Quantidade</Label>
+          <Input
+            id="qtd"
+            type="number"
+            {...form.register("qtd")}
+            onChange={handleQuantidadeChange}
+            value={form.watch("qtd")}
+            placeholder="1"
+          />
+        </div>
+        <div className="items-center gap-4">
+          <Label htmlFor="valor">Valo total (R$)</Label>
+          <Input
+            id="valor"
+            {...form.register("valor")}
+            onChange={handleValorChange}
+            value={form.watch("valor")}
+            placeholder="0,00"
+          />
+        </div>
+        <div className="items-center gap-4">
+          <Label htmlFor="estadoConservacao">Estado de conservação</Label>
+          <Select
+            onValueChange={(value) => form.setValue("estadoConservacao", value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="bom" {...form.register("estadoConservacao")}>
+                  Bom
+                </SelectItem>
+                <SelectItem
+                  value="ruim"
+                  {...form.register("estadoConservacao")}
+                >
+                  Ruim
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <DialogFooter>
+          <Button type="submit">
+            {editingItem ? "Salvar mudanças" : "Adicionar"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
   );
 }
 
