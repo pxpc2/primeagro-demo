@@ -29,10 +29,10 @@ export async function signIn(formData) {
 
 export async function signUp(formData) {
   const supabase = createClient();
-
+  console.log(formData);
   const data = {
-    email: formData.get("email"),
-    password: formData.get("password"),
+    email: formData.email,
+    password: formData.password,
   };
 
   const { error } = await supabase.auth.signUp(data);
