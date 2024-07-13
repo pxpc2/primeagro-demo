@@ -168,11 +168,79 @@ async function getInventario() {
   const benfeitoriasImovel = await getInventarioBenfeitoriasImovel();
   const benfeitoriasIndividuais = await getInventarioBenfeitoriasIndividuais();
 
+  const inventariosIndividuais = await getInventariosIndividuais();
+
   return {
     aba_inventario,
     benfeitoriasImovel,
     benfeitoriasIndividuais,
+    inventariosIndividuais,
   };
+}
+
+export async function getInventariosIndividuais() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: inventariosIndividuais, error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return inventariosIndividuais;
+}
+
+export async function addNewInventarioIndividual({ data }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  const entries = {
+    ...data,
+    authuser_id: authUserID,
+  };
+  let { error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .insert(entries);
+  if (error) {
+    console.log(error);
+    return redirect("/error?message=" + error.message);
+  }
+}
+
+export async function deleteInventarioIndividual({ inventarioID }) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .delete()
+    .eq("id", inventarioID);
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return inventarioID;
+}
+
+export async function getInventarioItems({ inventarioID }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: inventariosIndividuais, error } = await supabase
+    .from("aba_inventario_inventarioIndividualItem")
+    .select("*")
+    .eq("inventarioIndividual_id", inventarioID);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return inventariosIndividuais;
 }
 
 export async function submitInventario({
@@ -180,10 +248,6 @@ export async function submitInventario({
   coletivosData,
   individuaisData,
 }) {
-  console.log("individuais data: ");
-  console.log(individuaisData);
-  console.log("\nnormal data: ");
-  console.log(data);
   const supabase = createClient();
 
   const {

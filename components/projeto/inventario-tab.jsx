@@ -54,6 +54,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import InventarioIndividual from "./inventario-individual";
 
 export default function InventarioTab({ data }) {
   const [editingItem, setEditingItem] = useState(null);
@@ -87,6 +88,9 @@ export default function InventarioTab({ data }) {
   );
   const [individuaisTableData, setIndividuaisTableData] = useState(
     data.benfeitoriasIndividuais || []
+  );
+  const [inventariosIndividuais, setInventariosIndividuais] = useState(
+    data.inventariosIndividuais || []
   );
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
@@ -152,8 +156,8 @@ export default function InventarioTab({ data }) {
       );
       setColetivosTableData(updatedData);
     } else if (tableType === "individuais") {
-      const updatedData = await deleteBenfeitoriaIndividual(
-        individualData,
+      const updatedData = await deleteBenfeitoria(
+        individuaisTableData,
         item,
         tableType
       );
@@ -417,6 +421,16 @@ export default function InventarioTab({ data }) {
             </div>
           </form>
         </Form>
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">Inventário Individual</h1>
+        </div>
+        <div className="flex w-full items-center justify-center">
+          <InventarioIndividual
+            inventariosIndividuais={inventariosIndividuais}
+            setInventariosIndividuais={setInventariosIndividuais}
+            formDisabled={formsDisabled}
+          />
+        </div>
       </div>
     </div>
   );
