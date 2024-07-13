@@ -93,6 +93,9 @@ export default function InventarioTab({ data }) {
   const [inventariosIndividuais, setInventariosIndividuais] = useState(
     data.inventariosIndividuais || []
   );
+  const [tempInventariosIndividuais, setTempInventariosIndividuais] = useState(
+    data.inventariosIndividuais || []
+  );
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
@@ -107,8 +110,9 @@ export default function InventarioTab({ data }) {
       data: combinedData,
       coletivosData: coletivosTableData,
       individuaisData: individuaisTableData,
-      inventariosIndividuais: inventariosIndividuais,
+      inventariosIndividuais: tempInventariosIndividuais,
     }).then(() => {
+      setInventariosIndividuais(tempInventariosIndividuais);
       setFormsDisabled(true);
       setLoading(false);
     });
@@ -138,6 +142,7 @@ export default function InventarioTab({ data }) {
         "",
     });
 
+    setTempInventariosIndividuais(inventariosIndividuais);
     setFormsDisabled(true);
   };
 
@@ -432,6 +437,8 @@ export default function InventarioTab({ data }) {
             setInventariosIndividuais={setInventariosIndividuais}
             formDisabled={formsDisabled}
             setIsDialogOpen={setIsDialogOpen}
+            setTempInventariosIndividuais={setTempInventariosIndividuais}
+            tempInventariosIndividuais={tempInventariosIndividuais}
           />
         </div>
       </div>

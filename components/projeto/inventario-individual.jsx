@@ -12,23 +12,33 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useForm } from "react-hook-form";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 export default function InventarioIndividual({
   inventariosIndividuais,
   setInventariosIndividuais,
   formDisabled,
   setIsDialogOpen,
+  setTempInventariosIndividuais,
+  tempInventariosIndividuais,
 }) {
   const form = useForm();
   const handleDialogSubmit = form.handleSubmit((data) => {
     const newItem = { ...data };
-    setInventariosIndividuais((prev) => [...prev, newItem]);
+    setTempInventariosIndividuais((prev) => [...prev, newItem]);
     setIsDialogOpen(false);
     form.reset();
   });
   return (
-    <div>
-      {inventariosIndividuais?.map((item) => (
+    <div className="w-full px-2 grid grid-cols-2 sm:grid-cols-3 sm:gap-8">
+      {tempInventariosIndividuais?.map((item) => (
         <Item item={item} key={item.id} />
       ))}
       <Dialog>
@@ -70,10 +80,27 @@ export default function InventarioIndividual({
   );
 }
 
-function Item({ item }, key) {
+function Item({ item }) {
+  const data = [];
   return (
-    <p className="" key={key}>
-      {item.tipo}
-    </p>
+    <div className="mb-4">
+      <h2 className="font-semibold text-center mb-2">{item.tipo}</h2>
+      <Table className="border-collapse">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-center">Descrição</TableHead>
+            <TableHead className="text-center">Cabeça</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell className="text-center">{row.descricao}</TableCell>
+              <TableCell className="text-center">{row.cabeca}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
