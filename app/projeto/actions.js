@@ -208,6 +208,56 @@ export async function submitInventario({ data, tableData }) {
   return dados;
 }
 
+/**
+ *
+ * @todo DELETE FROM DB
+ *
+ *
+ * @param {} tableData
+ * @param {*} itemToDelete
+ * @returns
+ */
+export async function deleteBeinfeitoriaColetiva(tableData, itemToDelete) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  const { error: deleteError } = await supabase
+    .from("aba_inventario_benfeitoriasImovel")
+    .delete()
+    .eq("id", itemToDelete.id)
+    .eq("authuser_id", authUserID);
+
+  if (deleteError) {
+    console.log(deleteError);
+    return redirect("/error?message=" + deleteError.message);
+  }
+
+  const updatedData = tableData.filter((item) => item.SEQ !== itemToDelete.SEQ);
+  updatedData.forEach((item, index) => {
+    item.SEQ = index + 1;
+  });
+
+  const { error } = await supabase
+    .from("aba_inventario_benfeitoriasImovel")
+    .upsert(
+      updatedData.map((item) => ({
+        ...item,
+        authuser_id: authUserID,
+      })),
+      { onConflict: ["id"] }
+    );
+
+  if (error) {
+    console.log(error);
+    return redirect("/error?message=" + error.message);
+  }
+
+  return updatedData;
+}
+
 export async function submitBenfeitoriaImovel({ tableData }) {
   //console.log(tableData);
   const supabase = createClient();

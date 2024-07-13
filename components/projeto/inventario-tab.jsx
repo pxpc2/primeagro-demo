@@ -44,7 +44,10 @@ import {
   SelectValue,
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import { submitInventario } from "@/app/projeto/actions";
+import {
+  deleteBeinfeitoriaColetiva,
+  submitInventario,
+} from "@/app/projeto/actions";
 import {
   Form,
   FormControl,
@@ -57,6 +60,7 @@ import {
 
 export default function InventarioTab({ data }) {
   const [editingItem, setEditingItem] = useState(null);
+  const [deletingItem, setDeletingItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -102,6 +106,12 @@ export default function InventarioTab({ data }) {
   const handleAddNewItem = (newItem) => {
     setTableData((prevData) => [...prevData, newItem]);
   };
+
+  const handleDeleteItem = async (item) => {
+    const updatedData = await deleteBeinfeitoriaColetiva(tableData, item);
+    setTableData(updatedData);
+  };
+
   const getValorTotal = useCallback(() => {
     return tableData.reduce((total, item) => {
       const valor = parseFloat(item.valor.replace(/\./g, "").replace(",", "."));
@@ -167,6 +177,9 @@ export default function InventarioTab({ data }) {
             setIsDialogOpen={setIsDialogOpen}
             isDialogOpen={isDialogOpen}
             setTableData={setTableData}
+            deletingItem={deletingItem}
+            setDeletingItem={setDeletingItem}
+            onDeleteItem={handleDeleteItem}
           />
         </div>
         <Form {...form}>
@@ -242,6 +255,9 @@ function EquipamentosExistentesImovelTable({
   setEditingItem,
   setTableData,
   onEditItem,
+  onDeleteItem,
+  deletingItem,
+  setDeletingItem,
   setIsDialogOpen,
   isDialogOpen,
 }) {
@@ -345,7 +361,10 @@ function EquipamentosExistentesImovelTable({
                             Editar
                           </DropdownMenuItem>
                         </DialogTrigger>
-                        <DropdownMenuItem className="hover:cursor-pointer">
+                        <DropdownMenuItem
+                          className="hover:cursor-pointer"
+                          onClick={() => onDeleteItem(item)}
+                        >
                           <Trash className="mr-2 h-4 w-4 text-red-500" />
                           Deletar
                         </DropdownMenuItem>
