@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -41,15 +40,11 @@ import {
   Select,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import {
-  submitBenfeitoriaImovel,
-  submitInventario,
-} from "@/app/projeto/actions";
+import { submitInventario } from "@/app/projeto/actions";
 import {
   Form,
   FormControl,
@@ -169,6 +164,8 @@ export default function InventarioTab({ data }) {
             onEditItem={handleEditItem}
             setEditingItem={setEditingItem}
             editingItem={editingItem}
+            setIsDialogOpen={setIsDialogOpen}
+            isDialogOpen={isDialogOpen}
             setTableData={setTableData}
           />
         </div>
@@ -245,19 +242,21 @@ function EquipamentosExistentesImovelTable({
   setEditingItem,
   setTableData,
   onEditItem,
+  setIsDialogOpen,
+  isDialogOpen,
 }) {
   const form = useForm();
   const handleDialogSubmit = form.handleSubmit((newData) => {
-    console.log(newData);
     const newItem = {
-      SEQ: data.length + 1,
+      ...editingItem,
+      SEQ: editingItem ? editingItem.SEQ : data.length + 1,
       descricao: newData.descricao,
       declarado_pelo_proprietario:
-        newData.declarado_pelo_proprietario === "sim",
+        newData.declarado_pelo_proprietario === "sim" ? true : false,
       unidade_medida: newData.unidade,
       quantidade: newData.qtd,
       valor: newData.valor,
-      estado_conservacao: newData.estadoConservacao,
+      estado_conservacao: newData.estado_conservacao,
     };
     if (editingItem) {
       const updatedData = data.map((item) =>
@@ -269,6 +268,7 @@ function EquipamentosExistentesImovelTable({
     }
     setEditingItem(null);
     form.reset();
+    setIsDialogOpen(false);
   });
   const formatBRL = (value) => {
     if (!value) return value;
@@ -409,7 +409,7 @@ function AddBenfeitoriaColetivaDialog({
       form.setValue("unidade", editingItem.unidade_medida);
       form.setValue("qtd", editingItem.quantidade);
       form.setValue("valor", editingItem.valor);
-      form.setValue("estadoConservacao", editingItem.estado_conservacao);
+      form.setValue("estado_conservacao", editingItem.estado_conservacao);
     } else {
       form.reset();
     }
@@ -437,13 +437,15 @@ function AddBenfeitoriaColetivaDialog({
           />
         </div>
         <div className="flex flex-col gap-4">
-          <Label htmlFor="declaradoPeloUsuario">
+          <Label htmlFor="declarado_pelo_proprietario">
             Declarado pelo proprietário?
           </Label>
           <RadioGroup
-            defaultValue="sim"
             className="flex flex-row"
-            {...form.register("declarado_pelo_proprietario")}
+            value={form.watch("declarado_pelo_proprietario")}
+            onValueChange={(value) =>
+              form.setValue("declarado_pelo_proprietario", value)
+            }
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem
@@ -493,21 +495,27 @@ function AddBenfeitoriaColetivaDialog({
           />
         </div>
         <div className="items-center gap-4">
-          <Label htmlFor="estadoConservacao">Estado de conservação</Label>
+          <Label htmlFor="estado_conservacao">Estado de conservação</Label>
           <Select
-            onValueChange={(value) => form.setValue("estadoConservacao", value)}
+            value={form.watch("estado_conservacao")}
+            onValueChange={(value) =>
+              form.setValue("estado_conservacao", value)
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="bom" {...form.register("estadoConservacao")}>
+                <SelectItem
+                  value="bom"
+                  {...form.register("estado_conservacao")}
+                >
                   Bom
                 </SelectItem>
                 <SelectItem
                   value="ruim"
-                  {...form.register("estadoConservacao")}
+                  {...form.register("estado_conservacao")}
                 >
                   Ruim
                 </SelectItem>
