@@ -83,6 +83,7 @@ export default function InventarioTab({ data }) {
         "",
     },
   });
+
   const [coletivosTableData, setColetivosTableData] = useState(
     data.benfeitoriasImovel || []
   );
@@ -106,6 +107,7 @@ export default function InventarioTab({ data }) {
       data: combinedData,
       coletivosData: coletivosTableData,
       individuaisData: individuaisTableData,
+      inventariosIndividuais: inventariosIndividuais,
     }).then(() => {
       setFormsDisabled(true);
       setLoading(false);
@@ -429,6 +431,7 @@ export default function InventarioTab({ data }) {
             inventariosIndividuais={inventariosIndividuais}
             setInventariosIndividuais={setInventariosIndividuais}
             formDisabled={formsDisabled}
+            setIsDialogOpen={setIsDialogOpen}
           />
         </div>
       </div>
@@ -588,8 +591,8 @@ function EquipamentosExistentesTable({
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="sm" variant="" className="gap-1">
-                  <CirclePlusIcon className="h-3.5 w-3.5" />
                   Inserir novo
+                  <CirclePlusIcon className="h-3.5 w-3.5 mt-0.5" />
                 </Button>
               </DialogTrigger>
               <AddBenfeitoriaColetivaDialog
