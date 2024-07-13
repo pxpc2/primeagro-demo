@@ -44,10 +44,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import {
-  deleteBeinfeitoriaColetiva,
-  submitInventario,
-} from "@/app/projeto/actions";
+import { deleteBenfeitoria, submitInventario } from "@/app/projeto/actions";
 import {
   Form,
   FormControl,
@@ -64,7 +61,9 @@ export default function InventarioTab({ data }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const form = useForm({
+  const [currentTable, setCurrentTable] = useState(null);
+
+  const coletivoForm = useForm({
     defaultValues: {
       benfeitorias_coletivas_numero_familias_irao_adquirir:
         data.aba_inventario[0]
@@ -73,53 +72,109 @@ export default function InventarioTab({ data }) {
         data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
     },
   });
-  const [tableData, setTableData] = useState(data.benfeitoriasImovel || []);
+  const individualForm = useForm({
+    defaultValues: {
+      benfeitorias_individuais_numero_familias_irao_adquirir:
+        data.aba_inventario[0]
+          ?.benfeitorias_individuais_numero_familias_irao_adquirir || "",
+      benfeitorias_individuais_valor_por_familia:
+        data.aba_inventario[0]?.benfeitorias_individuais_valor_por_familia ||
+        "",
+    },
+  });
+  const [coletivosTableData, setColetivosTableData] = useState(
+    data.benfeitoriasImovel || []
+  );
+  const [individuaisTableData, setIndividuaisTableData] = useState(
+    data.benfeitoriasIndividuais || []
+  );
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
 
-    form.handleSubmit(async (data) => {
-      await submitInventario({
-        data: data,
-        tableData: tableData,
-      });
+    const coletivaData = coletivoForm.getValues();
+    const individualData = individualForm.getValues();
+    const combinedData = {
+      ...coletivaData,
+      ...individualData,
+    };
+    submitInventario({
+      data: combinedData,
+      coletivosData: coletivosTableData,
+      individuaisData: individuaisTableData,
+    }).then(() => {
       setFormsDisabled(true);
       setLoading(false);
-    })();
+    });
   };
-  const handleEditItem = (item) => {
+
+  const handleEditItem = (item, tableType) => {
     setEditingItem(item);
+    setCurrentTable(tableType);
     setIsDialogOpen(true);
   };
 
   const handleCancel = () => {
-    form.reset({
+    coletivoForm.reset({
       benfeitorias_coletivas_numero_familias_irao_adquirir:
         data.aba_inventario[0]
           ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
       benfeitorias_coletivas_valor_por_familia:
         data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
     });
+
+    individualForm.reset({
+      benfeitorias_individuais_numero_familias_irao_adquirir:
+        data.aba_inventario[0]
+          ?.benfeitorias_individuais_numero_familias_irao_adquirir || "",
+      benfeitorias_individuais_valor_por_familia:
+        data.aba_inventario[0]?.benfeitorias_individuais_valor_por_familia ||
+        "",
+    });
+
     setFormsDisabled(true);
   };
 
-  const handleAddNewItem = (newItem) => {
-    setTableData((prevData) => [...prevData, newItem]);
+  const handleAddNewItem = (newItem, tableType) => {
+    if (tableType === "coletivas") {
+      setColetivosTableData((prevData) => [...prevData, newItem]);
+    } else if (tableType === "individuais") {
+      setIndividuaisTableData((prevData) => [...prevData, newItem]);
+    }
   };
 
-  const handleDeleteItem = async (item) => {
-    const updatedData = await deleteBeinfeitoriaColetiva(tableData, item);
-    setTableData(updatedData);
+  const handleDeleteItem = async (item, tableType) => {
+    if (tableType === "coletivas") {
+      const updatedData = await deleteBenfeitoria(
+        coletivosTableData,
+        item,
+        tableType
+      );
+      setColetivosTableData(updatedData);
+    } else if (tableType === "individuais") {
+      const updatedData = await deleteBenfeitoriaIndividual(
+        individualData,
+        item,
+        tableType
+      );
+      setIndividuaisTableData(updatedData);
+    }
   };
 
-  const getValorTotal = useCallback(() => {
+  const getValorTotal = useCallback((tableData) => {
     return tableData.reduce((total, item) => {
       const valor = parseFloat(item.valor.replace(/\./g, "").replace(",", "."));
       return total + (isNaN(valor) ? 0 : valor);
     }, 0);
-  }, [tableData]);
+  }, []);
 
-  const [valorTotal, setValorTotal] = useState(getValorTotal);
+  const [valorTotalColetiva, setValorTotalColetiva] = useState(
+    getValorTotal(coletivosTableData)
+  );
+  const [valorTotalIndividual, setValorTotalIndividual] = useState(
+    getValorTotal(individuaisTableData)
+  );
+
   const getValorPorFamilia = useCallback((total, numFamilies) => {
     if (numFamilies > 0) {
       return (total / numFamilies).toLocaleString("pt-BR", {
@@ -131,22 +186,51 @@ export default function InventarioTab({ data }) {
   }, []);
 
   useEffect(() => {
-    setValorTotal(getValorTotal());
-  }, [tableData, getValorTotal]);
+    setValorTotalColetiva(getValorTotal(coletivosTableData));
+    setValorTotalIndividual(getValorTotal(individuaisTableData));
+  }, [coletivosTableData, individuaisTableData, getValorTotal]);
 
   useEffect(() => {
-    const qtdFamilias = parseInt(
-      form.getValues("benfeitorias_coletivas_numero_familias_irao_adquirir"),
+    const qtdFamiliasColetiva = parseInt(
+      coletivoForm.getValues(
+        "benfeitorias_coletivas_numero_familias_irao_adquirir"
+      ),
       10
     );
-    if (!isNaN(qtdFamilias) && qtdFamilias > 0) {
-      const valorPorFamilia = getValorPorFamilia(valorTotal, qtdFamilias);
-      form.setValue(
+    if (!isNaN(qtdFamiliasColetiva) && qtdFamiliasColetiva > 0) {
+      const valorPorFamiliaColetiva = getValorPorFamilia(
+        valorTotalColetiva,
+        qtdFamiliasColetiva
+      );
+      coletivoForm.setValue(
         "benfeitorias_coletivas_valor_por_familia",
-        valorPorFamilia
+        valorPorFamiliaColetiva
       );
     }
-  }, [valorTotal, form, getValorPorFamilia]);
+
+    const qtdFamiliasIndividual = parseInt(
+      individualForm.getValues(
+        "benfeitorias_individuais_numero_familias_irao_adquirir"
+      ),
+      10
+    );
+    if (!isNaN(qtdFamiliasIndividual) && qtdFamiliasIndividual > 0) {
+      const valorPorFamiliaIndividual = getValorPorFamilia(
+        valorTotalIndividual,
+        qtdFamiliasIndividual
+      );
+      individualForm.setValue(
+        "benfeitorias_individuais_valor_por_familia",
+        valorPorFamiliaIndividual
+      );
+    }
+  }, [
+    valorTotalColetiva,
+    valorTotalIndividual,
+    coletivoForm,
+    individualForm,
+    getValorPorFamilia,
+  ]);
 
   return (
     <div className="p-4 bg-white">
@@ -160,33 +244,37 @@ export default function InventarioTab({ data }) {
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
-          <h1 className="text-white font-semibold">Dados do Imóvel</h1>
+          <h1 className="text-white font-semibold">Dados do imóvel</h1>
         </div>
         <div className="p-4  flex flex-col gap-8">
           <p className="text-indigo-800 font-semibold">
             Benfeitorias / equipamentos existentes coletivos:
           </p>
-          <EquipamentosExistentesImovelTable
-            form={form}
+          <EquipamentosExistentesTable
+            form={coletivoForm}
             formsDisabled={formsDisabled}
-            data={tableData}
-            onAddNewItem={handleAddNewItem}
-            onEditItem={handleEditItem}
+            data={coletivosTableData}
+            onAddNewItem={(newItem) => handleAddNewItem(newItem, "coletivas")}
+            onEditItem={(item) => handleEditItem(item, "coletivas")}
             setEditingItem={setEditingItem}
             editingItem={editingItem}
             setIsDialogOpen={setIsDialogOpen}
             isDialogOpen={isDialogOpen}
-            setTableData={setTableData}
+            setTableData={setColetivosTableData}
             deletingItem={deletingItem}
             setDeletingItem={setDeletingItem}
-            onDeleteItem={handleDeleteItem}
+            onDeleteItem={(item) => handleDeleteItem(item, "coletivas")}
+            tableType={"coletivas"}
           />
         </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Form {...coletivoForm}>
+          <form
+            onSubmit={coletivoForm.handleSubmit(onSave)}
+            className="space-y-8"
+          >
             <div className="flex w-full flex-row justify-end gap-10">
               <FormField
-                control={form.control}
+                control={coletivoForm.control}
                 name="benfeitorias_coletivas_numero_familias_irao_adquirir"
                 render={({ field }) => (
                   <FormItem>
@@ -204,15 +292,15 @@ export default function InventarioTab({ data }) {
                           const qtdFamilias = parseInt(value, 10);
                           if (!isNaN(qtdFamilias) && qtdFamilias > 0) {
                             const valorPorFamilia = getValorPorFamilia(
-                              valorTotal,
+                              valorTotalColetiva,
                               qtdFamilias
                             );
-                            form.setValue(
+                            coletivoForm.setValue(
                               "benfeitorias_coletivas_valor_por_familia",
                               valorPorFamilia
                             );
                           } else {
-                            form.setValue(
+                            coletivoForm.setValue(
                               "benfeitorias_coletivas_valor_por_familia",
                               ""
                             );
@@ -226,8 +314,95 @@ export default function InventarioTab({ data }) {
                 )}
               />
               <FormField
-                control={form.control}
+                control={coletivoForm.control}
                 name="benfeitorias_coletivas_valor_por_familia"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Valor das benfeitorias por família</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value} disabled />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </form>
+        </Form>
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">
+            Benfeitorias pagas pelo beneficiário
+          </h1>
+        </div>
+        <p className="text-indigo-800 font-semibold">
+          Benfeitorias / equipamentos existentes individuais:
+        </p>
+        <EquipamentosExistentesTable
+          form={individualForm}
+          formsDisabled={formsDisabled}
+          data={individuaisTableData}
+          onAddNewItem={(newItem) => handleAddNewItem(newItem, "individuais")}
+          onEditItem={(item) => handleEditItem(item, "individuais")}
+          setEditingItem={setEditingItem}
+          editingItem={editingItem}
+          setIsDialogOpen={setIsDialogOpen}
+          isDialogOpen={isDialogOpen}
+          setTableData={setIndividuaisTableData}
+          deletingItem={deletingItem}
+          setDeletingItem={setDeletingItem}
+          onDeleteItem={(item) => handleDeleteItem(item, "individuais")}
+          tableType={"individuais"}
+        />
+        <Form {...individualForm}>
+          <form
+            onSubmit={individualForm.handleSubmit(onSave)}
+            className="space-y-8"
+          >
+            <div className="flex w-full flex-row justify-end gap-10">
+              <FormField
+                control={individualForm.control}
+                name="benfeitorias_individuais_numero_familias_irao_adquirir"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Nº de famílias que irão adquirir as benfeitorias
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value}
+                        disabled={formsDisabled}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value);
+                          const qtdFamilias = parseInt(value, 10);
+                          if (!isNaN(qtdFamilias) && qtdFamilias > 0) {
+                            const valorPorFamilia = getValorPorFamilia(
+                              valorTotalIndividual,
+                              qtdFamilias
+                            );
+                            individualForm.setValue(
+                              "benfeitorias_individuais_valor_por_familia",
+                              valorPorFamilia
+                            );
+                          } else {
+                            individualForm.setValue(
+                              "benfeitorias_individuais_valor_por_familia",
+                              ""
+                            );
+                          }
+                        }}
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={individualForm.control}
+                name="benfeitorias_individuais_valor_por_familia"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Valor das benfeitorias por família</FormLabel>
@@ -247,7 +422,7 @@ export default function InventarioTab({ data }) {
   );
 }
 
-function EquipamentosExistentesImovelTable({
+function EquipamentosExistentesTable({
   formsDisabled,
   data,
   onAddNewItem,
@@ -260,6 +435,7 @@ function EquipamentosExistentesImovelTable({
   setDeletingItem,
   setIsDialogOpen,
   isDialogOpen,
+  tableType,
 }) {
   const form = useForm();
   const handleDialogSubmit = form.handleSubmit((newData) => {
@@ -273,6 +449,7 @@ function EquipamentosExistentesImovelTable({
       quantidade: newData.qtd,
       valor: newData.valor,
       estado_conservacao: newData.estado_conservacao,
+      tableType,
     };
     if (editingItem) {
       const updatedData = data.map((item) =>
@@ -305,7 +482,11 @@ function EquipamentosExistentesImovelTable({
   return (
     <Table className="border-collapse">
       <TableCaption>
-        Lista de benfeitorias/equipamentos relacionados ao imóvel
+        {tableType === "coletivas" ? (
+          <p>Lista de benfeitorias/equipamentos coletivas</p>
+        ) : (
+          <p>Lista de benfeitorias/equipamentos individuais</p>
+        )}
       </TableCaption>
       <TableHeader>
         <TableRow>
@@ -355,7 +536,7 @@ function EquipamentosExistentesImovelTable({
                         <DialogTrigger asChild>
                           <DropdownMenuItem
                             className="hover:cursor-pointer"
-                            onClick={() => onEditItem(item)}
+                            onClick={() => onEditItem(item, tableType)}
                           >
                             <Pencil className="mr-2 h-4 w-4" />
                             Editar
@@ -363,7 +544,7 @@ function EquipamentosExistentesImovelTable({
                         </DialogTrigger>
                         <DropdownMenuItem
                           className="hover:cursor-pointer"
-                          onClick={() => onDeleteItem(item)}
+                          onClick={() => onDeleteItem(item, tableType)}
                         >
                           <Trash className="mr-2 h-4 w-4 text-red-500" />
                           Deletar

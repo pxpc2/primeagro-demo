@@ -89,6 +89,18 @@ async function getInventarioBenfeitoriasImovel() {
   return aba_inventario_benfeitoriasImovel;
 }
 
+async function getInventarioBenfeitoriasIndividuais() {
+  const supabase = createClient();
+  let { data: aba_inventario_benfeitoriasIndividuais, err } = await supabase
+    .from("aba_inventario_benfeitoriasIndividuais")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return aba_inventario_benfeitoriasIndividuais;
+}
+
 export async function submitPreAnaliseForm({ formData }) {
   const supabase = createClient();
   const {
@@ -154,39 +166,48 @@ async function getInventario() {
   }
 
   const benfeitoriasImovel = await getInventarioBenfeitoriasImovel();
+  const benfeitoriasIndividuais = await getInventarioBenfeitoriasIndividuais();
 
   return {
     aba_inventario,
     benfeitoriasImovel,
+    benfeitoriasIndividuais,
   };
 }
 
-export async function submitInventario({ data, tableData }) {
+export async function submitInventario({
+  data,
+  coletivosData,
+  individuaisData,
+}) {
+  console.log("individuais data: ");
+  console.log(individuaisData);
+  console.log("\nnormal data: ");
+  console.log(data);
   const supabase = createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  await submitBenfeitoriaImovel({ tableData: tableData });
-  let totalValor = 0;
-  tableData?.map((entry) => {
-    if (entry.valor) {
-      const valor = parseFloat(
-        entry.valor.replace(/\./g, "").replace(",", ".")
-      ); // centavos vira . invés de , e remove o .
-      if (!isNaN(valor)) {
-        // bom checar se deu pra formatar
-        totalValor += valor;
-      }
-    }
+  const authUserID = user.id;
+
+  await submitBenfeitoria({ tableData: coletivosData, tableType: "coletivas" });
+  await submitBenfeitoria({
+    tableData: individuaisData,
+    tableType: "individuais",
   });
+
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
       data.benfeitorias_coletivas_valor_por_familia,
     benfeitorias_coletivas_numero_familias_irao_adquirir:
       data.benfeitorias_coletivas_numero_familias_irao_adquirir,
-  };
 
-  const authUserID = user.id;
+    benfeitorias_individuais_valor_por_familia:
+      data.benfeitorias_individuais_valor_por_familia,
+    benfeitorias_individuais_numero_familias_irao_adquirir:
+      data.benfeitorias_individuais_numero_familias_irao_adquirir,
+  };
 
   const { error } = await supabase.from("aba_inventario").upsert(
     [
@@ -195,6 +216,10 @@ export async function submitInventario({ data, tableData }) {
           data.benfeitorias_coletivas_valor_por_familia,
         benfeitorias_coletivas_numero_familias_irao_adquirir:
           data.benfeitorias_coletivas_numero_familias_irao_adquirir,
+        benfeitorias_individuais_valor_por_familia:
+          data.benfeitorias_individuais_valor_por_familia,
+        benfeitorias_individuais_numero_familias_irao_adquirir:
+          data.benfeitorias_individuais_numero_familias_irao_adquirir,
         authuser_id: authUserID,
       },
     ],
@@ -208,24 +233,19 @@ export async function submitInventario({ data, tableData }) {
   return dados;
 }
 
-/**
- *
- * @todo DELETE FROM DB
- *
- *
- * @param {} tableData
- * @param {*} itemToDelete
- * @returns
- */
-export async function deleteBeinfeitoriaColetiva(tableData, itemToDelete) {
+export async function deleteBenfeitoria(tableData, itemToDelete, tableType) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const authUserID = user.id;
 
+  const tableName = `aba_inventario_benfeitorias${
+    tableType === "coletivas" ? "Imovel" : "Individuais"
+  }`;
+
   const { error: deleteError } = await supabase
-    .from("aba_inventario_benfeitoriasImovel")
+    .from(tableName)
     .delete()
     .eq("id", itemToDelete.id)
     .eq("authuser_id", authUserID);
@@ -240,15 +260,13 @@ export async function deleteBeinfeitoriaColetiva(tableData, itemToDelete) {
     item.SEQ = index + 1;
   });
 
-  const { error } = await supabase
-    .from("aba_inventario_benfeitoriasImovel")
-    .upsert(
-      updatedData.map((item) => ({
-        ...item,
-        authuser_id: authUserID,
-      })),
-      { onConflict: ["id"] }
-    );
+  const { error } = await supabase.from(tableName).upsert(
+    updatedData.map((item) => ({
+      ...item,
+      authuser_id: authUserID,
+    })),
+    { onConflict: ["id"] }
+  );
 
   if (error) {
     console.log(error);
@@ -258,17 +276,22 @@ export async function deleteBeinfeitoriaColetiva(tableData, itemToDelete) {
   return updatedData;
 }
 
-export async function submitBenfeitoriaImovel({ tableData }) {
-  //console.log(tableData);
+export async function submitBenfeitoria({ tableData, tableType }) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const authUserID = user.id;
 
+  const tableName = `aba_inventario_benfeitorias${
+    tableType === "coletivas" ? "Imovel" : "Individuais"
+  }`;
+
+  const cleanedData = tableData.map(({ tableType, ...item }) => item);
+
   // separar novos de antigos (com ou sem ID)
-  const newEntries = tableData.filter((entry) => !entry.id);
-  const existingEntries = tableData.filter((entry) => entry.id);
+  const newEntries = cleanedData.filter((entry) => !entry.id);
+  const existingEntries = cleanedData.filter((entry) => entry.id);
 
   const newEntriesWithAuthUser = newEntries.map((entry) => ({
     ...entry,
@@ -278,7 +301,7 @@ export async function submitBenfeitoriaImovel({ tableData }) {
   // update existentes
   if (existingEntries.length > 0) {
     let { error } = await supabase
-      .from("aba_inventario_benfeitoriasImovel")
+      .from(tableName)
       .upsert(existingEntries, { onConflict: ["id"] });
     if (error) {
       console.log(error);
@@ -289,7 +312,7 @@ export async function submitBenfeitoriaImovel({ tableData }) {
   // inserir novos
   if (newEntriesWithAuthUser.length > 0) {
     let { error } = await supabase
-      .from("aba_inventario_benfeitoriasImovel")
+      .from(tableName)
       .insert(newEntriesWithAuthUser);
     if (error) {
       console.log(error);
