@@ -96,6 +96,9 @@ export default function InventarioTab({ data }) {
   const [tempInventariosIndividuais, setTempInventariosIndividuais] = useState(
     data.inventariosIndividuais || []
   );
+  const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
+    useState(data.inventariosIndividuaisItens || []);
+
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
@@ -439,6 +442,8 @@ export default function InventarioTab({ data }) {
             setIsDialogOpen={setIsDialogOpen}
             setTempInventariosIndividuais={setTempInventariosIndividuais}
             tempInventariosIndividuais={tempInventariosIndividuais}
+            itens={inventariosIndividuaisItens}
+            setItens={setInventariosIndividuaisItens}
           />
         </div>
       </div>

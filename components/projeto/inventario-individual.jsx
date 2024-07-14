@@ -1,4 +1,4 @@
-import { CirclePlusIcon } from "lucide-react";
+import { CirclePlusIcon, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -20,7 +20,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { deleteInventarioIndividual } from "@/app/projeto/actions";
+import {
+  deleteInventarioIndividual,
+  deleteInventarioItem,
+} from "@/app/projeto/actions";
 
 export default function InventarioIndividual({
   inventariosIndividuais,
@@ -29,6 +32,8 @@ export default function InventarioIndividual({
   setIsDialogOpen,
   setTempInventariosIndividuais,
   tempInventariosIndividuais,
+  itens,
+  setItens,
 }) {
   const form = useForm();
   const handleDialogSubmit = form.handleSubmit((data) => {
@@ -37,10 +42,12 @@ export default function InventarioIndividual({
     setIsDialogOpen(false);
     form.reset();
   });
-  const handleDeleteItem = (itemID) => {
+  const handleDeleteInventarioItem = async (itemID) => {
     /**
         @TODO 
     */
+    await deleteInventarioItem({ itemID: itemID });
+    setItens((prev) => prev.filter((item) => item.id !== itemID));
   };
   const handleDeleteInventario = async (inventarioID) => {
     await deleteInventarioIndividual({ inventarioID: inventarioID });
@@ -55,9 +62,10 @@ export default function InventarioIndividual({
           <Item
             item={item}
             key={item.id}
-            onDeleteInventarioItem={handleDeleteItem}
+            onDeleteInventarioItem={handleDeleteInventarioItem}
             formsDisabled={formDisabled}
             onDeleteInventario={handleDeleteInventario}
+            data={itens}
           />
         ))}
       </div>
@@ -111,12 +119,18 @@ function Item({
   onDeleteInventarioItem,
   formsDisabled,
   onDeleteInventario,
+  setTempInventariosIndividuais,
+  data,
 }) {
-  const data = [];
+  const form = useForm();
+  const filteredData = data.filter(
+    (row) => row.inventarioIndividual_id === item.id
+  );
+
   return (
     <div className="mb-4 border-2 border-dotted rounded">
       <div className="flex flex-row justify-center gap-2 border-b pb-2">
-        <h2 className="font-semibold text-center pt-2">{item.tipo}</h2>
+        <h2 className="font-semibold text-center pt-2 px-4">{item.tipo}</h2>
         {!formsDisabled && (
           <Button
             size="sm"
@@ -124,7 +138,7 @@ function Item({
             onClick={() => onDeleteInventario(item.id)}
             className="mt-1"
           >
-            X
+            <Trash className="h-4  text-white" />
           </Button>
         )}
       </div>
@@ -133,25 +147,26 @@ function Item({
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Descrição</TableHead>
-            <TableHead className="text-center">Cabeça</TableHead>
+            <TableHead className="text-center">Cabeças</TableHead>
             {!formsDisabled && (
               <TableHead className="text-center">Ações</TableHead>
             )}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.map((row, index) => (
+          {filteredData?.map((row, index) => (
             <TableRow key={index}>
               <TableCell className="text-center">{row.descricao}</TableCell>
-              <TableCell className="text-center">{row.cabeca}</TableCell>
+              <TableCell className="text-center">{row.cabecas}</TableCell>
               {!formsDisabled && (
                 <TableCell className="text-center">
                   <Button
-                    size="sm"
+                    size="xs"
+                    className="p-1"
                     variant="destructive"
-                    onClick={() => onDeleteInventarioItem(item.id)}
+                    onClick={() => onDeleteInventarioItem(row.id)}
                   >
-                    Deletar
+                    <Trash className="h-3  text-white" />
                   </Button>
                 </TableCell>
               )}
