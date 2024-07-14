@@ -1,4 +1,4 @@
-import { CirclePlusIcon, Trash } from "lucide-react";
+import { CirclePlusIcon, PlusIcon, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -78,7 +79,7 @@ export default function InventarioIndividual({
                 variant=""
                 className="gap-1 sm:max-w-[320px] items-center justify-center"
               >
-                Inserir novo
+                Inserir novo inventário
                 <CirclePlusIcon className="h-3.5 w-3.5 mt-0.5" />
               </Button>
             ) : (
@@ -114,6 +115,11 @@ export default function InventarioIndividual({
   );
 }
 
+function primeiraMaiuscula(string) {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function Item({
   item,
   onDeleteInventarioItem,
@@ -128,22 +134,25 @@ function Item({
   );
 
   return (
-    <div className="mb-4 border-2 border-dotted rounded">
-      <div className="flex flex-row justify-center gap-2 border-b pb-2">
-        <h2 className="font-semibold text-center pt-2 px-4">{item.tipo}</h2>
+    <div className="border-2 border-dotted rounded">
+      <div className="flex flex-row justify-center gap-2 border-b">
+        <h2 className="font-semibold text-center py-2 px-4">
+          {primeiraMaiuscula(item.tipo)}
+        </h2>
         {!formsDisabled && (
           <Button
             size="sm"
-            variant="destructive"
+            variant="ghost"
             onClick={() => onDeleteInventario(item.id)}
-            className="mt-1"
+            className="my-1 hover:bg-red-600 text-red-600 hover:text-white"
           >
-            <Trash className="h-4  text-white" />
+            Deletar inventário
+            <Trash className="h-4 ml-1" />
           </Button>
         )}
       </div>
 
-      <Table className="border-collapse">
+      <Table className="border-collapse overflow-hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="text-center">Descrição</TableHead>
@@ -162,17 +171,29 @@ function Item({
                 <TableCell className="text-center">
                   <Button
                     size="xs"
-                    className="p-1"
-                    variant="destructive"
+                    className="py-1 px-0.5 text-black hover:bg-red-600 hover:text-white"
+                    variant="ghost"
                     onClick={() => onDeleteInventarioItem(row.id)}
                   >
-                    <Trash className="h-3  text-white" />
+                    <Trash className="h-3" />
                   </Button>
                 </TableCell>
               )}
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter>
+          <div className="w-full flex flex-row justify-center">
+            {!formsDisabled && (
+              <Button
+                size="xs"
+                className="bg-green-700 hover:bg-green-600 py-1 px-0.5 my-2 text-xs text-white rounded-lg"
+              >
+                <PlusIcon className="h-3"></PlusIcon>
+              </Button>
+            )}
+          </div>
+        </TableFooter>
       </Table>
     </div>
   );
