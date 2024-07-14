@@ -215,6 +215,7 @@ export async function addNewInventarioIndividual({ data }) {
 
 export async function deleteInventarioIndividual({ inventarioID }) {
   const supabase = createClient();
+  console.log(inventarioID);
   const { error } = await supabase
     .from("aba_inventario_inventarioIndividual")
     .delete()
