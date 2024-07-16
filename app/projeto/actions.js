@@ -276,11 +276,30 @@ export async function submitInventariosIndividuais({ data }) {
   }
 }
 
+export async function submitInventariosIndividuaisItens({ data }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const newItens = data?.filter((item) => !item.id);
+  for (const newItem of newItens) {
+    const entry = { ...newItem, authuser_id: user.id };
+    const { error: error } = await supabase
+      .from("aba_inventario_inventarioIndividualItem")
+      .insert(entry);
+    if (error) {
+      console.log(error);
+      return redirect("/error?message=" + insertError.message);
+    }
+  }
+}
+
 export async function submitInventario({
   data,
   coletivosData,
   individuaisData,
   inventariosIndividuais,
+  inventariosIndividuaisItens,
 }) {
   const supabase = createClient();
 
@@ -298,6 +317,10 @@ export async function submitInventario({
   await submitInventariosIndividuais({
     data: inventariosIndividuais,
     authUserID: authUserID,
+  });
+
+  await submitInventariosIndividuaisItens({
+    data: inventariosIndividuaisItens,
   });
 
   const dados = {

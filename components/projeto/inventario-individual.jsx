@@ -25,28 +25,25 @@ import {
   deleteInventarioIndividual,
   deleteInventarioItem,
 } from "@/app/projeto/actions";
+import { useState } from "react";
 
 export default function InventarioIndividual({
-  inventariosIndividuais,
-  setInventariosIndividuais,
   formDisabled,
   setIsDialogOpen,
   setTempInventariosIndividuais,
   tempInventariosIndividuais,
   itens,
   setItens,
+  onAddInventarioItem,
 }) {
   const form = useForm();
-  const handleDialogSubmit = form.handleSubmit((data) => {
+  const handleInventarioDialogSubmit = form.handleSubmit((data) => {
     const newItem = { ...data };
     setTempInventariosIndividuais((prev) => [...prev, newItem]);
     setIsDialogOpen(false);
     form.reset();
   });
   const handleDeleteInventarioItem = async (itemID) => {
-    /**
-        @TODO 
-    */
     await deleteInventarioItem({ itemID: itemID });
     setItens((prev) => prev.filter((item) => item.id !== itemID));
   };
@@ -67,10 +64,11 @@ export default function InventarioIndividual({
             formsDisabled={formDisabled}
             onDeleteInventario={handleDeleteInventario}
             data={itens}
+            onAdd={onAddInventarioItem}
           />
         ))}
       </div>
-      <div className="flex w-full items-center justify-center pt-2 sm:pt-4">
+      <div className="flex w-full items-center justify-center pt-2 sm:pt-12">
         <Dialog>
           <DialogTrigger asChild>
             {!formDisabled ? (
@@ -80,7 +78,7 @@ export default function InventarioIndividual({
                 className="gap-1 sm:max-w-[320px] items-center justify-center"
               >
                 Inserir novo inventário
-                <CirclePlusIcon className="h-3.5 w-3.5 mt-0.5" />
+                <PlusIcon className="h-3.5 w-3.5 mt-0.5" />
               </Button>
             ) : (
               <></>
@@ -91,7 +89,7 @@ export default function InventarioIndividual({
               <DialogTitle>Adicionar novo</DialogTitle>
               <DialogDescription></DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleDialogSubmit}>
+            <form onSubmit={handleInventarioDialogSubmit}>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="tipo" className="text-right">
@@ -125,16 +123,23 @@ function Item({
   onDeleteInventarioItem,
   formsDisabled,
   onDeleteInventario,
-  setTempInventariosIndividuais,
   data,
+  onAdd,
 }) {
   const form = useForm();
   const filteredData = data.filter(
     (row) => row.inventarioIndividual_id === item.id
   );
-
+  const [isAddItemDialogOpen, setAddItemDialogOpen] = useState(false);
+  const handleAddItemDialogSubmit = form.handleSubmit((data) => {
+    console.log("being called...");
+    const newItem = { ...data, inventarioIndividual_id: item.id };
+    onAdd(newItem);
+    if (isAddItemDialogOpen) setAddItemDialogOpen(!isAddItemDialogOpen);
+    form.reset();
+  });
   return (
-    <div className="border-2 border-dotted rounded">
+    <div className="border border-gray-300 shadow-sm border-dotted rounded">
       <div className="flex flex-row justify-center gap-2 border-b">
         <h2 className="font-semibold text-center py-2 px-4">
           {primeiraMaiuscula(item.tipo)}
@@ -185,12 +190,51 @@ function Item({
         <TableFooter>
           <div className="w-full flex flex-row justify-center">
             {!formsDisabled && (
-              <Button
-                size="xs"
-                className="bg-green-700 hover:bg-green-600 py-1 px-0.5 my-2 text-xs text-white rounded-lg"
-              >
-                <PlusIcon className="h-3"></PlusIcon>
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="xs"
+                    className="bg-green-700 hover:bg-green-600 py-1 px-0.5 my-2 text-xs text-white rounded-lg"
+                    onClick={() => setAddItemDialogOpen(true)}
+                  >
+                    <PlusIcon className="h-3" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Adicionar Item</DialogTitle>
+                    <DialogDescription></DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleAddItemDialogSubmit}>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="descricao" className="text-right">
+                          Descrição
+                        </Label>
+                        <Input
+                          id="descricao"
+                          className="col-span-3"
+                          {...form.register("descricao")}
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="cabecas" className="text-right">
+                          Cabeças
+                        </Label>
+                        <Input
+                          id="cabecas"
+                          type="number"
+                          className="col-span-3"
+                          {...form.register("cabecas")}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Adicionar</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             )}
           </div>
         </TableFooter>

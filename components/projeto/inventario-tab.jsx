@@ -14,7 +14,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
-import { CirclePlusIcon, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import {
+  CirclePlusIcon,
+  MoreHorizontal,
+  Pencil,
+  PlusIcon,
+  Trash,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -114,6 +120,7 @@ export default function InventarioTab({ data }) {
       coletivosData: coletivosTableData,
       individuaisData: individuaisTableData,
       inventariosIndividuais: tempInventariosIndividuais,
+      inventariosIndividuaisItens: inventariosIndividuaisItens,
     }).then(() => {
       setInventariosIndividuais(tempInventariosIndividuais);
       setFormsDisabled(true);
@@ -444,6 +451,9 @@ export default function InventarioTab({ data }) {
             tempInventariosIndividuais={tempInventariosIndividuais}
             itens={inventariosIndividuaisItens}
             setItens={setInventariosIndividuaisItens}
+            onAddInventarioItem={(newItem) =>
+              setInventariosIndividuaisItens((prev) => [...prev, newItem])
+            }
           />
         </div>
       </div>
@@ -604,7 +614,7 @@ function EquipamentosExistentesTable({
               <DialogTrigger asChild>
                 <Button size="sm" variant="" className="gap-1">
                   Inserir novo
-                  <CirclePlusIcon className="h-3.5 w-3.5 mt-0.5" />
+                  <PlusIcon className="h-3.5 w-3.5 mt-0.5" />
                 </Button>
               </DialogTrigger>
               <AddBenfeitoriaColetivaDialog

@@ -48,11 +48,11 @@ export default function Heading({
               onClick={onEdit}
               className="inline-flex items-center rounded-md bg-white px-3 py-2 w-full text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
             >
+              Editar
               <PencilIcon
-                className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+                className="ml-1.5 h-3.5 w-3.5 text-gray-400"
                 aria-hidden="true"
               />
-              Editar
             </button>
           </span>
         ) : (
@@ -63,21 +63,21 @@ export default function Heading({
               </Button>
             </span>
 
-            <span className="sm:-ml-3">
+            <span className="">
               <button
                 type="button"
                 onClick={onSave}
                 className="inline-flex items-center rounded-md bg-orange-600 px-3 py-2 text-sm w-full font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
+                {isLoading ? "" : "Salvar"}
                 {isLoading ? (
                   <Loader2 className="animate-spin h-5 w-5 text-white" />
                 ) : (
                   <CheckIcon
-                    className="-ml-0.5 mr-1.5 h-5 w-5"
+                    className="h-3.5 w-3.5 mt-0.5 ml-1"
                     aria-hidden="true"
                   />
                 )}
-                {isLoading ? "" : "Salvar"}
               </button>
             </span>
           </div>
