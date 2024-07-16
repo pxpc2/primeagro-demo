@@ -50,7 +50,11 @@ import {
   SelectValue,
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
-import { deleteBenfeitoria, submitInventario } from "@/app/projeto/actions";
+import {
+  deleteBenfeitoria,
+  deleteMaquinaEquipamento,
+  submitInventario,
+} from "@/app/projeto/actions";
 import {
   Form,
   FormControl,
@@ -61,6 +65,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import InventarioIndividual from "./inventario-individual";
+import MaquinasEquipamentosTable from "./maquinas-e-equipamentos";
 
 export default function InventarioTab({ data }) {
   const [editingItem, setEditingItem] = useState(null);
@@ -105,6 +110,9 @@ export default function InventarioTab({ data }) {
   const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
     useState(data.inventariosIndividuaisItens || []);
 
+  const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
+    useState(data.maquinasEquipamentosTableData || []);
+
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
@@ -121,6 +129,7 @@ export default function InventarioTab({ data }) {
       individuaisData: individuaisTableData,
       inventariosIndividuais: tempInventariosIndividuais,
       inventariosIndividuaisItens: inventariosIndividuaisItens,
+      maquinasEquipamentosData: maquinasEquipamentosTableData,
     }).then(() => {
       setInventariosIndividuais(tempInventariosIndividuais);
       setFormsDisabled(true);
@@ -252,6 +261,24 @@ export default function InventarioTab({ data }) {
     individualForm,
     getValorPorFamilia,
   ]);
+
+  const handleAddNewMaquina = (item) => {
+    setMaquinasEquipamentosTableData((prev) => [...prev, item]);
+    // é enviado ao servidor depois, no onSave()
+  };
+
+  const handleEditMaquina = (item) => {
+    // TODO
+  };
+
+  const handleDeleteMaquina = async (item) => {
+    const result = await deleteMaquinaEquipamento({ id: item.id }); // deletamos na hora, não aguarda onSave()
+    if (result) {
+      setMaquinasEquipamentosTableData((prev) =>
+        prev.filter((i) => i.id !== item.id)
+      );
+    }
+  };
 
   return (
     <div className="p-4 bg-white">
@@ -455,6 +482,28 @@ export default function InventarioTab({ data }) {
               setInventariosIndividuaisItens((prev) => [...prev, newItem])
             }
           />
+        </div>
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">Máquinas e Equipamentos</h1>
+        </div>
+        <MaquinasEquipamentosTable
+          data={maquinasEquipamentosTableData}
+          setTableData={setMaquinasEquipamentosTableData}
+          formsDisabled={formsDisabled}
+          onAddNewItem={handleAddNewMaquina}
+          onEditItem={handleEditMaquina}
+          onDeleteItem={handleDeleteMaquina}
+        />
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">Outros bens</h1>
+        </div>
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">Infraestrutura</h1>
+        </div>
+        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <h1 className="text-white font-semibold">
+            Atividades agrícolas já existentes no imóvel
+          </h1>
         </div>
       </div>
     </div>
