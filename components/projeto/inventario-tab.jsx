@@ -66,6 +66,7 @@ import {
 } from "../ui/form";
 import InventarioIndividual from "./inventario-individual";
 import MaquinasEquipamentosTable from "./maquinas-e-equipamentos";
+import ReusableTable from "../reusable-table";
 
 export default function InventarioTab({ data }) {
   const [editingItem, setEditingItem] = useState(null);
@@ -74,6 +75,12 @@ export default function InventarioTab({ data }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [currentTable, setCurrentTable] = useState(null);
+
+  const maquinaEquipamentoColumns = [
+    { key: "descricao", label: "Descrição" },
+    { key: "unidade_medida", label: "Unidade de Medida" },
+    { key: "quantidade", label: "Quantidade" },
+  ];
 
   const coletivoForm = useForm({
     defaultValues: {
@@ -267,8 +274,10 @@ export default function InventarioTab({ data }) {
     // é enviado ao servidor depois, no onSave()
   };
 
-  const handleEditMaquina = (item) => {
-    // TODO
+  const handleEditMaquina = (updatedItem) => {
+    setMaquinasEquipamentosTableData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
   };
 
   const handleDeleteMaquina = async (item) => {
@@ -486,13 +495,14 @@ export default function InventarioTab({ data }) {
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Máquinas e Equipamentos</h1>
         </div>
-        <MaquinasEquipamentosTable
+        <ReusableTable
           data={maquinasEquipamentosTableData}
-          setTableData={setMaquinasEquipamentosTableData}
+          columns={maquinaEquipamentoColumns}
           formsDisabled={formsDisabled}
           onAddNewItem={handleAddNewMaquina}
           onEditItem={handleEditMaquina}
           onDeleteItem={handleDeleteMaquina}
+          caption={"Lista de máquinas e equipamentos existentes"}
         />
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Outros bens</h1>
@@ -519,10 +529,7 @@ function EquipamentosExistentesTable({
   setTableData,
   onEditItem,
   onDeleteItem,
-  deletingItem,
-  setDeletingItem,
   setIsDialogOpen,
-  isDialogOpen,
   tableType,
 }) {
   const form = useForm();
