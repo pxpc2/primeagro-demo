@@ -53,6 +53,7 @@ import { SelectContent } from "@radix-ui/react-select";
 import {
   deleteBenfeitoria,
   deleteMaquinaEquipamento,
+  deleteOutrosBens,
   submitInventario,
 } from "@/app/projeto/actions";
 import {
@@ -65,7 +66,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import InventarioIndividual from "./inventario-individual";
-import MaquinasEquipamentosTable from "./maquinas-e-equipamentos";
 import ReusableTable from "../reusable-table";
 
 export default function InventarioTab({ data }) {
@@ -120,6 +120,10 @@ export default function InventarioTab({ data }) {
   const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
     useState(data.maquinasEquipamentosTableData || []);
 
+  const [outrosBensTableData, setOutrosBensTableData] = useState(
+    data.outrosBensTableData || []
+  );
+
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
@@ -137,6 +141,7 @@ export default function InventarioTab({ data }) {
       inventariosIndividuais: tempInventariosIndividuais,
       inventariosIndividuaisItens: inventariosIndividuaisItens,
       maquinasEquipamentosData: maquinasEquipamentosTableData,
+      outrosBensData: outrosBensTableData,
     }).then(() => {
       setInventariosIndividuais(tempInventariosIndividuais);
       setFormsDisabled(true);
@@ -286,6 +291,23 @@ export default function InventarioTab({ data }) {
       setMaquinasEquipamentosTableData((prev) =>
         prev.filter((i) => i.id !== item.id)
       );
+    }
+  };
+
+  const handleAddNewOutrosBens = async (item) => {
+    setOutrosBensTableData((prev) => [...prev, item]);
+  };
+
+  const handleEditOutrosBens = (updatedItem) => {
+    setOutrosBensTableData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleDeleteOutrosBens = async (item) => {
+    const result = await deleteOutrosBens({ id: item.id });
+    if (result) {
+      setOutrosBensTableData((prev) => prev.filter((i) => i.id !== item.id));
     }
   };
 
@@ -474,6 +496,7 @@ export default function InventarioTab({ data }) {
             </div>
           </form>
         </Form>
+
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Inventário Individual</h1>
         </div>
@@ -492,21 +515,38 @@ export default function InventarioTab({ data }) {
             }
           />
         </div>
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
-          <h1 className="text-white font-semibold">Máquinas e Equipamentos</h1>
+
+        <div>
+          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+            <h1 className="text-white font-semibold">
+              Máquinas e Equipamentos
+            </h1>
+          </div>
+          <ReusableTable
+            data={maquinasEquipamentosTableData}
+            columns={maquinaEquipamentoColumns}
+            formsDisabled={formsDisabled}
+            onAddNewItem={handleAddNewMaquina}
+            onEditItem={handleEditMaquina}
+            onDeleteItem={handleDeleteMaquina}
+            caption={"Lista de máquinas e equipamentos existentes"}
+          />
         </div>
-        <ReusableTable
-          data={maquinasEquipamentosTableData}
-          columns={maquinaEquipamentoColumns}
-          formsDisabled={formsDisabled}
-          onAddNewItem={handleAddNewMaquina}
-          onEditItem={handleEditMaquina}
-          onDeleteItem={handleDeleteMaquina}
-          caption={"Lista de máquinas e equipamentos existentes"}
-        />
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
-          <h1 className="text-white font-semibold">Outros bens</h1>
+        <div>
+          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+            <h1 className="text-white font-semibold">Outros bens</h1>
+          </div>
+          <ReusableTable
+            data={outrosBensTableData}
+            columns={maquinaEquipamentoColumns} // mesmas colunas
+            formsDisabled={formsDisabled}
+            onAddNewItem={handleAddNewOutrosBens}
+            onEditItem={handleEditOutrosBens}
+            onDeleteItem={handleDeleteOutrosBens}
+            caption={"Lista de demais bens"}
+          />
         </div>
+
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Infraestrutura</h1>
         </div>

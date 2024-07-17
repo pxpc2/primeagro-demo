@@ -170,6 +170,7 @@ async function getInventario() {
   const inventariosIndividuais = await getInventariosIndividuais();
   const inventariosIndividuaisItens = await getInventarioItems();
   const maquinasEquipamentosTableData = await getMaquinasEquipamentosData();
+  const outrosBensTableData = await getOutrosBensData();
 
   return {
     aba_inventario,
@@ -178,7 +179,24 @@ async function getInventario() {
     inventariosIndividuais,
     inventariosIndividuaisItens,
     maquinasEquipamentosTableData,
+    outrosBensTableData,
   };
+}
+
+export async function getOutrosBensData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_inventario_outrosBens")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return dados;
 }
 
 export async function getMaquinasEquipamentosData() {
@@ -186,7 +204,7 @@ export async function getMaquinasEquipamentosData() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  let { data: inventariosIndividuais, error } = await supabase
+  let { data: dados, error } = await supabase
     .from("aba_inventario_maquinas")
     .select("*");
 
@@ -194,7 +212,7 @@ export async function getMaquinasEquipamentosData() {
     console.log(error);
     return undefined;
   }
-  return inventariosIndividuais;
+  return dados;
 }
 
 export async function submitMaquinasEquipamentos({ data }) {
@@ -232,10 +250,60 @@ export async function submitMaquinasEquipamentos({ data }) {
   }
 }
 
+export async function submitOutrosBens({ data }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  const newEntries = data.filter((item) => !item.id);
+  const existingEntries = data.filter((item) => item.id);
+  if (existingEntries.length > 0) {
+    const { error: updateError } = await supabase
+      .from("aba_inventario_outrosBens")
+      .upsert(existingEntries, { onConflict: ["id"] });
+
+    if (updateError) {
+      console.log(updateError);
+      return redirect("/error?message=" + updateError.message);
+    }
+  }
+  if (newEntries.length > 0) {
+    const newEntriesWithAuthUser = newEntries.map((entry) => ({
+      ...entry,
+      authuser_id: authUserID,
+    }));
+
+    const { error: insertError } = await supabase
+      .from("aba_inventario_outrosBens")
+      .insert(newEntriesWithAuthUser);
+
+    if (insertError) {
+      console.log(insertError);
+      return redirect("/error?message=" + insertError.message);
+    }
+  }
+}
+
 export async function deleteMaquinaEquipamento({ id }) {
   const supabase = createClient();
   const { error } = await supabase
     .from("aba_inventario_maquinas")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return id;
+}
+
+export async function deleteOutrosBens({ id }) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("aba_inventario_outrosBens")
     .delete()
     .eq("id", id);
 
@@ -367,6 +435,7 @@ export async function submitInventario({
   inventariosIndividuais,
   inventariosIndividuaisItens,
   maquinasEquipamentosData,
+  outrosBensData,
 }) {
   const supabase = createClient();
 
@@ -391,6 +460,8 @@ export async function submitInventario({
   });
 
   await submitMaquinasEquipamentos({ data: maquinasEquipamentosData });
+
+  await submitOutrosBens({ data: outrosBensData });
 
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
