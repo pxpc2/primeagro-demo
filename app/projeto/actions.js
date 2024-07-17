@@ -24,7 +24,8 @@ export async function getProjetoFormsData() {
     await getIdentificacaoBeneficiario();
   formData.aba_inventario = await getInventario();
 
-  formData.aba_dadosImovel = {};
+  formData.aba_dadosImovel = {}; // @TODO
+  formData.aba_investimentos = {}; // @TODO
 
   return formData;
 }
