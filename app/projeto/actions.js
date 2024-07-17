@@ -440,7 +440,7 @@ export async function submitInventariosIndividuaisItens({ data }) {
       .insert(entry);
     if (error) {
       console.log(error);
-      return redirect("/error?message=" + insertError.message);
+      return redirect("/error?message=" + error.message);
     }
   }
 }

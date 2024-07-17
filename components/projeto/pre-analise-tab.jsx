@@ -25,6 +25,15 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useEffect, useState } from "react";
 import Heading from "./Header";
 import { submitPreAnaliseForm } from "@/app/projeto/actions";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 const getFieldNameByNumber = (number) => {
   const fieldNames = {
@@ -149,12 +158,12 @@ export default function PreAnaliseTab({ defaultValues }) {
       />
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full p-4  gap-4">
-          <div className="p-4 bg-gray-50 ">
+          <div className="p-4 bg-gray-50 shadow-sm">
             <InformacoesIniciaisForm form={form} formDisabled={formsDisabled} />
           </div>
         </div>
         <div className="w-full  p-4 gap-4">
-          <div className="p-4 bg-gray-50">
+          <div className="p-4 bg-gray-50 h-full shadow-sm">
             <PreAnaliseForm
               form={form}
               formDisabled={formsDisabled}
@@ -168,6 +177,66 @@ export default function PreAnaliseTab({ defaultValues }) {
             />
           </div>
         </div>
+      </div>
+      <div className="p-4 m-4 bg-gray-50 shadow-md border">
+        <Table>
+          <TableCaption></TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-black">Data de elaboração</TableHead>
+              <TableHead className="text-black">CREA/CFTA</TableHead>
+              <TableHead className="text-black">
+                Engenheiro responsável
+              </TableHead>
+              <TableHead className="text-black">Entidade de ATER</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <Table>
+          <TableCaption></TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-black">
+                Contato do(a) técnico(a) responsável
+              </TableHead>
+              <TableHead className="text-black">
+                E-mail do responsável
+              </TableHead>
+              <TableHead className="text-black">
+                Data de validade do certificado CET
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+              <TableCell>
+                <Input disabled={formsDisabled} />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
