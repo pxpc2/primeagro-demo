@@ -59,6 +59,13 @@ const getFieldNameByNumber = (number) => {
     20: "idadeProtocoloObterCredito",
     21: "agenteFinanceiro",
     22: "agenciaInteresse",
+    23: "dataElaboracao",
+    24: "creaCfta",
+    25: "engenheiroResponsavel",
+    26: "entidadeAter",
+    27: "contatoTecnicoResponsavel",
+    28: "emailResponsavel",
+    29: "dataValidadeCertificadoCet",
   };
   return fieldNames[number];
 };
@@ -131,13 +138,51 @@ export default function PreAnaliseTab({ defaultValues }) {
           ? "Não preenche o requisito"
           : ""
       );
+      setDataElaboracao(parsed["23-dataElaboracao"] || "");
+      setCreaCfta(parsed["24-creaCfta"] || "");
+      setEngenheiroResponsavel(parsed["25-engenheiroResponsavel"] || "");
+      setEntidadeAter(parsed["26-entidadeAter"] || "");
+      setContatoTecnicoResponsavel(
+        parsed["27-contatoTecnicoResponsavel"] || ""
+      );
+      setEmailResponsavel(parsed["28-emailResponsavel"] || "");
+      setDataValidadeCertificadoCet(
+        parsed["29-dataValidadeCertificadoCet"] || ""
+      );
     }
   }, [defaultValues, form]);
+
+  const [dataElaboracao, setDataElaboracao] = useState(
+    parsed["23-dataElaboracao"] || ""
+  );
+  const [creaCfta, setCreaCfta] = useState(parsed["24-creaCfta"] || "");
+  const [engenheiroResponsavel, setEngenheiroResponsavel] = useState(
+    parsed["25-engenheiroResponsavel"] || ""
+  );
+  const [entidadeAter, setEntidadeAter] = useState(
+    parsed["26-entidadeAter"] || ""
+  );
+  const [contatoTecnicoResponsavel, setContatoTecnicoResponsavel] = useState(
+    parsed["27-contatoTecnicoResponsavel"] || ""
+  );
+  const [emailResponsavel, setEmailResponsavel] = useState(
+    parsed["28-emailResponsavel"] || ""
+  );
+  const [dataValidadeCertificadoCet, setDataValidadeCertificadoCet] = useState(
+    parsed["29-dataValidadeCertificadoCet"] || ""
+  );
 
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
     form.handleSubmit(async (data) => {
+      data["23-dataElaboracao"] = dataElaboracao;
+      data["24-creaCfta"] = creaCfta;
+      data["25-engenheiroResponsavel"] = engenheiroResponsavel;
+      data["26-entidadeAter"] = entidadeAter;
+      data["27-contatoTecnicoResponsavel"] = contatoTecnicoResponsavel;
+      data["28-emailResponsavel"] = emailResponsavel;
+      data["29-dataValidadeCertificadoCet"] = dataValidadeCertificadoCet;
       await submitPreAnaliseForm({ formData: data });
       setFormsDisabled(true);
       setLoading(false);
@@ -194,16 +239,32 @@ export default function PreAnaliseTab({ defaultValues }) {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={dataElaboracao}
+                  onChange={(e) => setDataElaboracao(e.target.value)}
+                />
               </TableCell>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={creaCfta}
+                  onChange={(e) => setCreaCfta(e.target.value)}
+                />
               </TableCell>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={engenheiroResponsavel}
+                  onChange={(e) => setEngenheiroResponsavel(e.target.value)}
+                />
               </TableCell>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={entidadeAter}
+                  onChange={(e) => setEntidadeAter(e.target.value)}
+                />
               </TableCell>
             </TableRow>
           </TableBody>
@@ -226,13 +287,27 @@ export default function PreAnaliseTab({ defaultValues }) {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={contatoTecnicoResponsavel}
+                  onChange={(e) => setContatoTecnicoResponsavel(e.target.value)}
+                />
               </TableCell>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={emailResponsavel}
+                  onChange={(e) => setEmailResponsavel(e.target.value)}
+                />
               </TableCell>
               <TableCell>
-                <Input disabled={formsDisabled} />
+                <Input
+                  disabled={formsDisabled}
+                  value={dataValidadeCertificadoCet}
+                  onChange={(e) =>
+                    setDataValidadeCertificadoCet(e.target.value)
+                  }
+                />
               </TableCell>
             </TableRow>
           </TableBody>
