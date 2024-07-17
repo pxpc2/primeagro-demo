@@ -58,7 +58,7 @@ async function getDadosImovel({ dadosPreAnalise }) {
     console.log(err);
     return undefined;
   }
-
+  if (dadosImovel[0] === undefined) return {};
   if (!dadosImovel[0].campo1) {
     dadosImovel[0].campo1 = dadosPreAnalise.campo_4;
   }
