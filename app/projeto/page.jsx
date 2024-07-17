@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-tab";
 import DadosImovelTab from "@/components/projeto/dados-imovel-tab";
 import InventarioTab from "@/components/projeto/inventario-tab";
+import InvestimentosTab from "@/components/projeto/investimentos-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -54,6 +55,8 @@ export default function ProjetoPage() {
         return <DadosImovelTab defaultValues={formData?.aba_dadosImovel} />;
       case "Inventário":
         return <InventarioTab data={formData?.aba_inventario} />;
+      case "Investimentos":
+        return <InvestimentosTab data={formData?.aba_investimentos} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }

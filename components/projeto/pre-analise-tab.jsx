@@ -134,6 +134,9 @@ export default function PreAnaliseTab({ defaultValues }) {
       setLoading(false);
     })();
   };
+  const handleCancel = () => {
+    setFormsDisabled(true);
+  };
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -142,6 +145,7 @@ export default function PreAnaliseTab({ defaultValues }) {
         onSave={onSave}
         isEditing={!formsDisabled}
         isLoading={loading}
+        onCancel={handleCancel}
       />
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full p-4  gap-4">

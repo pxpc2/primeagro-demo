@@ -43,6 +43,9 @@ export default function DadosImovelTab({ defaultValues }) {
       setLoading(false);
     })();
   };
+  const handleCancel = () => {
+    setFormsDisabled(true);
+  };
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -51,6 +54,7 @@ export default function DadosImovelTab({ defaultValues }) {
         onSave={onSave}
         isEditing={!formsDisabled}
         isLoading={loading}
+        onCancel={handleCancel}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         <div className="p-4  flex flex-col gap-8">
