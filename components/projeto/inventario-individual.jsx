@@ -52,6 +52,9 @@ export default function InventarioIndividual({
     setTempInventariosIndividuais((prev) =>
       prev.filter((item) => item.id !== inventarioID)
     );
+    setItens((prev) =>
+      prev.filter((item) => item.inventarioIndividual_id !== inventarioID)
+    );
   };
   return (
     <div className="flex flex-col w-full">
