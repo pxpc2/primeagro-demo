@@ -58,7 +58,9 @@ async function getDadosImovel({ dadosPreAnalise }) {
     console.log(err);
     return undefined;
   }
+  // se usuário não tiver dados peenchidos ainda, vai estar undefined o objeto todo
   if (dadosImovel[0] === undefined) return {};
+
   if (!dadosImovel[0].campo1) {
     dadosImovel[0].campo1 = dadosPreAnalise.campo_4;
   }

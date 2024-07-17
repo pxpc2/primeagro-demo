@@ -2,6 +2,7 @@ import { CirclePlusIcon, PlusIcon, Trash } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -130,12 +131,23 @@ function Item({
   onAdd,
 }) {
   const form = useForm();
+
   const filteredData = data.filter(
     (row) => row.inventarioIndividual_id === item.id
   );
+
   const [isAddItemDialogOpen, setAddItemDialogOpen] = useState(false);
+  const [showSaveInventarioPopup, setShowSaveInventarioPopup] = useState(false);
+
+  const handleAddItemButtonClick = () => {
+    if (!item.id) {
+      setShowSaveInventarioPopup(true);
+    } else {
+      setAddItemDialogOpen(true);
+    }
+  };
+
   const handleAddItemDialogSubmit = form.handleSubmit((data) => {
-    console.log("being called...");
     const newItem = { ...data, inventarioIndividual_id: item.id };
     onAdd(newItem);
     if (isAddItemDialogOpen) setAddItemDialogOpen(!isAddItemDialogOpen);
@@ -193,52 +205,78 @@ function Item({
         <TableFooter>
           <div className="w-full flex flex-row justify-center">
             {!formsDisabled && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    size="xs"
-                    className="bg-green-700 hover:bg-green-600 py-1 px-0.5 my-2 text-xs text-white rounded-lg"
-                    onClick={() => setAddItemDialogOpen(true)}
+              <>
+                <Button
+                  size="xs"
+                  className="bg-green-700 hover:bg-green-600 py-1 px-0.5 my-2 text-xs text-white rounded-lg"
+                  onClick={handleAddItemButtonClick}
+                >
+                  <PlusIcon className="h-3" />
+                </Button>
+                {showSaveInventarioPopup && (
+                  <Dialog
+                    open={showSaveInventarioPopup}
+                    onOpenChange={setShowSaveInventarioPopup}
                   >
-                    <PlusIcon className="h-3" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Adicionar Item</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleAddItemDialogSubmit}>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="descricao" className="text-right">
-                          Descrição
-                        </Label>
-                        <Input
-                          id="descricao"
-                          className="col-span-3"
-                          {...form.register("descricao")}
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="cabecas" className="text-right">
-                          Cabeças
-                        </Label>
-                        <Input
-                          id="cabecas"
-                          type="number"
-                          className="col-span-3"
-                          {...form.register("cabecas")}
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button type="submit">Adicionar</Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Alerta</DialogTitle>
+                        <DialogDescription>
+                          Por favor, salve o novo inventário antes de adicionar
+                          itens.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="sm:justify-start">
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Fechar
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </>
             )}
+            <Dialog
+              open={isAddItemDialogOpen}
+              onOpenChange={setAddItemDialogOpen}
+            >
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Adicionar Item</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleAddItemDialogSubmit}>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="descricao" className="text-right">
+                        Descrição
+                      </Label>
+                      <Input
+                        id="descricao"
+                        className="col-span-3"
+                        {...form.register("descricao")}
+                      />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="cabecas" className="text-right">
+                        Cabeças
+                      </Label>
+                      <Input
+                        id="cabecas"
+                        type="number"
+                        className="col-span-3"
+                        {...form.register("cabecas")}
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit">Adicionar</Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </TableFooter>
       </Table>

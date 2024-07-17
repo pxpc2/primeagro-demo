@@ -574,6 +574,7 @@ export default function InventarioTab({ data }) {
             onEditItem={handleEditMaquina}
             onDeleteItem={handleDeleteMaquina}
             caption={"Lista de máquinas e equipamentos existentes"}
+            hasSEQ={false}
           />
         </div>
         <div>
@@ -588,6 +589,7 @@ export default function InventarioTab({ data }) {
             onEditItem={handleEditOutrosBens}
             onDeleteItem={handleDeleteOutrosBens}
             caption={"Lista de demais bens"}
+            hasSEQ={false}
           />
         </div>
         <div>
@@ -602,6 +604,7 @@ export default function InventarioTab({ data }) {
             onEditItem={handleEditInfraestrutura}
             onDeleteItem={handleDeleteInfraestrutura}
             caption={"Lista de infraestruturas"}
+            hasSEQ={false}
           />
         </div>
         <div>
@@ -618,6 +621,7 @@ export default function InventarioTab({ data }) {
             onEditItem={handleEditAtividadeAgricola}
             onDeleteItem={handleDeleteAtividadeAgricola}
             caption={"Lista de atividades agrícolas"}
+            hasSEQ={false}
           />
         </div>
       </div>
