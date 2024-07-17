@@ -51,7 +51,9 @@ import {
 } from "../ui/select";
 import { SelectContent } from "@radix-ui/react-select";
 import {
+  deleteAtividadesAgricolas,
   deleteBenfeitoria,
+  deleteInfraestrutura,
   deleteMaquinaEquipamento,
   deleteOutrosBens,
   submitInventario,
@@ -116,18 +118,20 @@ export default function InventarioTab({ data }) {
   );
   const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
     useState(data.inventariosIndividuaisItens || []);
-
   const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
     useState(data.maquinasEquipamentosTableData || []);
-
   const [outrosBensTableData, setOutrosBensTableData] = useState(
     data.outrosBensTableData || []
   );
+  const [infraestruturaTableData, setInfraestruturaTableData] = useState(
+    data.infraestruturaTableData || []
+  );
+  const [atividadesAgricolasTableData, setAtividadesAgricolasTableData] =
+    useState(data.atividadesAgricolasTableData || []);
 
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
     setLoading(true);
-
     const coletivaData = coletivoForm.getValues();
     const individualData = individualForm.getValues();
     const combinedData = {
@@ -142,6 +146,8 @@ export default function InventarioTab({ data }) {
       inventariosIndividuaisItens: inventariosIndividuaisItens,
       maquinasEquipamentosData: maquinasEquipamentosTableData,
       outrosBensData: outrosBensTableData,
+      infraestruturaData: infraestruturaTableData,
+      atividadesAgricolasData: atividadesAgricolasTableData,
     }).then(() => {
       setInventariosIndividuais(tempInventariosIndividuais);
       setFormsDisabled(true);
@@ -308,6 +314,44 @@ export default function InventarioTab({ data }) {
     const result = await deleteOutrosBens({ id: item.id });
     if (result) {
       setOutrosBensTableData((prev) => prev.filter((i) => i.id !== item.id));
+    }
+  };
+
+  const handleAddNewInfraestrutura = async (item) => {
+    setInfraestruturaTableData((prev) => [...prev, item]);
+  };
+
+  const handleEditInfraestrutura = (updatedItem) => {
+    setInfraestruturaTableData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleDeleteInfraestrutura = async (item) => {
+    const result = await deleteInfraestrutura({ id: item.id });
+    if (result) {
+      setInfraestruturaTableData((prev) =>
+        prev.filter((i) => i.id !== item.id)
+      );
+    }
+  };
+
+  const handleAddNewAtividadeAgricola = async (item) => {
+    setAtividadesAgricolasTableData((prev) => [...prev, item]);
+  };
+
+  const handleEditAtividadeAgricola = (updatedItem) => {
+    setAtividadesAgricolasTableData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleDeleteAtividadeAgricola = async (item) => {
+    const result = await deleteAtividadesAgricolas({ id: item.id });
+    if (result) {
+      setAtividadesAgricolasTableData((prev) =>
+        prev.filter((i) => i.id !== item.id)
+      );
     }
   };
 
@@ -546,14 +590,35 @@ export default function InventarioTab({ data }) {
             caption={"Lista de demais bens"}
           />
         </div>
-
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
-          <h1 className="text-white font-semibold">Infraestrutura</h1>
+        <div>
+          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+            <h1 className="text-white font-semibold">Infraestrutura</h1>
+          </div>
+          <ReusableTable
+            data={infraestruturaTableData}
+            columns={maquinaEquipamentoColumns}
+            formsDisabled={formsDisabled}
+            onAddNewItem={handleAddNewInfraestrutura}
+            onEditItem={handleEditInfraestrutura}
+            onDeleteItem={handleDeleteInfraestrutura}
+            caption={"Lista de infraestruturas"}
+          />
         </div>
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
-          <h1 className="text-white font-semibold">
-            Atividades agrícolas já existentes no imóvel
-          </h1>
+        <div>
+          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+            <h1 className="text-white font-semibold">
+              Atividades agrícolas já existentes no imóvel
+            </h1>
+          </div>
+          <ReusableTable
+            data={atividadesAgricolasTableData}
+            columns={maquinaEquipamentoColumns}
+            formsDisabled={formsDisabled}
+            onAddNewItem={handleAddNewAtividadeAgricola}
+            onEditItem={handleEditAtividadeAgricola}
+            onDeleteItem={handleDeleteAtividadeAgricola}
+            caption={"Lista de atividades agrícolas"}
+          />
         </div>
       </div>
     </div>

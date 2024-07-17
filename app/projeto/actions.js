@@ -171,6 +171,8 @@ async function getInventario() {
   const inventariosIndividuaisItens = await getInventarioItems();
   const maquinasEquipamentosTableData = await getMaquinasEquipamentosData();
   const outrosBensTableData = await getOutrosBensData();
+  const infraestruturaTableData = await getInfraestruturaData();
+  const atividadesAgricolasTableData = await getAtividadesAgricolas();
 
   return {
     aba_inventario,
@@ -180,7 +182,55 @@ async function getInventario() {
     inventariosIndividuaisItens,
     maquinasEquipamentosTableData,
     outrosBensTableData,
+    infraestruturaTableData,
+    atividadesAgricolasTableData,
   };
+}
+
+export async function getInfraestruturaData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_inventario_infraestrutura")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return dados;
+}
+
+export async function getAtividadesAgricolas() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_inventario_atividadesAgricolas")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return dados;
+}
+
+export async function deleteInfraestrutura({ id, tableName }) {
+  return await deleteFromDatabase({
+    id: id,
+    tableName: "aba_inventario_infraestrutura",
+  });
+}
+
+export async function deleAtividadesAgricolas({ id, tableName }) {
+  return await deleteFromDatabase({
+    id: id,
+    tableName: "aba_inventario_atividadesAgricolas",
+  });
 }
 
 export async function getOutrosBensData() {
@@ -215,7 +265,7 @@ export async function getMaquinasEquipamentosData() {
   return dados;
 }
 
-export async function submitMaquinasEquipamentos({ data }) {
+export async function submitFiltered({ data, tableName }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -225,7 +275,7 @@ export async function submitMaquinasEquipamentos({ data }) {
   const existingEntries = data.filter((item) => item.id);
   if (existingEntries.length > 0) {
     const { error: updateError } = await supabase
-      .from("aba_inventario_maquinas")
+      .from(tableName)
       .upsert(existingEntries, { onConflict: ["id"] });
 
     if (updateError) {
@@ -240,7 +290,7 @@ export async function submitMaquinasEquipamentos({ data }) {
     }));
 
     const { error: insertError } = await supabase
-      .from("aba_inventario_maquinas")
+      .from(tableName)
       .insert(newEntriesWithAuthUser);
 
     if (insertError) {
@@ -250,69 +300,35 @@ export async function submitMaquinasEquipamentos({ data }) {
   }
 }
 
-export async function submitOutrosBens({ data }) {
+export async function deleteFromDatabase({ id, tableName }) {
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const authUserID = user.id;
-  const newEntries = data.filter((item) => !item.id);
-  const existingEntries = data.filter((item) => item.id);
-  if (existingEntries.length > 0) {
-    const { error: updateError } = await supabase
-      .from("aba_inventario_outrosBens")
-      .upsert(existingEntries, { onConflict: ["id"] });
-
-    if (updateError) {
-      console.log(updateError);
-      return redirect("/error?message=" + updateError.message);
-    }
+  const { error } = await supabase.from(tableName).delete().eq("id", id);
+  if (error) {
+    console.log(error);
+    return undefined;
   }
-  if (newEntries.length > 0) {
-    const newEntriesWithAuthUser = newEntries.map((entry) => ({
-      ...entry,
-      authuser_id: authUserID,
-    }));
-
-    const { error: insertError } = await supabase
-      .from("aba_inventario_outrosBens")
-      .insert(newEntriesWithAuthUser);
-
-    if (insertError) {
-      console.log(insertError);
-      return redirect("/error?message=" + insertError.message);
-    }
-  }
+  return id;
 }
 
 export async function deleteMaquinaEquipamento({ id }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("aba_inventario_maquinas")
-    .delete()
-    .eq("id", id);
-
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-
-  return id;
+  return await deleteFromDatabase({
+    id: id,
+    tableName: "aba_inventario_maquinas",
+  });
 }
 
 export async function deleteOutrosBens({ id }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("aba_inventario_outrosBens")
-    .delete()
-    .eq("id", id);
+  return await deleteFromDatabase({
+    id: id,
+    tableName: "aba_inventario_outrosBens",
+  });
+}
 
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-
-  return id;
+export async function deleteAtividadesAgricolas({ id }) {
+  return await deleteFromDatabase({
+    id: id,
+    tableName: "aba_inventario_atividadesAgricolas",
+  });
 }
 
 export async function getInventariosIndividuais() {
@@ -436,6 +452,8 @@ export async function submitInventario({
   inventariosIndividuaisItens,
   maquinasEquipamentosData,
   outrosBensData,
+  infraestruturaData,
+  atividadesAgricolasData,
 }) {
   const supabase = createClient();
 
@@ -459,9 +477,22 @@ export async function submitInventario({
     data: inventariosIndividuaisItens,
   });
 
-  await submitMaquinasEquipamentos({ data: maquinasEquipamentosData });
-
-  await submitOutrosBens({ data: outrosBensData });
+  await submitFiltered({
+    data: maquinasEquipamentosData,
+    tableName: "aba_inventario_maquinas",
+  });
+  await submitFiltered({
+    data: outrosBensData,
+    tableName: "aba_inventario_outrosBens",
+  });
+  await submitFiltered({
+    data: infraestruturaData,
+    tableName: "aba_inventario_infraestrutura",
+  });
+  await submitFiltered({
+    data: atividadesAgricolasData,
+    tableName: "aba_inventario_atividadesAgricolas",
+  });
 
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
