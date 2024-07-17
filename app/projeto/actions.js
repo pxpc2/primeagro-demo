@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 /**
  *
- * @todo deve buscar todos os dados obrigatórios que já tenha no banco (por ex: dados básicos)
+ * @todo deve buscar todos os dados obrigatórios que já tenha no banco
  *
  * Buscar todos os dados do projeto do usuário em questão antes de abrir /projeto.
  * RLS configurado para retornar somente os seus dados, exceto se for usuário gerente/técnico.
@@ -24,10 +24,59 @@ export async function getProjetoFormsData() {
     await getIdentificacaoBeneficiario();
   formData.aba_inventario = await getInventario();
 
-  formData.aba_dadosImovel = {}; // @TODO
+  formData.aba_dadosImovel = await getDadosImovel({
+    dadosPreAnalise: formData.aba_preanalise[0],
+  });
+
   formData.aba_investimentos = {}; // @TODO
 
   return formData;
+}
+
+async function getDadosImovel({ dadosPreAnalise }) {
+  /*
+  preciso pegar os dados de pre analise primeiro, preciso dos campos:
+
+  LEGENDA campo_preanalise vira campo_dadosImovel
+
+  campo4 vira campo1
+  campo5 vira campo2
+  campo7 vira campo3
+  campo3 vira campo4 E campo 5 (campo4 = antes da / na string, campo5 = apos a /)
+  (@TODO : tem mais campos e macros)
+  */
+  //console.log(dadosPreAnalise);
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dadosImovel, err } = await supabase
+    .from("aba_dados_imovel")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+
+  if (!dadosImovel[0].campo1) {
+    dadosImovel[0].campo1 = dadosPreAnalise.campo_4;
+  }
+  if (!dadosImovel[0].campo2) {
+    dadosImovel[0].campo2 = dadosPreAnalise.campo_5;
+  }
+  if (!dadosImovel[0].campo3) {
+    dadosImovel[0].campo3 = dadosPreAnalise.campo_7;
+  }
+  const [strPre, strPos] = dadosPreAnalise.campo_3.split("-"); // ex: campos_gerais-mg
+  if (!dadosImovel[0].campo4) {
+    dadosImovel[0].campo4 = strPre;
+  }
+  if (!dadosImovel[0].campo5) {
+    dadosImovel[0].campo5 = strPos.toUpperCase();
+  }
+
+  return dadosImovel;
 }
 
 async function getIdentificacaoBeneficiario() {
@@ -148,8 +197,25 @@ export async function submitIdentificacaoBeneficiarioForm({ formData }) {
   }
 }
 
+/**
+ * @TODO
+ */
 export async function submitDadosImovelForm({ formData }) {
   console.log(formData);
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const authUserID = user.id;
+  const { error } = await supabase
+    .from("aba_dados_imovel")
+    .upsert([{ ...formData, authuser_id: authUserID }], {
+      onConflict: ["authuser_id"],
+    });
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
 }
 
 async function getInventario() {

@@ -31,7 +31,7 @@ export default function DadosImovelTab({ defaultValues }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
-    defaultValues: defaultValues,
+    defaultValues: defaultValues[0],
   });
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
@@ -199,7 +199,7 @@ function DadosImovelCampos({ form, formsDisabled }) {
             name="campo7"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>7. Nº da certificação</FormLabel>
+                <FormLabel>7. Nº do CCIR</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -714,27 +714,23 @@ function BlueFields({ form, formsDisabled }) {
 
 const condicoesList = [
   {
-    id: "estrada-pavimentada",
+    id: "estrada_pavimentada",
     condicao: "Estrada Pavimentada",
-    km: "22",
-    transitavel: "12 meses",
   },
   {
-    id: "estrada-terra-condicoes-boas",
+    id: "estrada_terra_boas",
     condicao: "Estrada de terra em boas condições",
-    km: "10",
-    transitavel: "12 meses",
   },
   {
-    id: "estrada-terra-condicoes-regulares",
+    id: "estrada_terra_regulares",
     condicao: "Estrada de terra em condições regulares",
   },
   {
-    id: "estrada-terra-condicoes-pessimas",
+    id: "estrada_terra_pessimas",
     condicao: "Estrada de terra em péssimas condições",
   },
-  { id: "trilha", condicao: "Trilha", km: "25" },
-  { id: "fluvial-lacustre", condicao: "Fluvial / lacustre" },
+  { id: "trilha", condicao: "Trilha" },
+  { id: "fluvial_lacustre", condicao: "Fluvial / lacustre" },
 ];
 
 function CondicoesTable({ form, formsDisabled }) {
@@ -756,7 +752,7 @@ function CondicoesTable({ form, formsDisabled }) {
             <TableCell colSpan={1}>
               <FormField
                 control={form.control}
-                name={`campo-${k.id}-km`}
+                name={`${k.id}_km`}
                 render={({ field }) => (
                   <FormItem className="col-span-1">
                     <FormControl>
@@ -776,7 +772,7 @@ function CondicoesTable({ form, formsDisabled }) {
             <TableCell>
               <FormField
                 control={form.control}
-                name={`campo-${k.id}-transitavel`}
+                name={`${k.id}_transitavel`}
                 render={({ field }) => (
                   <FormItem className="col-span-1">
                     <FormControl>
