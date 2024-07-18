@@ -33,6 +33,7 @@ export async function getProjetoFormsData() {
   return formData;
 }
 
+/* INICIO INVESTIMENTOS ------------------------------------------------------------------------------------------- */
 export async function getDadosInvestimentos() {
   const supabase = createClient();
 
@@ -40,38 +41,75 @@ export async function getDadosInvestimentos() {
     data: { user },
   } = await supabase.auth.getUser();
   let { data: dadosInvestimentos, err } = await supabase
-    .from("aba_investimentosl")
+    .from("aba_investimentos")
     .select("*");
   if (err) {
     console.log(err);
     return undefined;
   }
   if (!dadosInvestimentos || dadosInvestimentos[0] === undefined) return {};
-  return dadosInvestimentos[0];
+  return dadosInvestimentos;
 }
 
 export async function submitInvestimentos({ data }) {
   const supabase = createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const authID = user.id;
 
-  const { error } = await supabase
-    .from("aba_investimentos")
-    .upsert([{ ...data, authuser_id: authID }], {
-      onConflict: ["authuser_id"],
-    });
+  const existingEntries = data.filter((item) => item.id);
+  const newEntries = data.filter((item) => !item.id);
 
-  if (error) {
-    return redirect("/error?message=" + error.message);
+  const mappedExistingEntries = existingEntries.map((item) => ({
+    ...item,
+    authuser_id: authID,
+  }));
+
+  const mappedNewEntries = newEntries.map((item) => ({
+    ...item,
+    authuser_id: authID,
+  }));
+
+  if (mappedExistingEntries.length > 0) {
+    const { error: upsertError } = await supabase
+      .from("aba_investimentos")
+      .upsert(mappedExistingEntries, {
+        onConflict: ["id"],
+      });
+
+    if (upsertError) {
+      console.log(upsertError);
+      return redirect("/error?message=" + upsertError.message);
+    }
+  }
+
+  if (mappedNewEntries.length > 0) {
+    const { error: insertError } = await supabase
+      .from("aba_investimentos")
+      .insert(mappedNewEntries);
+
+    if (insertError) {
+      console.log(insertError);
+      return redirect("/error?message=" + insertError.message);
+    }
   }
 }
 
-export async function deleteInvestimento({ id }) {
-  return await deleteFromDatabase({ id: id, tableName: "aba_investimentos" });
+export async function deleteInvestimento({ itemToDelete, data }) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("aba_investimentos")
+    .delete()
+    .eq("id", itemToDelete.id);
+  const updatedData = data.filter((item) => item.seq !== itemToDelete.seq);
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+  return updatedData;
 }
+/* FIM INVESTIMENTOS ------------------------------------------------------------------------------------------- */
 
 async function getDadosImovel({ dadosPreAnalise }) {
   /*

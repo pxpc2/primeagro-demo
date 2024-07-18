@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Heading from "./Header";
 import ReusableTable from "../reusable-table";
-import { deleteInvestimento } from "@/app/projeto/actions";
+import { deleteInvestimento, submitInvestimentos } from "@/app/projeto/actions";
 
 export default function InvestimentosTab({ data }) {
   const colunas = [
@@ -20,11 +20,15 @@ export default function InvestimentosTab({ data }) {
 
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [investimentosData, setInvestimentosData] = useState(
-    data.aba_investimentos || []
-  );
+  const [investimentosData, setInvestimentosData] = useState(data || []);
 
-  const onSave = () => {};
+  const onSave = async () => {
+    setLoading(true);
+    await submitInvestimentos({ data: investimentosData }).then(() => {
+      setFormsDisabled(true);
+      setLoading(false);
+    });
+  };
   const onEdit = () => {
     setFormsDisabled(false);
   };
@@ -33,6 +37,7 @@ export default function InvestimentosTab({ data }) {
   };
 
   const handleAddInvestimentoItem = async (item) => {
+    if (!item.id) item.seq = investimentosData.length + 1;
     setInvestimentosData((prev) => [...prev, item]);
     // é enviado ao servidor depois, no onSave()
   };
@@ -44,9 +49,15 @@ export default function InvestimentosTab({ data }) {
   };
 
   const handleDeleteInvestimentoItem = async (item) => {
-    const result = await deleteInvestimento({ id: item.id }); // deletamos na hora, não aguarda onSave()
-    if (result) {
-      setInvestimentosData((prev) => prev.filter((i) => i.id !== item.id));
+    const updatedData = await deleteInvestimento({
+      data: investimentosData,
+      itemToDelete: item,
+    });
+    if (updatedData) {
+      updatedData.forEach((item, index) => {
+        item.seq = index + 1;
+      });
+      setInvestimentosData(updatedData);
     }
   };
 
