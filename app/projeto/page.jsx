@@ -9,6 +9,7 @@ import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-t
 import DadosImovelTab from "@/components/projeto/dados-imovel-tab";
 import InventarioTab from "@/components/projeto/inventario-tab";
 import InvestimentosTab from "@/components/projeto/investimentos-tab";
+import TiposDeSoloTab from "@/components/projeto/tipos-de-solo-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -57,6 +58,8 @@ export default function ProjetoPage() {
         return <InventarioTab data={formData?.aba_inventario} />;
       case "Investimentos":
         return <InvestimentosTab data={formData?.aba_investimentos} />;
+      case "Tipos de solo":
+        return <TiposDeSoloTab data={formData?.aba_tiposDeSolo} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }

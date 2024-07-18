@@ -32,7 +32,36 @@ export async function getProjetoFormsData() {
     dadosPreAnalise: formData.aba_preanalise[0],
   });
 
+  formData.aba_tiposDeSolo = await getTiposDeSolo();
+
   return formData;
+}
+
+export async function getSoloQualidades() {
+  const supabase = createClient();
+  let { data: dados, err } = await supabase
+    .from("aba_tiposDeSolo_qualidades")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return dados;
+}
+
+export async function getTiposDeSolo() {
+  const supabase = createClient();
+  const dadosTabelaTiposDeSolo = await getSoloQualidades();
+  console.log(dadosTabelaTiposDeSolo);
+  let { data: dadosTiposDeSolo, err } = await supabase
+    .from("aba_tiposDeSolo_qualidades")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  const dados = { dadosTiposDeSolo, dadosTabelaTiposDeSolo };
+  return dados;
 }
 
 /* INICIO INVESTIMENTOS ------------------------------------------------------------------------------------------- */
