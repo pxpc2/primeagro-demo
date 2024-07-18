@@ -20,7 +20,9 @@ export default function InvestimentosTab({ data }) {
 
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [investimentosData, setInvestimentosData] = useState(data || []);
+  const [investimentosData, setInvestimentosData] = useState(
+    data.dadosInvestimentos || []
+  );
 
   const onSave = async () => {
     setLoading(true);
@@ -61,6 +63,10 @@ export default function InvestimentosTab({ data }) {
     }
   };
 
+  const nomeImovel = data.dadosPreAnalise.campo_4;
+  let [cidade, UF] = data.dadosPreAnalise.campo_3.split("-");
+  cidade = cidade.replace(/_/g, " ");
+
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -76,8 +82,9 @@ export default function InvestimentosTab({ data }) {
         {/* CONTEÚDO ABAIXO */}
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">
-            RELAÇÃO DOS INVESTIMENTOS A SEREM IMPLANTADOS NO (nome do imovel) -
-            (local)
+            RELAÇÃO DOS INVESTIMENTOS A SEREM IMPLANTADOS NO{" "}
+            {nomeImovel.toUpperCase()} - {cidade.toUpperCase()} /{" "}
+            {UF.toUpperCase()}
           </h1>
         </div>
         <ReusableTable

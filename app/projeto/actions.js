@@ -28,13 +28,15 @@ export async function getProjetoFormsData() {
     dadosPreAnalise: formData.aba_preanalise[0],
   });
 
-  formData.aba_investimentos = await getDadosInvestimentos();
+  formData.aba_investimentos = await getDadosInvestimentos({
+    dadosPreAnalise: formData.aba_preanalise[0],
+  });
 
   return formData;
 }
 
 /* INICIO INVESTIMENTOS ------------------------------------------------------------------------------------------- */
-export async function getDadosInvestimentos() {
+export async function getDadosInvestimentos({ dadosPreAnalise }) {
   const supabase = createClient();
 
   const {
@@ -48,7 +50,8 @@ export async function getDadosInvestimentos() {
     return undefined;
   }
   if (!dadosInvestimentos || dadosInvestimentos[0] === undefined) return {};
-  return dadosInvestimentos;
+  const dados = { dadosPreAnalise, dadosInvestimentos }; // nome do imovel e local é preciso
+  return dados;
 }
 
 export async function submitInvestimentos({ data }) {
@@ -150,7 +153,7 @@ async function getDadosImovel({ dadosPreAnalise }) {
   }
   const [strPre, strPos] = dadosPreAnalise.campo_3.split("-"); // ex: campos_gerais-mg
   if (!dadosImovel[0].campo4) {
-    dadosImovel[0].campo4 = strPre;
+    dadosImovel[0].campo4 = strPre.replace(/_/g, " ").toUpperCase();
   }
   if (!dadosImovel[0].campo5) {
     dadosImovel[0].campo5 = strPos.toUpperCase();
