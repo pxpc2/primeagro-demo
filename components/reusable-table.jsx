@@ -38,6 +38,7 @@ function ReusableDialog({
   columns,
   editingItem,
   setEditingItem,
+  hasSEQ,
 }) {
   useEffect(() => {
     if (editingItem) {
@@ -64,14 +65,18 @@ function ReusableDialog({
       <form onSubmit={handleDialogSubmit} className="flex flex-col gap-4 py-4">
         {columns.map((column) => (
           <div key={column.key} className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor={column.key} className="text-right">
-              {column.label}
-            </Label>
-            <Input
-              id={column.key}
-              className="col-span-3"
-              {...form.register(column.key)}
-            />
+            {(!hasSEQ || column.key !== "seq") && (
+              <>
+                <Label htmlFor={column.key} className="text-right">
+                  {column.label}
+                </Label>
+                <Input
+                  id={column.key}
+                  className="col-span-3"
+                  {...form.register(column.key)}
+                />
+              </>
+            )}
           </div>
         ))}
         <DialogFooter>
@@ -92,6 +97,7 @@ export default function ReusableTable({
   onDeleteItem,
   formsDisabled,
   caption,
+  hasSEQ,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -120,6 +126,11 @@ export default function ReusableTable({
 
   const handleDeleteItem = (item) => {
     onDeleteItem(item);
+  };
+
+  const handleAddNewItemClick = () => {
+    setEditingItem(null);
+    setIsDialogOpen(true);
   };
 
   return (
@@ -176,6 +187,7 @@ export default function ReusableTable({
                     handleDialogSubmit={handleDialogSubmit}
                     columns={columns}
                     editingItem={editingItem}
+                    hasSEQ={hasSEQ}
                   />
                 </Dialog>
               </TableCell>
@@ -188,7 +200,12 @@ export default function ReusableTable({
           {!formsDisabled && (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" variant="" className="gap-1">
+                <Button
+                  size="sm"
+                  variant=""
+                  className="gap-1"
+                  onClick={handleAddNewItemClick}
+                >
                   Inserir novo
                   <PlusIcon className="h-3.5 w-3.5 mt-0.5" />
                 </Button>
@@ -198,6 +215,7 @@ export default function ReusableTable({
                 handleDialogSubmit={handleDialogSubmit}
                 columns={columns}
                 editingItem={null}
+                hasSEQ={hasSEQ}
               />
             </Dialog>
           )}

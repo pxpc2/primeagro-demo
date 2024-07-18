@@ -28,9 +28,49 @@ export async function getProjetoFormsData() {
     dadosPreAnalise: formData.aba_preanalise[0],
   });
 
-  formData.aba_investimentos = {}; // @TODO
+  formData.aba_investimentos = await getDadosInvestimentos();
 
   return formData;
+}
+
+export async function getDadosInvestimentos() {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dadosInvestimentos, err } = await supabase
+    .from("aba_investimentosl")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  if (!dadosInvestimentos || dadosInvestimentos[0] === undefined) return {};
+  return dadosInvestimentos[0];
+}
+
+export async function submitInvestimentos({ data }) {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authID = user.id;
+
+  const { error } = await supabase
+    .from("aba_investimentos")
+    .upsert([{ ...data, authuser_id: authID }], {
+      onConflict: ["authuser_id"],
+    });
+
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
+
+export async function deleteInvestimento({ id }) {
+  return await deleteFromDatabase({ id: id, tableName: "aba_investimentos" });
 }
 
 async function getDadosImovel({ dadosPreAnalise }) {

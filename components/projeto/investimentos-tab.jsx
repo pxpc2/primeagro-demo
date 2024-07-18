@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Heading from "./Header";
 import ReusableTable from "../reusable-table";
+import { deleteInvestimento } from "@/app/projeto/actions";
 
 export default function InvestimentosTab({ data }) {
   const colunas = [
@@ -31,6 +32,24 @@ export default function InvestimentosTab({ data }) {
     setFormsDisabled(true);
   };
 
+  const handleAddInvestimentoItem = async (item) => {
+    setInvestimentosData((prev) => [...prev, item]);
+    // é enviado ao servidor depois, no onSave()
+  };
+
+  const handleEditInvestimentoItem = async (updatedItem) => {
+    setInvestimentosData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleDeleteInvestimentoItem = async (item) => {
+    const result = await deleteInvestimento({ id: item.id }); // deletamos na hora, não aguarda onSave()
+    if (result) {
+      setInvestimentosData((prev) => prev.filter((i) => i.id !== item.id));
+    }
+  };
+
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -56,6 +75,10 @@ export default function InvestimentosTab({ data }) {
           columns={colunas}
           formsDisabled={formsDisabled}
           caption={"Lista de investimentos"}
+          hasSEQ={true}
+          onAddNewItem={handleAddInvestimentoItem}
+          onEditItem={handleEditInvestimentoItem}
+          onDeleteItem={handleDeleteInvestimentoItem}
         />
         {/* CONTEÚDO ACIMA */}
       </div>
