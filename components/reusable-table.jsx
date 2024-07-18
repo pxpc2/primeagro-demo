@@ -39,7 +39,26 @@ function ReusableDialog({
   editingItem,
   setEditingItem,
   hasSEQ,
+  hasBRLFormatting,
+  brlFieldIdentifier,
 }) {
+  const formatBRL = (value) => {
+    if (!value) return value;
+    value = value.replace(/\D/g, "");
+    value = (Number(value) / 100).toFixed(2).replace(".", ",");
+    return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+  const handleChange = (e, fieldKey) => {
+    console.log("has formatting? " + hasBRLFormatting);
+    console.log("brl field identifier: " + brlFieldIdentifier);
+    if (hasBRLFormatting && fieldKey.includes(brlFieldIdentifier)) {
+      const inputValue = e.target.value;
+      const formattedValue = formatBRL(inputValue);
+      form.setValue(fieldKey, formattedValue);
+    } else {
+      form.setValue(fieldKey, e.target.value);
+    }
+  };
   useEffect(() => {
     if (editingItem) {
       columns.forEach((column) => {
@@ -71,9 +90,11 @@ function ReusableDialog({
                   {column.label}
                 </Label>
                 <Input
+                  type={column.key === "quantidade" ? "number" : ""}
                   id={column.key}
                   className="col-span-3"
                   {...form.register(column.key)}
+                  onChange={(e) => handleChange(e, column.key)}
                 />
               </>
             )}
@@ -98,6 +119,8 @@ export default function ReusableTable({
   formsDisabled,
   caption,
   hasSEQ,
+  hasBRLFormatting,
+  brlFieldIdentifier,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -187,7 +210,10 @@ export default function ReusableTable({
                     handleDialogSubmit={handleDialogSubmit}
                     columns={columns}
                     editingItem={editingItem}
+                    setEditingItem={setEditingItem}
                     hasSEQ={hasSEQ}
+                    brlFieldIdentifier={brlFieldIdentifier}
+                    hasBRLFormatting={hasBRLFormatting}
                   />
                 </Dialog>
               </TableCell>
@@ -216,6 +242,8 @@ export default function ReusableTable({
                 columns={columns}
                 editingItem={null}
                 hasSEQ={hasSEQ}
+                brlFieldIdentifier={brlFieldIdentifier}
+                hasBRLFormatting={hasBRLFormatting}
               />
             </Dialog>
           )}

@@ -90,6 +90,8 @@ export default function InvestimentosTab({ data }) {
           onAddNewItem={handleAddInvestimentoItem}
           onEditItem={handleEditInvestimentoItem}
           onDeleteItem={handleDeleteInvestimentoItem}
+          hasBRLFormatting={true}
+          brlFieldIdentifier={"valor"}
         />
         {/* CONTEÚDO ACIMA */}
       </div>
