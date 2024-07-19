@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import PreAnaliseTab from "@/components/projeto/pre-analise-tab";
 import { PROJETO_TABS } from "@/utils/constants";
-import { getProjetoFormsData } from "./actions";
+import { getProjetoFormsData, isAdminUser } from "./actions";
 import { Loader2 } from "lucide-react";
 import IdentificacaoBeneficiarioTab from "@/components/projeto/id-beneficiario-tab";
 import DadosImovelTab from "@/components/projeto/dados-imovel-tab";
@@ -16,10 +16,12 @@ export default function ProjetoPage() {
   const [currentTab, setCurrentTab] = useState("Menu");
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProjetoFormsData();
+      setIsAdmin(await isAdminUser());
       setFormData(data);
       setLoading(false);
     };
@@ -45,21 +47,41 @@ export default function ProjetoPage() {
           <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top over "></div>
         );
       case "Pré-análise":
-        return <PreAnaliseTab defaultValues={formData?.aba_preanalise} />;
+        return (
+          <PreAnaliseTab
+            defaultValues={formData?.aba_preanalise}
+            isAdmin={isAdmin}
+          />
+        );
       case "Identificação do Beneficiário":
         return (
           <IdentificacaoBeneficiarioTab
             defaultValues={formData?.aba_identificacao_beneficiario}
+            isAdmin={isAdmin}
           />
         );
       case "Dados do Imóvel":
-        return <DadosImovelTab defaultValues={formData?.aba_dadosImovel} />;
+        return (
+          <DadosImovelTab
+            defaultValues={formData?.aba_dadosImovel}
+            isAdmin={isAdmin}
+          />
+        );
       case "Inventário":
-        return <InventarioTab data={formData?.aba_inventario} />;
+        return (
+          <InventarioTab data={formData?.aba_inventario} isAdmin={isAdmin} />
+        );
       case "Investimentos":
-        return <InvestimentosTab data={formData?.aba_investimentos} />;
+        return (
+          <InvestimentosTab
+            data={formData?.aba_investimentos}
+            isAdmin={isAdmin}
+          />
+        );
       case "Tipos de solo":
-        return <TiposDeSoloTab data={formData?.aba_tiposDeSolo} />;
+        return (
+          <TiposDeSoloTab data={formData?.aba_tiposDeSolo} isAdmin={isAdmin} />
+        );
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }

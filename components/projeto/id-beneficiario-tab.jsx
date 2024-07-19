@@ -16,7 +16,10 @@ import { Input } from "../ui/input";
 import { submitIdentificacaoBeneficiarioForm } from "@/app/projeto/actions";
 import { Textarea } from "../ui/textarea";
 
-export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
+export default function IdentificacaoBeneficiarioTab({
+  defaultValues,
+  isAdmin,
+}) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -43,6 +46,7 @@ export default function IdentificacaoBeneficiarioTab({ defaultValues }) {
         onSave={onSave}
         isEditing={!formsDisabled}
         isLoading={loading}
+        isAdmin={isAdmin}
         onCancel={handleCancel}
       />
       <div className="w-full mt-4 sm:px-4 bg-gray-50 sm:py-2 flex flex-col gap-8">

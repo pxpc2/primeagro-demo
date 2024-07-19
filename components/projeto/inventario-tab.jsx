@@ -70,7 +70,7 @@ import {
 import InventarioIndividual from "./inventario-individual";
 import ReusableTable from "../reusable-table";
 
-export default function InventarioTab({ data }) {
+export default function InventarioTab({ data, isAdmin }) {
   const [editingItem, setEditingItem] = useState(null);
   const [deletingItem, setDeletingItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -364,6 +364,7 @@ export default function InventarioTab({ data }) {
         isEditing={!formsDisabled}
         isLoading={loading}
         onCancel={handleCancel}
+        isAdmin={isAdmin}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">

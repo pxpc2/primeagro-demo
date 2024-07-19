@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Heading from "./Header";
 
-export default function TiposDeSoloTab({ data }) {
+export default function TiposDeSoloTab({ data, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +20,7 @@ export default function TiposDeSoloTab({ data }) {
         isEditing={!formsDisabled}
         isLoading={loading}
         onCancel={handleCancel}
+        isAdmin={isAdmin}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         {/* CONTEÚDO ABAIXO */}

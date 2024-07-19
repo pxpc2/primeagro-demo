@@ -27,7 +27,7 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { submitDadosImovelForm } from "@/app/projeto/actions";
 
-export default function DadosImovelTab({ defaultValues }) {
+export default function DadosImovelTab({ defaultValues, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const form = useForm({
@@ -55,6 +55,7 @@ export default function DadosImovelTab({ defaultValues }) {
         isEditing={!formsDisabled}
         isLoading={loading}
         onCancel={handleCancel}
+        isAdmin={isAdmin}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
         <div className="p-4  flex flex-col gap-8">

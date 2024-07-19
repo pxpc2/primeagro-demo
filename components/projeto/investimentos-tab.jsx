@@ -5,7 +5,7 @@ import Heading from "./Header";
 import ReusableTable from "../reusable-table";
 import { deleteInvestimento, submitInvestimentos } from "@/app/projeto/actions";
 
-export default function InvestimentosTab({ data }) {
+export default function InvestimentosTab({ data, isAdmin }) {
   const colunas = [
     { key: "seq", label: "SEQ" },
     { key: "categoria", label: "Categoria" },
@@ -75,6 +75,7 @@ export default function InvestimentosTab({ data }) {
         onSave={onSave}
         isEditing={!formsDisabled}
         isLoading={loading}
+        isAdmin={isAdmin}
         onCancel={handleCancel}
       />
 

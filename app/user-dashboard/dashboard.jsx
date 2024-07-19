@@ -21,6 +21,7 @@ import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
 import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
 import { Button } from "@/components/ui/button";
+import { ADMIN_EMAIL } from "@/utils/constants";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

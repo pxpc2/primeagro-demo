@@ -1,5 +1,6 @@
 "use server";
 
+import { ADMIN_EMAIL } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -52,7 +53,6 @@ export async function getSoloQualidades() {
 export async function getTiposDeSolo() {
   const supabase = createClient();
   const dadosTabelaTiposDeSolo = await getSoloQualidades();
-  console.log(dadosTabelaTiposDeSolo);
   let { data: dadosTiposDeSolo, err } = await supabase
     .from("aba_tiposDeSolo_qualidades")
     .select("*");
@@ -81,6 +81,19 @@ export async function getDadosInvestimentos({ dadosPreAnalise }) {
   if (!dadosInvestimentos || dadosInvestimentos[0] === undefined) return {};
   const dados = { dadosPreAnalise, dadosInvestimentos }; // nome do imovel e local é preciso
   return dados;
+}
+
+export async function isAdminUser() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const isAdmin = ADMIN_EMAIL.some((email) => {
+    return user.email === email;
+  });
+
+  return isAdmin;
 }
 
 export async function submitInvestimentos({ data }) {

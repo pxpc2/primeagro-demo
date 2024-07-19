@@ -426,3 +426,5 @@ export const PROJETO_TABS = [
   { id: 21, name: "Súmula (PAG01)", href: "#", current: false },
   { id: 22, name: "Imprimir a súmula", href: "#", current: false },
 ];
+
+export const ADMIN_EMAIL = ["pedrodaia.c@gmail.com", "teste2@teste"];

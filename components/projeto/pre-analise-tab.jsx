@@ -82,7 +82,7 @@ const parseFormData = (defaultValues) => {
   return transformed;
 };
 
-export default function PreAnaliseTab({ defaultValues }) {
+export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const parsed = parseFormData(defaultValues[0]);
@@ -200,6 +200,7 @@ export default function PreAnaliseTab({ defaultValues }) {
         isEditing={!formsDisabled}
         isLoading={loading}
         onCancel={handleCancel}
+        isAdmin={isAdmin}
       />
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full p-4  gap-4">
