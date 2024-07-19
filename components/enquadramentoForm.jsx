@@ -30,14 +30,13 @@ import { redirect } from "next/navigation";
 import { DOCUMENTOS_ENQUADRAMENTO } from "@/utils/constants";
 
 export default function EnquadramentoForm({ authID, onClose, msg }) {
-  /* se chegou até aqui, é porque a conta está cadastrada E logada, MAS os dados básicos
-   do perfil ainda não foram preenchidos */
   const form = useForm();
   const {
     handleSubmit,
     formState: { errors },
   } = form;
   const [loading, setLoading] = useState(false);
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -52,15 +51,15 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
 
   return (
     <div className="fixed inset-x-0 inset-y-0 w-full bg-gray-50 bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
-      <div className="w-full h-full flex items-center justify-center ">
-        <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white  shadow-2xl p-8 sm:p-16  h-full overflow-y-auto">
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full max-w-5xl divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-2xl p-4 sm:p-8 h-full overflow-y-auto">
           <div className="px-4 py-5 sm:px-6 gap-4 flex flex-col">
             <h1 className="text-2xl font-bold text-orange-700 uppercase">
               Formulário de Enquadramento <a className="text-green-700">PNCF</a>
             </h1>
             <p>
               Seu próximo passo é preencher o formulário de enquadramento a
-              seguir para o Programa Nacional de Crédio Fundiário.
+              seguir para o Programa Nacional de Crédito Fundiário.
             </p>
           </div>
           <div className="px-4 py-5 sm:p-6">
@@ -69,7 +68,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="divide-y divide-gray-200">
                     <div className="grid gap-4">
-                      <div className="grid grid-cols-2 gap-4 pt-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
@@ -103,7 +102,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           )}
                         />
                       </div>
-                      <div className="grid grid-cols-7 gap-4 pt-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-7 gap-4 pt-4">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
@@ -156,7 +155,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           )}
                         />
                       </div>
-                      <div className="grid grid-cols-3 gap-4 pt-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
@@ -262,7 +261,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           )}
                         />
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
@@ -329,7 +328,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           </FormItem>
                         )}
                       />
-                      <div className="grid grid-cols-4 gap-4 pb-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pb-8">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
@@ -539,7 +538,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           </FormItem>
                         )}
                       />
-                      <div className="grid grid-cols-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-3">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}

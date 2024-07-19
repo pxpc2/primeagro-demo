@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { SubmitButton } from "../app/login/submit-button";
 import completeProfile from "../app/user-dashboard/actions";
-import FormPNCF from "./pncf-form";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -30,20 +29,23 @@ export default function ProfileCreationPage({ authID }) {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center ">
+    <div className="w-full h-full flex items-center justify-center">
       <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white  shadow-2xl p-8 sm:p-16 sm:w-[80%] gap-16 justify-center overflow-y-auto">
         <Link href={"/login"}>
           <button
             type="button"
             className="rounded-full  bg-white text-black shadow-sm hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            <HomeIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+            <HomeIcon
+              className="-ml-0.5 h-8 w-8 text-black hover:shadow-md p-2 rounded-xl"
+              aria-hidden="true"
+            />
           </button>
         </Link>
         {!showAvaliadorMsg && (
           <div className="flex items-center flex-col justify-center align-middle h-full">
             <h1 className="font-medium pt-20">Qual o seu tipo de conta?</h1>
-            <div className="w-full flex items-center gap-11 justify-center py-10">
+            <div className="w-full flex items-center gap-4 sm:gap-8 justify-center py-10">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="default">Sou beneficiário</Button>
