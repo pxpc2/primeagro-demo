@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function Layout({ children }) {
   return (
-    <div className="">
+    <div className="w-full h-full">
       <main className="w-full h-full">{children}</main>
       <Toaster />
     </div>

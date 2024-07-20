@@ -33,7 +33,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
     if (message) notify();
   }, [message, toast]);
   return (
-    <div className="flex min-h-full flex-1 bg-background">
+    <div className="flex min-h-full flex-1 bg-gray-50">
       <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
@@ -79,6 +79,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
           width={2000}
           height={50}
         />
+        <div className="absolute inset-0 bg-black opacity-20"></div>
       </div>
     </div>
   );
@@ -155,7 +156,11 @@ function LoginForm({ message }) {
             Lembrar dados de acesso
           </label>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-orange-600"
+        >
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
