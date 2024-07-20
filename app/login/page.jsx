@@ -34,12 +34,12 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
   }, [message, toast]);
   return (
     <div className="flex min-h-full flex-1 bg-gray-50">
-      <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:flex-none lg:px-20 xl:px-24">
+      <div className="flex flex-1 flex-col justify-center px-6 py-8 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
             <a href="/login">
               <Image
-                className="h-36 w-auto"
+                className="h-32 w-auto"
                 src="/confidens-logo-verde-laranja.png"
                 alt="Your Company"
                 width={1200}
@@ -47,7 +47,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               />
             </a>
 
-            <h2 className="mt-8 text-xl font-bold leading-9 tracking-tight text-popover-foreground">
+            <h2 className="mt-4 text-lg font-bold leading-9 tracking-tight text-popover-foreground">
               Entre com sua conta
             </h2>
             <div className="flex gap-2 text-[0.8rem]">
@@ -64,7 +64,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               </Dialog>
             </div>
           </div>
-          <div className="mt-10">
+          <div className="mt-6">
             <div>
               <LoginForm message={message} />
             </div>
@@ -104,7 +104,7 @@ function LoginForm({ message }) {
 
   return (
     <Form {...form}>
-      <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           rules={{ required: "E-mail obrigatório." }}
