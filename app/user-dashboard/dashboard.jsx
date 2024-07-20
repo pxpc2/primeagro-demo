@@ -120,8 +120,8 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                               }}
                               className={classNames(
                                 selectedTab === item.name
-                                  ? "bg-gray-800 border text-gray-200"
-                                  : "text-gray-200 bg-gray-900",
+                                  ? "border text-gray-200 bg-gray-900 hover:bg-gray-800"
+                                  : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
                                 "flex justify-start gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 w-full"
                               )}
                             >
