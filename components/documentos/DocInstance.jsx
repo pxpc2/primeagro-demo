@@ -78,7 +78,7 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
         <span
           className={`inline-flex items-center rounded-md ${corBg} px-2 py-1 text-xs font-medium ${corTexto} ring-1 ring-inset ${corRing} `}
         >
-          {status ? "Ativo" : "Pendente"}
+          {status ? "Concluído" : "Pendente"}
         </span>
       </td>
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
