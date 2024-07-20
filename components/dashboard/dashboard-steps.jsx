@@ -43,16 +43,6 @@ export default function DashboardSteps({ cliente }) {
         status: cliente.status_documentos ? "complete" : "current",
       });
     }
-
-    if (cliente.status_documentos) {
-      steps.push({
-        id: "04",
-        name: "Projeto",
-        description: "Finalize o projeto.",
-        href: "#",
-        status: "current",
-      });
-    }
   }
 
   return (

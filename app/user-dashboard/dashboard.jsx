@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   BookTextIcon,
   CalendarIcon,
+  ExternalLinkIcon,
   FolderIcon,
   HomeIcon,
   MenuIcon,
@@ -234,9 +235,18 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
             </div>
           )}
           {selectedTab === "Geral" && usuario.status_documentos && (
-            <Link href="/projeto" target="_blank">
-              <Button className="">Projeto</Button>
-            </Link>
+            <div className="flex-col items-center text-sm align-middle justify-center mx-12 py-4 sm:p-12 sm:my-12">
+              <p>se esta vendo esta mensagem, você é usuário administrador</p>
+              <p>
+                deixando essa mensagem temporária de recado que ainda vou
+                ajeitar o botão do projeto
+              </p>
+              <Link href="/projeto" target="_blank">
+                <Button variant="secondary" className="mt-4">
+                  Acessar o projeto <ExternalLinkIcon className="ml-1.5" />
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </main>
