@@ -1,17 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { jwtDecode } from "jwt-decode";
@@ -21,38 +10,45 @@ import DashboardSteps from "@/components/dashboard/dashboard-steps";
 import PagamentoCard from "@/components/dashboard/pagamento-card";
 import DocumentosDashboard from "@/components/documentos/DocumentosDashboard";
 import { Button } from "@/components/ui/button";
-import { ADMIN_EMAIL } from "@/utils/constants";
+import {
+  BookTextIcon,
+  CalendarIcon,
+  FolderIcon,
+  HomeIcon,
+  MenuIcon,
+  UsersIcon,
+  XIcon,
+} from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DialogPanel,
+  TransitionChild,
+  Dialog,
+  DialogBackdrop,
+} from "@headlessui/react";
+
+const navigation = [
+  { name: "Geral", href: "#", icon: HomeIcon },
+  { name: "Formulário de Enquadramento", href: "#", icon: BookTextIcon },
+  { name: "Documentos", href: "#", icon: FolderIcon },
+];
+
+const adminNav = [
+  { name: "Geral", href: "#", icon: HomeIcon },
+  { name: "Beneficiários", href: "#", icon: UsersIcon },
+  { name: "Técnicos", href: "#", icon: CalendarIcon },
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [role, setRole] = useState(null);
   const [selectedTab, setSelectedTab] = useState("Geral");
-  const navigation = [
-    { name: "Geral", href: "#", current: selectedTab === "Geral" },
-    {
-      name: "Formulário de Enquadramento",
-      href: "#",
-      current: selectedTab === "Formulário de Enquadramento",
-    },
-    { name: "Documentos", href: "#", current: selectedTab === "Documentos" },
-  ];
-  const userNavigation = [
-    { name: "Sua Conta", href: "#" },
-    { name: "Sair", href: "#" },
-  ];
 
-  const adminNav = [
-    { name: "Geral", href: "#", current: selectedTab === "Geral" },
-    {
-      name: "Beneficiários",
-      href: "#",
-      current: selectedTab === "Beneficiários",
-    },
-    { name: "Técnicos", href: "#", current: selectedTab === "Técnicos" },
-  ];
+  const userNavigation = [{ name: "Sair", href: "#" }];
 
   const usuario = cliente[0];
 
@@ -68,265 +64,182 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
     }
   );
 
+  const nomeCompletoPartes = (usuario.primeiro_nome + " " + usuario.sobrenome)
+    .trim()
+    .split(" ");
+  const iniciais = nomeCompletoPartes
+    .map((i) => i.charAt(0).toUpperCase())
+    .join("");
+
   return (
-    <div className="min-h-full">
-      <div className="bg-orange-800 pb-32">
-        <Disclosure as="nav">
-          {({ open }) => (
-            <>
-              <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div className="border-b border-orange-700">
-                  <div className="flex h-28 items-end justify-between px-4 sm:px-0">
-                    <div className="flex items-end">
-                      <div className="flex-shrink-0 mr-8 sm:mb-2">
-                        <Link href={"/"}>
-                          <Image
-                            src="/logo-04.svg"
-                            alt="ConfidensAgro"
-                            height={200}
-                            width={100}
-                          />
-                        </Link>
-                      </div>
-                      <div className="hidden md:block">
-                        <div className="ml-10 flex items-baseline space-x-4 sm:mb-4">
-                          {role === "gerente"
-                            ? adminNav.map((item) => (
-                                <Button
-                                  className={classNames(
-                                    "inline-flex items-center text-sm font-semibold text-gray-200",
-                                    item.current
-                                      ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
-                                      : "hover:bg-orange-700 bg-transparent"
-                                  )}
-                                  key={item.name}
-                                  onClick={() => {
-                                    setSelectedTab(item.name);
-                                  }}
-                                >
-                                  {item.name}
-                                </Button>
-                              ))
-                            : navigation.map((item) => (
-                                <Button
-                                  className={classNames(
-                                    "inline-flex items-center text-sm font-semibold text-gray-200",
-                                    item.current
-                                      ? "border-gray-300  text-gray-100 bg-orange-700 hover:bg-orange-700"
-                                      : "hover:bg-orange-700 bg-transparent",
-                                    (!usuario.status_enquadramento ||
-                                      !usuario.status_pagamento) &&
-                                      item.name === "Documentos"
-                                      ? "hidden"
-                                      : ""
-                                  )}
-                                  key={item.name}
-                                  onClick={() => {
-                                    setSelectedTab(item.name);
-                                  }}
-                                >
-                                  {item.name}
-                                </Button>
-                              ))}
-                          {role === "gerente" ? (
-                            <></>
-                          ) : (
-                            <Link
-                              href={"/projeto"}
-                              target="_blank"
+    <>
+      <Dialog
+        open={sidebarOpen}
+        onClose={setSidebarOpen}
+        className="relative z-50 lg:hidden"
+      >
+        <DialogBackdrop className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-[closed]:opacity-0" />
+
+        <div className="fixed inset-0 flex">
+          <DialogPanel className="relative mr-16 flex w-full max-w-xs flex-1 transform transition duration-300 ease-in-out data-[closed]:-translate-x-full">
+            <TransitionChild>
+              <div className="absolute left-full top-0 flex w-16 justify-center pt-5 duration-300 ease-in-out data-[closed]:opacity-0">
+                <button
+                  type="button"
+                  onClick={() => setSidebarOpen(false)}
+                  className="-m-2.5 p-2.5"
+                >
+                  <span className="sr-only">Close sidebar</span>
+                  <XIcon aria-hidden="true" className="h-6 w-6 text-white" />
+                </button>
+              </div>
+            </TransitionChild>
+            <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10">
+              <div className="flex mt-4 shrink-0 items-center">
+                <Image
+                  src="/logo-04.svg"
+                  alt="ConfidensAgro"
+                  height={120}
+                  width={120}
+                />
+              </div>
+              <nav className="flex flex-1 flex-col">
+                <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                  <li>
+                    <ul
+                      role="list"
+                      className="-mx-2 space-y-3 flex flex-col mt-2"
+                    >
+                      {(role === "gerente" ? adminNav : navigation).map(
+                        (item) => (
+                          <li key={item.name}>
+                            <Button
+                              onClick={() => {
+                                setSelectedTab(item.name);
+                                setSidebarOpen(false);
+                              }}
                               className={classNames(
-                                "text-gray-200 l",
-                                usuario.status_documentos ? "" : "hidden"
+                                selectedTab === item.name
+                                  ? "bg-gray-800 border text-gray-200"
+                                  : "text-gray-200 bg-gray-900",
+                                "flex justify-start gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 w-full"
                               )}
                             >
-                              <Button className="bg-transparent hover:bg-orange-700 text-gray-200">
-                                Projeto
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="hidden md:block sm:mb-4">
-                      <div className="ml-4 flex items-center md:ml-6">
-                        <button
-                          type="button"
-                          className="relative rounded-full bg-orange-600 p-1 text-gray-100 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-200"
-                        >
-                          <span className="absolute -inset-1.5" />
-                          <span className="sr-only">Ver Notificações</span>
-                          <BellIcon className="h-6 w-6" aria-hidden="true" />
-                        </button>
-
-                        {/* Profile dropdown */}
-                        <Menu as="div" className="relative ml-3">
-                          <div>
-                            <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                              <span className="absolute -inset-1.5" />
-                              <span className="sr-only">
-                                Abrir menu de usuário
-                              </span>
-                              <Image
-                                className="h-8 w-8 rounded-full"
-                                src={"/farmer.png"}
-                                alt=""
-                                width={300}
-                                height={50}
+                              <item.icon
+                                className="h-6 w-6"
+                                aria-hidden="true"
                               />
-                            </MenuButton>
-                          </div>
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-100"
-                            enterFrom="transform opacity-0 scale-95"
-                            enterTo="transform opacity-100 scale-100"
-                            leave="transition ease-in duration-75"
-                            leaveFrom="transform opacity-100 scale-100"
-                            leaveTo="transform opacity-0 scale-95"
-                          >
-                            <MenuItems className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              {userNavigation.map((item) => (
-                                <MenuItem key={item.name}>
-                                  {({ active }) => (
-                                    <a
-                                      href={item.href}
-                                      className={classNames(
-                                        active ? "bg-gray-100" : "",
-                                        "block px-4 py-2 text-sm text-gray-700"
-                                      )}
-                                    >
-                                      {item.name}
-                                    </a>
-                                  )}
-                                </MenuItem>
-                              ))}
-                            </MenuItems>
-                          </Transition>
-                        </Menu>
-                      </div>
-                    </div>
-                    <div className="-mr-2 flex md:hidden">
-                      {/* Mobile menu button */}
-                      <DisclosureButton className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                        <span className="absolute -inset-0.5" />
-                        <span className="sr-only">Abrir menu principal</span>
-                        {open ? (
-                          <XMarkIcon
-                            className="block h-6 w-6"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          <Bars3Icon
-                            className="block h-6 w-6"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </DisclosureButton>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <DisclosurePanel className="border-b border-gray-700 md:hidden">
-                <div className="space-y-1 px-2 py-3 sm:px-3">
-                  {navigation.map((item) => (
-                    <DisclosureButton
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className={classNames(
-                        item.current
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "block rounded-md px-3 py-2 text-base font-medium"
+                              {item.name}
+                            </Button>
+                          </li>
+                        )
                       )}
-                      aria-current={item.current ? "page" : undefined}
-                    >
-                      {item.name}
-                    </DisclosureButton>
-                  ))}
-                </div>
-                <div className="border-t border-gray-700 pb-3 pt-4">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <Image
-                        className="h-10 w-10 rounded-full"
-                        src={"/farmer.png"}
-                        alt=""
-                        width={100}
-                        height={100}
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">
-                        {usuario.primeiro_nome}
-                      </div>
-                      <div className="text-sm font-medium leading-none text-gray-400">
-                        {usuario.email}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">Ver Notificações</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <DisclosureButton
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </DisclosureButton>
-                    ))}
-                  </div>
-                </div>
-              </DisclosurePanel>
-            </>
-          )}
-        </Disclosure>
-        <header className="py-10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 className="text-1xl font-semibold tracking-tight text-white">
-              Bem-vindo, {usuario.primeiro_nome} {usuario.ultimo_nome}
-            </h1>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
+
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6">
+          <div className="flex my-4 shrink-0 items-center">
+            <Link href={"/login"}>
+              <Image
+                src="/logo-04.svg"
+                alt="ConfidensAgro"
+                height={128}
+                width={128}
+              />
+            </Link>
           </div>
-        </header>
+          <nav className="flex flex-1 flex-col">
+            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+              <li>
+                <ul role="list" className="-mx-2 space-y-1">
+                  {(role === "gerente" ? adminNav : navigation).map((item) => (
+                    <li key={item.name}>
+                      <Button
+                        onClick={() => setSelectedTab(item.name)}
+                        className={classNames(
+                          selectedTab === item.name
+                            ? "border text-gray-200 bg-gray-900 hover:bg-gray-800"
+                            : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
+                          "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                        )}
+                      >
+                        <item.icon className="h-6 w-6" aria-hidden="true" />
+                        {item.name}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+              <li className="-mx-6 mt-auto">
+                <a
+                  href="#"
+                  className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+                >
+                  <Avatar className="text-black">
+                    <AvatarFallback>{iniciais}</AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{usuario.email}</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
 
-      <main className="-mt-32">
-        {usuario.email === "admin@admin" ? (
-          <h1>PAINEL DE ADMINISTRADOR</h1>
-        ) : (
-          <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-0">
-            <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-              {selectedTab === "Geral" ? (
-                <DashboardSteps cliente={usuario} />
-              ) : selectedTab === "Documentos" ? (
-                <DocumentosDashboard cliente={usuario} />
-              ) : (
-                <FormularioEnquadramentoPreview
-                  dados={dadosEnquadramento[0]}
-                  cliente={usuario}
-                />
-              )}
-            </div>
+      <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(true)}
+          className="-m-2.5 p-2.5 text-gray-400 lg:hidden"
+        >
+          <span className="sr-only">Abrir menu</span>
+          <MenuIcon className="h-6 w-6" aria-hidden="true" />
+        </button>
+        <div className="flex-1 text-sm font-semibold leading-6 text-white">
+          {selectedTab}
+        </div>
+        <a href="#">
+          <span className="sr-only">Seu perfil</span>
+        </a>
+      </div>
+
+      <main className="py-2 lg:pl-72 sm:h-full ">
+        <div
+          className={`px-4 sm:px-6 lg:px-8 flex flex-col align-middle h-full  ${
+            selectedTab === "Geral" ? "sm:justify-center" : "py-8"
+          }`}
+        >
+          <div className="rounded-sm bg-white px-5 py-6 shadow sm:px-6">
             {selectedTab === "Geral" ? (
-              <div>
-                <PagamentoCard cliente={usuario} />
-              </div>
+              <DashboardSteps cliente={usuario} />
+            ) : selectedTab === "Documentos" ? (
+              <DocumentosDashboard cliente={usuario} />
             ) : (
-              <></>
+              <FormularioEnquadramentoPreview
+                dados={dadosEnquadramento[0]}
+                cliente={usuario}
+              />
             )}
           </div>
-        )}
+          {selectedTab === "Geral" && (
+            <div>
+              <PagamentoCard cliente={usuario} />
+            </div>
+          )}
+          {selectedTab === "Geral" && usuario.status_documentos && (
+            <Link href="/projeto" target="_blank">
+              <Button className="">Projeto</Button>
+            </Link>
+          )}
+        </div>
       </main>
-    </div>
+    </>
   );
 }

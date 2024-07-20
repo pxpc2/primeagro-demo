@@ -56,6 +56,7 @@ export default function DocumentosDashboard({ cliente }) {
   };
 
   const handleTabChange = (tabId) => {
+    console.log("setting to tab " + tabId);
     setCurrentTab(tabId);
     const updatedTabs = tabs.map((tab) => ({
       ...tab,
@@ -67,19 +68,18 @@ export default function DocumentosDashboard({ cliente }) {
   return (
     <div>
       <div className="sm:hidden">
-        <label htmlFor="tabs" className="sr-only">
-          Select a tab
-        </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
         <select
           id="tabs"
           name="tabs"
           onChange={(e) => handleTabChange(e.target.value)}
           className="block w-full rounded-md border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-          defaultValue={tabs.find((tab) => tab.current).name}
+          defaultValue={tabs.find((tab) => tab.current)?.name || ""}
         >
           {tabs.map((tab) => (
-            <option key={tab.name}>{tab.name}</option>
+            <option key={tab.id} value={tab.id}>
+              {tab.name}
+            </option>
           ))}
         </select>
       </div>

@@ -27,7 +27,7 @@ export default function DashboardSteps({ cliente }) {
       name: "Pagamento",
       description: cliente.status_pagamento
         ? "Pagamento identificado com sucesso!"
-        : "Sua próxima etapa é concluir o pagamento.",
+        : "Conclua o pagamento para avançar para a próxima etapa.",
       href: "#",
       status: cliente.status_pagamento ? "complete" : "current",
     });
@@ -66,7 +66,10 @@ export default function DashboardSteps({ cliente }) {
           className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200"
         >
           {steps.map((step, stepIdx) => (
-            <li key={step.id} className="relative overflow-hidden lg:flex-1">
+            <li
+              key={step.id}
+              className="relative overflow-hidden lg:flex-1 bg-white"
+            >
               <div
                 className={classNames(
                   stepIdx === 0 ? "rounded-t-md border-b-0" : "",
@@ -87,7 +90,7 @@ export default function DashboardSteps({ cliente }) {
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-700">
                           <CheckIcon
                             className="h-6 w-6 text-white"
                             aria-hidden="true"
@@ -96,7 +99,7 @@ export default function DashboardSteps({ cliente }) {
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
                         <span className="text-sm font-medium">{step.name}</span>
-                        <span className="text-sm font-medium text-gray-500">
+                        <span className="text-xs sm:text-sm mt-1 sm:mt-0 font-normal text-gray-500">
                           {step.description}
                         </span>
                       </span>
@@ -123,7 +126,7 @@ export default function DashboardSteps({ cliente }) {
                         <span className="text-sm font-medium text-orange-600">
                           {step.name}
                         </span>
-                        <span className="text-sm font-medium text-gray-500">
+                        <span className="text-xs sm:text-sm mt-1 sm:mt-0 font-medium text-gray-500">
                           {step.description}
                         </span>
                       </span>
@@ -142,7 +145,7 @@ export default function DashboardSteps({ cliente }) {
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-300">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gray-400">
                           <span className="text-gray-500">{step.id}</span>
                         </span>
                       </span>

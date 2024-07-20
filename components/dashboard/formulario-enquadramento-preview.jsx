@@ -66,8 +66,8 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
 
   return (
     <div>
-      <div className="px-4 sm:px-0">
-        <h3 className="text-base font-semibold leading-7 text-gray-900">
+      <div>
+        <h3 className="text-base font-bold leading-7 text-gray-900">
           Dados Básicos
         </h3>
       </div>
@@ -99,8 +99,8 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </div>
         </dl>
       </div>
-      <div className="px-4 sm:px-0">
-        <h3 className="text-base font-semibold leading-7 text-gray-900 mt-28">
+      <div className="">
+        <h3 className="text-base font-bold leading-7 text-gray-900 mt-10 sm:mt-16">
           Dados do Formulário
         </h3>
       </div>

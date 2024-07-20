@@ -25,11 +25,6 @@ export default async function UserProtectedPage() {
   const aps = await getAplicacoes();
   const dadosEnquadramento = await getDadosEnquadramentoForm();
 
-  let { data: user_role, err } = await supabase
-    .from("user_roles")
-    .select("*")
-    .eq("user_id", user.id);
-
   return (
     <UserDashboardPage
       cliente={cliente}
