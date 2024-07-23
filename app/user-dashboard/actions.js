@@ -97,6 +97,12 @@ export async function submitEnquadramentoForm({ formData }) {
   );
 }
 
+export async function getAllClients() {
+  const supabase = createClient();
+  let { data: clientes, error } = await supabase.from("clientes").select("*");
+  return clientes;
+}
+
 export async function completeProfile(
   dadosBasicos,
   aprovadoStatus,

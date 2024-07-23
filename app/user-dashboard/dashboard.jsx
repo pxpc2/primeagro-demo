@@ -27,6 +27,8 @@ import {
   Dialog,
   DialogBackdrop,
 } from "@headlessui/react";
+import AdminDashboard from "@/components/dashboard/admin-dashboard";
+import { getAllClients } from "./actions";
 
 const navigation = [
   { name: "Geral", href: "#", icon: HomeIcon },
@@ -54,6 +56,7 @@ export default function UserDashboardPage({
   const [selectedTab, setSelectedTab] = useState(
     `${isAdmin ? "Dashboard" : "Geral"}`
   );
+  const [clientes, setClientes] = useState([]);
 
   const userNavigation = [{ name: "Sair", href: "#" }];
 
@@ -70,6 +73,13 @@ export default function UserDashboardPage({
       }
     }
   );
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      setClientes(await getAllClients());
+    };
+    fetchClients();
+  });
 
   const nomeCompletoPartes = (usuario.primeiro_nome + " " + usuario.sobrenome)
     .trim()
@@ -232,7 +242,7 @@ export default function UserDashboardPage({
                 cliente={usuario}
               />
             ) : isAdmin && selectedTab === "Dashboard" ? (
-              <p>ADMIN DASHBOARD</p>
+              <AdminDashboard clientes={clientes} />
             ) : isAdmin && selectedTab === "Beneficiários" ? (
               <p>ABA BENEFICIÁRIOS</p>
             ) : isAdmin && selectedTab === "Técnicos" ? (
