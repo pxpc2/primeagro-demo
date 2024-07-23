@@ -140,6 +140,13 @@ export default function UserDashboardPage({
                               setSelectedTab(item.name);
                               setSidebarOpen(false);
                             }}
+                            disabled={
+                              item.name === "Documentos" &&
+                              (!usuario.status_pagamento ||
+                                !usuario.status_enquadramento)
+                                ? true
+                                : false
+                            }
                             className={classNames(
                               selectedTab === item.name
                                 ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
@@ -187,6 +194,13 @@ export default function UserDashboardPage({
                             : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
                           "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         )}
+                        disabled={
+                          item.name === "Documentos" &&
+                          (!usuario.status_pagamento ||
+                            !usuario.status_enquadramento)
+                            ? true
+                            : false
+                        }
                       >
                         <item.icon className="h-6 w-6" aria-hidden="true" />
                         {item.name}
