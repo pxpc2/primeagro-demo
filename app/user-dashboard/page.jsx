@@ -3,6 +3,7 @@ import UserDashboardPage from "./dashboard";
 import { redirect } from "next/navigation";
 import ProfileCreationPage from "../../components/profile-creation";
 import { getAplicacoes, getDadosEnquadramentoForm } from "./actions";
+import { isAdminUser } from "../projeto/actions";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();
@@ -24,12 +25,14 @@ export default async function UserProtectedPage() {
 
   const aps = await getAplicacoes();
   const dadosEnquadramento = await getDadosEnquadramentoForm();
+  const isAdmin = await isAdminUser();
 
   return (
     <UserDashboardPage
       cliente={cliente}
       aplicacoes={aps}
       dadosEnquadramento={dadosEnquadramento}
+      isAdmin={isAdmin}
     />
   );
 }
