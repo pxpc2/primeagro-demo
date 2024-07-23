@@ -92,11 +92,13 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                           name="sobrenome"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Seu sobrenome</FormLabel>
+                              <FormLabel>Seu(s) sobrenome(s)</FormLabel>
                               <FormControl>
                                 <Input type="text" {...field} />
                               </FormControl>
-                              <FormDescription>Seu sobrenome</FormDescription>
+                              <FormDescription>
+                                O restante do seu nome completo
+                              </FormDescription>
                               <FormMessage />
                             </FormItem>
                           )}
