@@ -63,9 +63,13 @@ export default function InvestimentosTab({ data, isAdmin }) {
     }
   };
 
-  const nomeImovel = data.dadosPreAnalise.campo_4;
-  let [cidade, UF] = data.dadosPreAnalise.campo_3.split("-");
-  cidade = cidade.replace(/_/g, " ");
+  let [cidade, UF] = data.dadosPreAnalise
+    ? data.dadosPreAnalise.campo_3.split("-")
+    : ["sem_cidade", "sem_UF"];
+  const nomeImovel =
+    data.dadosPreAnalise !== undefined
+      ? data.dadosPreAnalise.campo_4
+      : "IMÓVEL SEM NOME";
 
   return (
     <div className="p-4 bg-white">

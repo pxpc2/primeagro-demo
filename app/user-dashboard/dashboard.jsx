@@ -219,7 +219,10 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
         >
           <div className="rounded-sm bg-white px-5 py-6 shadow sm:px-6">
             {selectedTab === "Geral" ? (
-              <DashboardSteps cliente={usuario} />
+              <DashboardSteps
+                cliente={usuario}
+                setSelectedTab={setSelectedTab}
+              />
             ) : selectedTab === "Documentos" ? (
               <DocumentosDashboard cliente={usuario} />
             ) : (

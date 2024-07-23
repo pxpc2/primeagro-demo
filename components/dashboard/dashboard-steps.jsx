@@ -8,7 +8,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DashboardSteps({ cliente }) {
+export default function DashboardSteps({ cliente, setSelectedTab }) {
   const steps = [
     {
       id: "01",
@@ -45,6 +45,14 @@ export default function DashboardSteps({ cliente }) {
     }
   }
 
+  const handleClick = (step) => {
+    if (step.name === "Documentos" && step.status !== "complete") {
+      setSelectedTab("Documentos");
+    } else if (step.id === "01" && step.status !== "complete") {
+      setSelectedTab("Formulário de Enquadramento");
+    }
+  };
+
   return (
     <div className="lg:border-b lg:border-t lg:border-gray-200">
       <nav
@@ -58,7 +66,7 @@ export default function DashboardSteps({ cliente }) {
           {steps.map((step, stepIdx) => (
             <li
               key={step.id}
-              className="relative overflow-hidden lg:flex-1 bg-white"
+              className="relative overflow-hidden lg:flex-1 bg-white cursor-default"
             >
               <div
                 className={classNames(
@@ -68,7 +76,7 @@ export default function DashboardSteps({ cliente }) {
                 )}
               >
                 {step.status === "complete" ? (
-                  <a href={step.href} className="group">
+                  <a href={step.href} className="group cursor-default">
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -96,7 +104,14 @@ export default function DashboardSteps({ cliente }) {
                     </span>
                   </a>
                 ) : step.status === "current" ? (
-                  <a href={step.href} aria-current="step">
+                  <a
+                    href={step.href}
+                    aria-current="step"
+                    className={
+                      step.name === "Documentos" ? "" : "cursor-default"
+                    }
+                    onClick={() => handleClick(step)}
+                  >
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-orange-600 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
@@ -123,7 +138,11 @@ export default function DashboardSteps({ cliente }) {
                     </span>
                   </a>
                 ) : (
-                  <a href={step.href} className="group">
+                  <a
+                    href={step.href}
+                    className="group"
+                    onClick={() => handleClick(step)}
+                  >
                     <span
                       className="absolute left-0 top-0 h-full w-1 bg-transparent group-hover:bg-gray-200 lg:bottom-0 lg:top-auto lg:h-1 lg:w-full"
                       aria-hidden="true"
