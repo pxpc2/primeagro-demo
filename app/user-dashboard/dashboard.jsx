@@ -16,6 +16,7 @@ import {
   ExternalLinkIcon,
   FolderIcon,
   HomeIcon,
+  Loader2,
   MenuIcon,
   UsersIcon,
   XIcon,
@@ -62,6 +63,8 @@ export default function UserDashboardPage({
 
   const usuario = cliente[0];
 
+  const [clientesListLoading, setClientesListLoading] = useState(true);
+
   const supabase = createClient();
 
   const { subscription: authListener } = supabase.auth.onAuthStateChange(
@@ -76,10 +79,13 @@ export default function UserDashboardPage({
 
   useEffect(() => {
     const fetchClients = async () => {
-      setClientes(await getAllClients());
+      setClientesListLoading(true);
+      const fetched = await getAllClients();
+      setClientes(fetched);
+      setClientesListLoading(false);
     };
     fetchClients();
-  });
+  }, []);
 
   const nomeCompletoPartes = (usuario.primeiro_nome + " " + usuario.sobrenome)
     .trim()
@@ -242,7 +248,15 @@ export default function UserDashboardPage({
                 cliente={usuario}
               />
             ) : isAdmin && selectedTab === "Dashboard" ? (
-              <AdminDashboard clientes={clientes} />
+              <>
+                {clientesListLoading ? (
+                  <div>
+                    <Loader2 className="animate-spin w-5 h-5 text-black" />
+                  </div>
+                ) : (
+                  <AdminDashboard clientes={clientes} />
+                )}
+              </>
             ) : isAdmin && selectedTab === "Beneficiários" ? (
               <p>ABA BENEFICIÁRIOS</p>
             ) : isAdmin && selectedTab === "Técnicos" ? (
