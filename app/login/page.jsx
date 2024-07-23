@@ -55,7 +55,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               <Dialog>
                 <DialogTrigger asChild>
                   <p className="text-primary hover:cursor-pointer hover:underline">
-                    Registrar agora.
+                    Registrar agora!
                   </p>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[800px]">
