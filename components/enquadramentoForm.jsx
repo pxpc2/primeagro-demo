@@ -49,6 +49,42 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
     }
   };
 
+  const formatCPF = (value) => {
+    if (!value) return value;
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  };
+
+  const formatRG = (value) => {
+    if (!value) return value;
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{1})(\d{3})(\d{3})$/, "$1.$2.$3");
+  };
+
+  const formatTelefone = (value) => {
+    if (!value) return value;
+    return value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d{4})$/, "$1-$2");
+  };
+
+  const handleChange = (e, fieldKey) => {
+    let formattedValue = e.target.value;
+    if (fieldKey === "cpf") {
+      formattedValue = formatCPF(formattedValue);
+    } else if (fieldKey === "rg") {
+      formattedValue = formatRG(formattedValue);
+    } else if (fieldKey === "telefone") {
+      formattedValue = formatTelefone(formattedValue);
+    }
+    form.setValue(fieldKey, formattedValue);
+  };
+
   return (
     <div className="fixed inset-x-0 inset-y-0 w-full bg-gray-50 bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="w-full h-full flex items-center justify-center">
@@ -68,36 +104,19 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="divide-y divide-gray-200">
                     <div className="grid gap-4">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                      <div className="grid grid-cols-1 gap-4 pt-4">
                         <FormField
                           control={form.control}
                           rules={{ required: "Campo obrigatório." }}
-                          name="primeiroNome"
+                          name="nome_completo"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Primeiro nome</FormLabel>
+                              <FormLabel>Nome completo</FormLabel>
                               <FormControl>
                                 <Input type="text" {...field} />
                               </FormControl>
                               <FormDescription>
-                                Seu primeiro nome
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          rules={{ required: "Campo obrigatório." }}
-                          name="sobrenome"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Seu(s) sobrenome(s)</FormLabel>
-                              <FormControl>
-                                <Input type="text" {...field} />
-                              </FormControl>
-                              <FormDescription>
-                                O restante do seu nome completo
+                                Seu nome completo
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -113,7 +132,11 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                             <FormItem className="col-span-3">
                               <FormLabel>CPF</FormLabel>
                               <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                  type="text"
+                                  {...field}
+                                  onChange={(e) => handleChange(e, "cpf")}
+                                />
                               </FormControl>
                               <FormDescription>Seu CPF</FormDescription>
                               <FormMessage />
@@ -128,7 +151,11 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                             <FormItem className="col-span-2">
                               <FormLabel>RG</FormLabel>
                               <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                  type="text"
+                                  {...field}
+                                  onChange={(e) => handleChange(e, "rg")}
+                                />
                               </FormControl>
                               <FormDescription>Seu RG</FormDescription>
                               <FormMessage />
@@ -302,7 +329,11 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                             <FormItem>
                               <FormLabel>Telefone</FormLabel>
                               <FormControl>
-                                <Input type="text" {...field} />
+                                <Input
+                                  type="text"
+                                  {...field}
+                                  onChange={(e) => handleChange(e, "telefone")}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

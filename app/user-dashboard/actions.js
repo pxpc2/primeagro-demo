@@ -16,8 +16,7 @@ export async function submitEnquadramentoForm({ formData }) {
   } = await supabase.auth.getUser();
 
   const dadosBasicos = {
-    primeiroNome: formData.primeiroNome,
-    sobrenome: formData.sobrenome,
+    nome_completo: formData.nome_completo,
     cpf: formData.cpf,
     rg: formData.rg,
     orgaoExpedidor: formData.orgaoExpedidor,
@@ -110,8 +109,7 @@ export async function completeProfile(
   user_email
 ) {
   const clienteData = {
-    primeiro_nome: dadosBasicos.primeiroNome,
-    sobrenome: dadosBasicos.sobrenome,
+    nome_completo: dadosBasicos.nome_completo,
     cpf: dadosBasicos.cpf,
     rg: dadosBasicos.rg,
     orgao_expedidor: dadosBasicos.orgaoExpedidor,
