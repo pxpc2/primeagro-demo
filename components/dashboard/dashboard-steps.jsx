@@ -27,7 +27,7 @@ export default function DashboardSteps({ cliente, setSelectedTab }) {
       name: "Pagamento",
       description: cliente.status_pagamento
         ? "Pagamento identificado com sucesso!"
-        : "Conclua o pagamento para avançar para a próxima etapa.",
+        : "Conclua o pagamento para avançar para a etapa de documentos.",
       href: "#",
       status: cliente.status_pagamento ? "complete" : "current",
     });
@@ -131,7 +131,7 @@ export default function DashboardSteps({ cliente, setSelectedTab }) {
                         <span className="text-sm font-medium text-orange-600">
                           {step.name}
                         </span>
-                        <span className="text-xs sm:text-sm mt-1 sm:mt-0 font-medium text-gray-500">
+                        <span className="text-xs sm:text-sm mt-1 sm:mt-0 font-normal  text-gray-500">
                           {step.description}
                         </span>
                       </span>
@@ -162,7 +162,7 @@ export default function DashboardSteps({ cliente, setSelectedTab }) {
                         <span className="text-sm font-medium text-gray-500">
                           {step.name}
                         </span>
-                        <span className="text-sm font-medium text-gray-500">
+                        <span className="text-sm text-gray-500 font-normal">
                           {step.description}
                         </span>
                       </span>

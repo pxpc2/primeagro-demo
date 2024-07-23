@@ -16,6 +16,7 @@ import {
   ExternalLinkIcon,
   FolderIcon,
   HomeIcon,
+  Loader2,
   MenuIcon,
   UsersIcon,
   XIcon,
@@ -27,6 +28,8 @@ import {
   Dialog,
   DialogBackdrop,
 } from "@headlessui/react";
+import AdminDashboard from "@/components/dashboard/admin-dashboard";
+import { getAllClients } from "./actions";
 
 const navigation = [
   { name: "Geral", href: "#", icon: HomeIcon },
@@ -54,10 +57,13 @@ export default function UserDashboardPage({
   const [selectedTab, setSelectedTab] = useState(
     `${isAdmin ? "Dashboard" : "Geral"}`
   );
+  const [clientes, setClientes] = useState([]);
 
   const userNavigation = [{ name: "Sair", href: "#" }];
 
   const usuario = cliente[0];
+
+  const [clientesListLoading, setClientesListLoading] = useState(true);
 
   const supabase = createClient();
 
@@ -70,6 +76,16 @@ export default function UserDashboardPage({
       }
     }
   );
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      setClientesListLoading(true);
+      const fetched = await getAllClients();
+      setClientes(fetched);
+      setClientesListLoading(false);
+    };
+    fetchClients();
+  }, []);
 
   const nomeCompletoPartes = (usuario.primeiro_nome + " " + usuario.sobrenome)
     .trim()
@@ -124,6 +140,13 @@ export default function UserDashboardPage({
                               setSelectedTab(item.name);
                               setSidebarOpen(false);
                             }}
+                            disabled={
+                              item.name === "Documentos" &&
+                              (!usuario.status_pagamento ||
+                                !usuario.status_enquadramento)
+                                ? true
+                                : false
+                            }
                             className={classNames(
                               selectedTab === item.name
                                 ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
@@ -171,6 +194,13 @@ export default function UserDashboardPage({
                             : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
                           "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         )}
+                        disabled={
+                          item.name === "Documentos" &&
+                          (!usuario.status_pagamento ||
+                            !usuario.status_enquadramento)
+                            ? true
+                            : false
+                        }
                       >
                         <item.icon className="h-6 w-6" aria-hidden="true" />
                         {item.name}
@@ -232,7 +262,15 @@ export default function UserDashboardPage({
                 cliente={usuario}
               />
             ) : isAdmin && selectedTab === "Dashboard" ? (
-              <p>ADMIN DASHBOARD</p>
+              <>
+                {clientesListLoading ? (
+                  <div>
+                    <Loader2 className="animate-spin w-5 h-5 text-black" />
+                  </div>
+                ) : (
+                  <AdminDashboard clientes={clientes} />
+                )}
+              </>
             ) : isAdmin && selectedTab === "Beneficiários" ? (
               <p>ABA BENEFICIÁRIOS</p>
             ) : isAdmin && selectedTab === "Técnicos" ? (
