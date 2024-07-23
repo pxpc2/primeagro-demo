@@ -20,7 +20,7 @@ import {
   UsersIcon,
   XIcon,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DialogPanel,
   TransitionChild,
@@ -35,7 +35,7 @@ const navigation = [
 ];
 
 const adminNav = [
-  { name: "Geral", href: "#", icon: HomeIcon },
+  { name: "Dashboard", href: "#", icon: HomeIcon },
   { name: "Beneficiários", href: "#", icon: UsersIcon },
   { name: "Técnicos", href: "#", icon: CalendarIcon },
 ];
@@ -44,10 +44,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
+export default function UserDashboardPage({
+  cliente,
+  dadosEnquadramento,
+  isAdmin,
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [role, setRole] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("Geral");
+  const [selectedTab, setSelectedTab] = useState(
+    `${isAdmin ? "Dashboard" : "Geral"}`
+  );
 
   const userNavigation = [{ name: "Sair", href: "#" }];
 
@@ -111,30 +117,25 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
                       role="list"
                       className="-mx-2 space-y-3 flex flex-col mt-2"
                     >
-                      {(role === "gerente" ? adminNav : navigation).map(
-                        (item) => (
-                          <li key={item.name}>
-                            <Button
-                              onClick={() => {
-                                setSelectedTab(item.name);
-                                setSidebarOpen(false);
-                              }}
-                              className={classNames(
-                                selectedTab === item.name
-                                  ? "border text-gray-200 bg-gray-900 hover:bg-gray-800"
-                                  : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
-                                "flex justify-start gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 w-full"
-                              )}
-                            >
-                              <item.icon
-                                className="h-6 w-6"
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </Button>
-                          </li>
-                        )
-                      )}
+                      {(isAdmin ? adminNav : navigation).map((item) => (
+                        <li key={item.name}>
+                          <Button
+                            onClick={() => {
+                              setSelectedTab(item.name);
+                              setSidebarOpen(false);
+                            }}
+                            className={classNames(
+                              selectedTab === item.name
+                                ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
+                                : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
+                              "flex justify-start gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 w-full"
+                            )}
+                          >
+                            <item.icon className="h-6 w-6" aria-hidden="true" />
+                            {item.name}
+                          </Button>
+                        </li>
+                      ))}
                     </ul>
                   </li>
                 </ul>
@@ -160,13 +161,13 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
                 <ul role="list" className="-mx-2 space-y-1">
-                  {(role === "gerente" ? adminNav : navigation).map((item) => (
+                  {(isAdmin ? adminNav : navigation).map((item) => (
                     <li key={item.name}>
                       <Button
                         onClick={() => setSelectedTab(item.name)}
                         className={classNames(
                           selectedTab === item.name
-                            ? "border text-gray-200 bg-gray-900 hover:bg-gray-800"
+                            ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
                             : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
                           "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         )}
@@ -218,26 +219,34 @@ export default function UserDashboardPage({ cliente, dadosEnquadramento }) {
           }`}
         >
           <div className="rounded-sm bg-white px-5 py-6 shadow sm:px-6">
-            {selectedTab === "Geral" ? (
+            {!isAdmin && selectedTab === "Geral" ? (
               <DashboardSteps
                 cliente={usuario}
                 setSelectedTab={setSelectedTab}
               />
-            ) : selectedTab === "Documentos" ? (
+            ) : !isAdmin && selectedTab === "Documentos" ? (
               <DocumentosDashboard cliente={usuario} />
-            ) : (
+            ) : !isAdmin && selectedTab === "Formulário de Enquadramento" ? (
               <FormularioEnquadramentoPreview
                 dados={dadosEnquadramento[0]}
                 cliente={usuario}
               />
+            ) : isAdmin && selectedTab === "Dashboard" ? (
+              <p>ADMIN DASHBOARD</p>
+            ) : isAdmin && selectedTab === "Beneficiários" ? (
+              <p>ABA BENEFICIÁRIOS</p>
+            ) : isAdmin && selectedTab === "Técnicos" ? (
+              <p>ABA TÉCNICOS</p>
+            ) : (
+              <p>aba não identificada, por favor recarregue a página.</p>
             )}
           </div>
-          {selectedTab === "Geral" && (
+          {selectedTab === "Geral" && !isAdmin && (
             <div>
               <PagamentoCard cliente={usuario} />
             </div>
           )}
-          {selectedTab === "Geral" && usuario.status_documentos && (
+          {!isAdmin && selectedTab === "Geral" && usuario.status_documentos && (
             <div className="flex-col items-center text-sm align-middle justify-center mx-12 py-4 sm:p-12 sm:my-12">
               <p>se esta vendo esta mensagem, você é usuário administrador</p>
               <p>

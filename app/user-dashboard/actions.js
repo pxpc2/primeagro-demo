@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
  * @returns redirecionamento p/ dashboard com msg
  */
 export async function submitEnquadramentoForm({ formData }) {
-  console.log(formData);
   const supabase = createClient();
   const {
     data: { user },
