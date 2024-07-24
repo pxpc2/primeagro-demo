@@ -72,9 +72,7 @@ export default function AdminDashboard({ clientes }) {
     <>
       <div className="flex flex-col gap-y-4 p-4">
         {clientes?.map((user) => {
-          const nomeCompletoPartes = (user.primeiro_nome + " " + user.sobrenome)
-            .trim()
-            .split(" ");
+          const nomeCompletoPartes = user.nome_completo.trim().split(" ");
           const iniciais = nomeCompletoPartes
             .map((i) => i.charAt(0).toUpperCase())
             .join("");

@@ -87,9 +87,7 @@ export default function UserDashboardPage({
     fetchClients();
   }, []);
 
-  const nomeCompletoPartes = (usuario.primeiro_nome + " " + usuario.sobrenome)
-    .trim()
-    .split(" ");
+  const nomeCompletoPartes = usuario.nome_completo.trim().split(" ");
   const iniciais = nomeCompletoPartes
     .map((i) => i.charAt(0).toUpperCase())
     .join("");
