@@ -223,7 +223,7 @@ async function getIdentificacaoBeneficiario() {
       .eq("authuser_id", user.id);
     const dadosCliente = cl[0];
     const dadosClienteParsed = {
-      campo1: `${dadosCliente.primeiro_nome} ${dadosCliente.sobrenome}`,
+      campo1: `${dadosCliente.nome_completo}`,
       campo2: dadosCliente.cpf,
       campo3: dadosCliente.rg,
       campo4: dadosCliente.orgao_expedidor,
