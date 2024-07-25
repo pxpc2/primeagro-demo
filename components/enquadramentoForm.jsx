@@ -397,7 +397,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
                                     <SelectValue />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent>
+                                <SelectContent className="overflow-y-auto">
                                   <SelectItem value="AC">Acre</SelectItem>
                                   <SelectItem value="AL">Alagoas</SelectItem>
                                   <SelectItem value="AP">Amapá</SelectItem>
