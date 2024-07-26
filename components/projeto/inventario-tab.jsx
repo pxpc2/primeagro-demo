@@ -16,6 +16,7 @@ import {
 import { Button } from "../ui/button";
 import {
   CirclePlusIcon,
+  Loader2,
   MoreHorizontal,
   Pencil,
   PlusIcon,
@@ -56,6 +57,7 @@ import {
   deleteInfraestrutura,
   deleteMaquinaEquipamento,
   deleteOutrosBens,
+  getInventario,
   submitInventario,
 } from "@/app/projeto/actions";
 import {
@@ -70,13 +72,71 @@ import {
 import InventarioIndividual from "./inventario-individual";
 import ReusableTable from "../reusable-table";
 
-export default function InventarioTab({ data, isAdmin }) {
+export default function InventarioTab({ isAdmin }) {
   const [editingItem, setEditingItem] = useState(null);
   const [deletingItem, setDeletingItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [currentTable, setCurrentTable] = useState(null);
+
+  const [loadingData, setLoadingData] = useState(true);
+  const [data, setData] = useState([]);
+  const [initialColetivoValues, setInitialColetivoValues] = useState({});
+  const [initialIndividualValues, setInitialIndividualValues] = useState({});
+  const [coletivosTableData, setColetivosTableData] = useState([]);
+  const [individuaisTableData, setIndividuaisTableData] = useState([]);
+  const [inventariosIndividuais, setInventariosIndividuais] = useState([]);
+  const [tempInventariosIndividuais, setTempInventariosIndividuais] = useState(
+    []
+  );
+  const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
+    useState([]);
+  const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
+    useState([]);
+  const [outrosBensTableData, setOutrosBensTableData] = useState([]);
+  const [infraestruturaTableData, setInfraestruturaTableData] = useState([]);
+  const [atividadesAgricolasTableData, setAtividadesAgricolasTableData] =
+    useState([]);
+
+  const refreshData = async () => {
+    const dados = await getInventario();
+    setData(dados);
+    setInitialColetivoValues({
+      benfeitorias_coletivas_numero_familias_irao_adquirir:
+        dados?.aba_inventario?.[0]
+          ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
+      benfeitorias_coletivas_valor_por_familia:
+        dados?.aba_inventario?.[0]?.benfeitorias_coletivas_valor_por_familia ||
+        "",
+    });
+    setInitialIndividualValues({
+      benfeitorias_individuais_numero_familias_irao_adquirir:
+        dados?.aba_inventario?.[0]
+          ?.benfeitorias_individuais_numero_familias_irao_adquirir || "",
+      benfeitorias_individuais_valor_por_familia:
+        dados?.aba_inventario?.[0]
+          ?.benfeitorias_individuais_valor_por_familia || "",
+    });
+    setColetivosTableData(dados.benfeitoriasImovel || []);
+    setIndividuaisTableData(dados.benfeitoriasIndividuais || []);
+    setInventariosIndividuais(dados.inventariosIndividuais || []);
+    setTempInventariosIndividuais(dados.inventariosIndividuais || []);
+    setInventariosIndividuaisItens(dados.inventariosIndividuaisItens || []);
+    setMaquinasEquipamentosTableData(dados.maquinasEquipamentosTableData || []);
+    setOutrosBensTableData(dados.outrosBensTableData || []);
+    setInfraestruturaTableData(dados.infraestruturaTableData || []);
+    setAtividadesAgricolasTableData(dados.atividadesAgricolasTableData || []);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoadingData(true);
+      await refreshData();
+      setLoadingData(false);
+    };
+    fetchData();
+  }, []);
 
   const maquinaEquipamentoColumns = [
     { key: "descricao", label: "Descrição" },
@@ -85,49 +145,12 @@ export default function InventarioTab({ data, isAdmin }) {
   ];
 
   const coletivoForm = useForm({
-    defaultValues: {
-      benfeitorias_coletivas_numero_familias_irao_adquirir:
-        data.aba_inventario[0]
-          ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
-      benfeitorias_coletivas_valor_por_familia:
-        data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
-    },
-  });
-  const individualForm = useForm({
-    defaultValues: {
-      benfeitorias_individuais_numero_familias_irao_adquirir:
-        data.aba_inventario[0]
-          ?.benfeitorias_individuais_numero_familias_irao_adquirir || "",
-      benfeitorias_individuais_valor_por_familia:
-        data.aba_inventario[0]?.benfeitorias_individuais_valor_por_familia ||
-        "",
-    },
+    defaultValues: initialColetivoValues,
   });
 
-  const [coletivosTableData, setColetivosTableData] = useState(
-    data.benfeitoriasImovel || []
-  );
-  const [individuaisTableData, setIndividuaisTableData] = useState(
-    data.benfeitoriasIndividuais || []
-  );
-  const [inventariosIndividuais, setInventariosIndividuais] = useState(
-    data.inventariosIndividuais || []
-  );
-  const [tempInventariosIndividuais, setTempInventariosIndividuais] = useState(
-    data.inventariosIndividuais || []
-  );
-  const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
-    useState(data.inventariosIndividuaisItens || []);
-  const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
-    useState(data.maquinasEquipamentosTableData || []);
-  const [outrosBensTableData, setOutrosBensTableData] = useState(
-    data.outrosBensTableData || []
-  );
-  const [infraestruturaTableData, setInfraestruturaTableData] = useState(
-    data.infraestruturaTableData || []
-  );
-  const [atividadesAgricolasTableData, setAtividadesAgricolasTableData] =
-    useState(data.atividadesAgricolasTableData || []);
+  const individualForm = useForm({
+    defaultValues: initialIndividualValues,
+  });
 
   const onEdit = () => setFormsDisabled(false);
   const onSave = () => {
@@ -148,12 +171,26 @@ export default function InventarioTab({ data, isAdmin }) {
       outrosBensData: outrosBensTableData,
       infraestruturaData: infraestruturaTableData,
       atividadesAgricolasData: atividadesAgricolasTableData,
-    }).then(() => {
+    }).then(async () => {
       setInventariosIndividuais(tempInventariosIndividuais);
+      await refreshData();
       setFormsDisabled(true);
       setLoading(false);
     });
   };
+
+  useEffect(() => {
+    if (!loadingData) {
+      coletivoForm.reset(initialColetivoValues);
+      individualForm.reset(initialIndividualValues);
+    }
+  }, [
+    loadingData,
+    initialColetivoValues,
+    initialIndividualValues,
+    coletivoForm,
+    individualForm,
+  ]);
 
   const handleEditItem = (item, tableType) => {
     setEditingItem(item);
@@ -162,23 +199,8 @@ export default function InventarioTab({ data, isAdmin }) {
   };
 
   const handleCancel = () => {
-    coletivoForm.reset({
-      benfeitorias_coletivas_numero_familias_irao_adquirir:
-        data.aba_inventario[0]
-          ?.benfeitorias_coletivas_numero_familias_irao_adquirir || "",
-      benfeitorias_coletivas_valor_por_familia:
-        data.aba_inventario[0]?.benfeitorias_coletivas_valor_por_familia || "",
-    });
-
-    individualForm.reset({
-      benfeitorias_individuais_numero_familias_irao_adquirir:
-        data.aba_inventario[0]
-          ?.benfeitorias_individuais_numero_familias_irao_adquirir || "",
-      benfeitorias_individuais_valor_por_familia:
-        data.aba_inventario[0]?.benfeitorias_individuais_valor_por_familia ||
-        "",
-    });
-
+    coletivoForm.reset(initialColetivoValues);
+    individualForm.reset(initialIndividualValues);
     setTempInventariosIndividuais(inventariosIndividuais);
     setFormsDisabled(true);
   };
@@ -354,6 +376,15 @@ export default function InventarioTab({ data, isAdmin }) {
       );
     }
   };
+
+  if (loadingData) {
+    return (
+      <div className="flex justify-center items-center h-full flex-col gap-4">
+        <p>Carregando inventário...</p>
+        <Loader2 className="animate-spin  w-5 h-5 text-black" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 bg-white">

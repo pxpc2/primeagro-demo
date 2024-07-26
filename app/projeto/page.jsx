@@ -68,9 +68,7 @@ export default function ProjetoPage() {
           />
         );
       case "Inventário":
-        return (
-          <InventarioTab data={formData?.aba_inventario} isAdmin={isAdmin} />
-        );
+        return <InventarioTab isAdmin={isAdmin} />;
       case "Investimentos":
         return (
           <InvestimentosTab
