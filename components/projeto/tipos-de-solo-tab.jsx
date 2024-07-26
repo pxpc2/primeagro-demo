@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Heading from "./Header";
 import ReusableTable from "../reusable-table";
-import { submitTiposDeSolo } from "@/app/projeto/actions";
+import { deleteQualidadeSolo, submitTiposDeSolo } from "@/app/projeto/actions";
 
 export default function TiposDeSoloTab({ data, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -26,10 +26,6 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   };
   const onSave = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setFormsDisabled(true);
-    }, 2000);
     const dados = {
       relevo,
       clima,
@@ -37,6 +33,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
       tabelaQualidades: qualidadesDeSoloData,
     };
     await submitTiposDeSolo({ data: dados }).then((res) => {
+      setFormsDisabled(true);
       setLoading(false);
     });
   };
@@ -56,18 +53,10 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   };
 
   const handleDeleteQualidadesDeSoloItem = async (item) => {
-    /*const updatedData = await deleteInvestimento({
-      data: investimentosData,
-      itemToDelete: item,
-    });
-    if (updatedData) {
-      updatedData.forEach((item, index) => {
-        item.seq = index + 1;
-      });
-      setInvestimentosData(updatedData);
-    }*/
-    console.log("deletando qualidade_de_solo_item: ");
-    console.log(item);
+    const result = deleteQualidadeSolo({ itemID: item.id });
+    if (result) {
+      setQualidadesDeSoloData((prev) => prev.filter((i) => i.id !== item.id));
+    }
   };
 
   return (

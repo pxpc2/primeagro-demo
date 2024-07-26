@@ -146,6 +146,13 @@ async function submitQualidades({ data, authUserID }) {
     }
   }
 }
+
+export async function deleteQualidadeSolo({ itemID }) {
+  return await deleteFromDatabase({
+    id: itemID,
+    tableName: "aba_tiposDeSolo_qualidades",
+  });
+}
 /* FIM TIPOS DE SOLO ------------------------------------------------------------------------------------------- */
 
 /* INICIO INVESTIMENTOS ------------------------------------------------------------------------------------------- */
