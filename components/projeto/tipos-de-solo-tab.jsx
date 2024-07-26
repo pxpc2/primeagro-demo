@@ -3,44 +3,61 @@
 import { useState } from "react";
 import Heading from "./Header";
 import ReusableTable from "../reusable-table";
+import { deleteQualidadeSolo, submitTiposDeSolo } from "@/app/projeto/actions";
+import { useForm } from "react-hook-form";
+import { Textarea } from "../ui/textarea";
 
 export default function TiposDeSoloTab({ data, isAdmin }) {
+  const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const [qualidadesDeSoloData, setQualidadesDeSoloData] = useState(
+    data?.tabelaQualidades.map((item) => ({
+      ...item,
+      usoAtual: item.uso_atual,
+      usoIndicado: item.uso_indicado,
+      descricaoClasse: item.descricao_classe,
+    })) || []
+  );
+  const [relevo, setRelevo] = useState(data?.tiposDeSolo[0].relevo || "");
+  const [clima, setClima] = useState(data?.tiposDeSolo[0].clima || "");
+  const [pedregosidade, setPedregosidade] = useState(
+    data[0]?.tiposDeSolo?.pedregosidade || ""
+  );
   const onEdit = () => {
     setFormsDisabled(false);
   };
-  const onSave = () => {
+  const onSave = async () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    const dados = {
+      relevo,
+      clima,
+      pedregosidade,
+      tabelaQualidades: qualidadesDeSoloData,
+    };
+    await submitTiposDeSolo({ data: dados }).then((res) => {
       setFormsDisabled(true);
-    }, 2000);
-    // submit tipos_de_solo pro banco
+      setLoading(false);
+    });
   };
   const handleCancel = () => {
     setFormsDisabled(true);
   };
-
-  const fakeData = [
-    {
-      area: 1.0,
-      porcentagem: 1.0,
-      classe: "classe",
-      descricaoClasse: "descricaoClasse",
-      usoAtual: "usoAtual",
-      usoIndicado: "usoIndicado",
-    },
-    {
-      area: 2.0,
-      porcentagem: 2.0,
-      classe: "classe2",
-      descricaoClasse: "descricaoClasse2",
-      usoAtual: "usoAtual2",
-      usoIndicado: "usoIndicado2",
-    },
-  ];
+  const handleAddQualidadesDeSoloItem = async (item) => {
+    setQualidadesDeSoloData((prev) => [...prev, item]);
+    // é enviado ao servidor depois, no onSave()
+  };
+  const handleEditQualidadesDeSoloItem = async (updatedItem) => {
+    setQualidadesDeSoloData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+  const handleDeleteQualidadesDeSoloItem = async (item) => {
+    const result = deleteQualidadeSolo({ itemID: item.id });
+    if (result) {
+      setQualidadesDeSoloData((prev) => prev.filter((i) => i.id !== item.id));
+    }
+  };
 
   return (
     <div className="p-4 bg-white">
@@ -57,7 +74,40 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
         {/* CONTEÚDO ABAIXO */}
         <div className="h-screen">
           <p className="text-indigo-800 font-semibold">Qualidade dos solos:</p>
-          <QualidadesDeSolo formsDisabled={formsDisabled} data={fakeData} />
+          <QualidadesDeSolo
+            formsDisabled={formsDisabled}
+            data={qualidadesDeSoloData}
+            handleAddQualidadesDeSoloItem={handleAddQualidadesDeSoloItem}
+            handleDeleteQualidadesDeSoloItem={handleDeleteQualidadesDeSoloItem}
+            handleEditQualidadesDeSoloItem={handleEditQualidadesDeSoloItem}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            RELEVO
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={relevo}
+            disabled={formsDisabled}
+            onChange={(e) => setRelevo(e.target.value)}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            CLIMA
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={clima}
+            disabled={formsDisabled}
+            onChange={(e) => setClima(e.target.value)}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            PEDREGOSIDADE
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={pedregosidade}
+            disabled={formsDisabled}
+            onChange={(e) => setPedregosidade(e.target.value)}
+          />
         </div>
         {/* CONTEÚDO ACIMA */}
       </div>
@@ -65,7 +115,13 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   );
 }
 
-function QualidadesDeSolo({ formsDisabled, data }) {
+function QualidadesDeSolo({
+  formsDisabled,
+  data,
+  handleAddQualidadesDeSoloItem,
+  handleDeleteQualidadesDeSoloItem,
+  handleEditQualidadesDeSoloItem,
+}) {
   const colunas = [
     { key: "area", label: "Área" },
     { key: "porcentagem", label: "Porcentagem" },
@@ -75,37 +131,8 @@ function QualidadesDeSolo({ formsDisabled, data }) {
     { key: "usoIndicado", label: "Uso indicado" },
   ];
 
-  const [qualidadesDeSoloData, setQualidadesDeSoloData] = useState(data || []);
-
-  const handleAddQualidadesDeSoloItem = async (item) => {
-    if (!item.id) item.seq = qualidadesDeSoloData.length + 1;
-    setQualidadesDeSoloData((prev) => [...prev, item]);
-    // é enviado ao servidor depois, no onSave()
-  };
-
-  const handleEditQualidadesDeSoloItem = async (updatedItem) => {
-    setQualidadesDeSoloData((prev) =>
-      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
-    );
-  };
-
-  const handleDeleteQualidadesDeSoloItem = async (item) => {
-    /*const updatedData = await deleteInvestimento({
-      data: investimentosData,
-      itemToDelete: item,
-    });
-    if (updatedData) {
-      updatedData.forEach((item, index) => {
-        item.seq = index + 1;
-      });
-      setInvestimentosData(updatedData);
-    }*/
-    console.log("deletando qualidade_de_solo_item: ");
-    console.log(item);
-  };
-
   return (
-    <div>
+    <div className="mt-3">
       <ReusableTable
         hasSEQ={false}
         data={data}
