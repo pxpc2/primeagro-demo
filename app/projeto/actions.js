@@ -23,7 +23,6 @@ export async function getProjetoFormsData() {
   formData.aba_preanalise = await getPreAnalise();
   formData.aba_identificacao_beneficiario =
     await getIdentificacaoBeneficiario();
-  formData.aba_inventario = await getInventario();
 
   formData.aba_dadosImovel = await getDadosImovel({
     dadosPreAnalise: formData.aba_preanalise[0],
@@ -343,7 +342,7 @@ export async function submitDadosImovelForm({ formData }) {
   }
 }
 
-async function getInventario() {
+export async function getInventario() {
   const supabase = createClient();
   const {
     data: { user },
