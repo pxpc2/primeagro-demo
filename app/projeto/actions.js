@@ -37,6 +37,7 @@ export async function getProjetoFormsData() {
   return formData;
 }
 
+/* INICIO TIPOS DE SOLO ------------------------------------------------------------------------------------------- */
 export async function getSoloQualidades() {
   const supabase = createClient();
   let { data: dados, err } = await supabase
@@ -51,17 +52,101 @@ export async function getSoloQualidades() {
 
 export async function getTiposDeSolo() {
   const supabase = createClient();
-  const dadosTabelaTiposDeSolo = await getSoloQualidades();
-  let { data: dadosTiposDeSolo, err } = await supabase
+  const tabelaQualidades = await getSoloQualidades();
+  let { data: tiposDeSolo, err } = await supabase
     .from("aba_tiposDeSolo_qualidades")
     .select("*");
   if (err) {
     console.log(err);
     return undefined;
   }
-  const dados = { dadosTiposDeSolo, dadosTabelaTiposDeSolo };
+  const dados = { tiposDeSolo, tabelaQualidades };
   return dados;
 }
+
+export async function submitTiposDeSolo({ data }) {
+  console.log("tipos de solo data: ");
+  console.log(data);
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authID = user.id;
+
+  const tiposDeSolo = {
+    relevo: data.relevo,
+    clima: data.clima,
+    pedregosidade: data.pedregosidade,
+    authuser_id: authID,
+  };
+
+  const { error } = await supabase.from("aba_tiposDeSolo").upsert(tiposDeSolo, {
+    onConflict: ["id"],
+  });
+
+  if (error) {
+    console.log(error);
+    return redirect("/error?message=" + error.message);
+  }
+
+  return await submitQualidades({
+    data: data.tabelaQualidades,
+    authUserID: authID,
+  });
+}
+
+async function submitQualidades({ data, authUserID }) {
+  const supabase = createClient();
+
+  const existingEntries = data.filter((item) => item.id);
+  const newEntries = data.filter((item) => !item.id);
+
+  const mappedExistingEntries = existingEntries.map((item) => ({
+    id: item.id,
+    classe: item.classe,
+    porcentagem: item.porcentagem,
+    area: item.area,
+    descricao_classe: item.descricaoClasse,
+    uso_atual: item.usoAtual,
+    uso_indicado: item.usoIndicado,
+    authuser_id: authUserID,
+  }));
+
+  const mappedNewEntries = newEntries.map((item) => ({
+    classe: item.classe,
+    porcentagem: item.porcentagem,
+    area: item.area,
+    descricao_classe: item.descricaoClasse,
+    uso_atual: item.usoAtual,
+    uso_indicado: item.usoIndicado,
+    authuser_id: authUserID,
+  }));
+
+  if (mappedExistingEntries.length > 0) {
+    const { error: upsertError } = await supabase
+      .from("aba_tiposDeSolo_qualidades")
+      .upsert(mappedExistingEntries, {
+        onConflict: ["id"],
+      });
+
+    if (upsertError) {
+      console.log(upsertError);
+      return redirect("/error?message=" + upsertError.message);
+    }
+  }
+
+  if (mappedNewEntries.length > 0) {
+    const { error: insertError } = await supabase
+      .from("aba_tiposDeSolo_qualidades")
+      .insert(mappedNewEntries);
+
+    if (insertError) {
+      console.log(insertError);
+      return redirect("/error?message=" + insertError.message);
+    }
+  }
+}
+/* FIM TIPOS DE SOLO ------------------------------------------------------------------------------------------- */
 
 /* INICIO INVESTIMENTOS ------------------------------------------------------------------------------------------- */
 export async function getDadosInvestimentos({ dadosPreAnalise }) {
@@ -325,7 +410,6 @@ export async function submitIdentificacaoBeneficiarioForm({ formData }) {
  * @TODO
  */
 export async function submitDadosImovelForm({ formData }) {
-  console.log(formData);
   const supabase = createClient();
   const {
     data: { user },

@@ -49,8 +49,6 @@ function ReusableDialog({
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
   const handleChange = (e, fieldKey) => {
-    console.log("has formatting? " + hasBRLFormatting);
-    console.log("brl field identifier: " + brlFieldIdentifier);
     if (hasBRLFormatting && fieldKey.includes(brlFieldIdentifier)) {
       const inputValue = e.target.value;
       const formattedValue = formatBRL(inputValue);
