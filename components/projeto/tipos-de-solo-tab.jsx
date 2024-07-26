@@ -4,8 +4,11 @@ import { useState } from "react";
 import Heading from "./Header";
 import ReusableTable from "../reusable-table";
 import { deleteQualidadeSolo, submitTiposDeSolo } from "@/app/projeto/actions";
+import { useForm } from "react-hook-form";
+import { Textarea } from "../ui/textarea";
 
 export default function TiposDeSoloTab({ data, isAdmin }) {
+  const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [qualidadesDeSoloData, setQualidadesDeSoloData] = useState(
@@ -16,10 +19,10 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
       descricaoClasse: item.descricao_classe,
     })) || []
   );
-  const [relevo, setRelevo] = useState(data?.tiposDeSolo?.relevo || "");
-  const [clima, setClima] = useState(data?.tiposDeSolo?.clima || "");
+  const [relevo, setRelevo] = useState(data?.tiposDeSolo[0].relevo || "");
+  const [clima, setClima] = useState(data?.tiposDeSolo[0].clima || "");
   const [pedregosidade, setPedregosidade] = useState(
-    data?.tiposDeSolo?.pedregosidade || ""
+    data[0]?.tiposDeSolo?.pedregosidade || ""
   );
   const onEdit = () => {
     setFormsDisabled(false);
@@ -40,18 +43,15 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   const handleCancel = () => {
     setFormsDisabled(true);
   };
-
   const handleAddQualidadesDeSoloItem = async (item) => {
     setQualidadesDeSoloData((prev) => [...prev, item]);
     // é enviado ao servidor depois, no onSave()
   };
-
   const handleEditQualidadesDeSoloItem = async (updatedItem) => {
     setQualidadesDeSoloData((prev) =>
       prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
     );
   };
-
   const handleDeleteQualidadesDeSoloItem = async (item) => {
     const result = deleteQualidadeSolo({ itemID: item.id });
     if (result) {
@@ -80,6 +80,33 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
             handleAddQualidadesDeSoloItem={handleAddQualidadesDeSoloItem}
             handleDeleteQualidadesDeSoloItem={handleDeleteQualidadesDeSoloItem}
             handleEditQualidadesDeSoloItem={handleEditQualidadesDeSoloItem}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            RELEVO
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={relevo}
+            disabled={formsDisabled}
+            onChange={(e) => setRelevo(e.target.value)}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            CLIMA
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={clima}
+            disabled={formsDisabled}
+            onChange={(e) => setClima(e.target.value)}
+          />
+          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+            PEDREGOSIDADE
+          </div>
+          <Textarea
+            className="mt-1 mb-4 sm:mb-8"
+            value={pedregosidade}
+            disabled={formsDisabled}
+            onChange={(e) => setPedregosidade(e.target.value)}
           />
         </div>
         {/* CONTEÚDO ACIMA */}

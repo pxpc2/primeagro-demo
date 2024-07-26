@@ -54,7 +54,7 @@ export async function getTiposDeSolo() {
   const supabase = createClient();
   const tabelaQualidades = await getSoloQualidades();
   let { data: tiposDeSolo, err } = await supabase
-    .from("aba_tiposDeSolo_qualidades")
+    .from("aba_tiposDeSolo")
     .select("*");
   if (err) {
     console.log(err);
@@ -81,7 +81,7 @@ export async function submitTiposDeSolo({ data }) {
   };
 
   const { error } = await supabase.from("aba_tiposDeSolo").upsert(tiposDeSolo, {
-    onConflict: ["id"],
+    onConflict: ["authuser_id"],
   });
 
   if (error) {
