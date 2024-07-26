@@ -128,14 +128,10 @@ export default function ReusableTable({
   const form = useForm();
 
   const handleDialogSubmit = form.handleSubmit((newData) => {
-    const newItem = {
-      ...editingItem,
-      ...newData,
-    };
     if (editingItem) {
-      onEditItem(newItem);
+      onEditItem({ ...editingItem, ...newData });
     } else {
-      onAddNewItem(newItem);
+      onAddNewItem(newData);
     }
     setEditingItem(null);
     form.reset();
@@ -204,22 +200,22 @@ export default function ReusableTable({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <ReusableDialog
-                    form={form}
-                    handleDialogSubmit={handleDialogSubmit}
-                    columns={columns}
-                    editingItem={editingItem}
-                    setEditingItem={setEditingItem}
-                    hasSEQ={hasSEQ}
-                    brlFieldIdentifier={brlFieldIdentifier}
-                    hasBRLFormatting={hasBRLFormatting}
-                  />
-                </Dialog>
               </TableCell>
             )}
           </TableRow>
         ))}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <ReusableDialog
+            form={form}
+            handleDialogSubmit={handleDialogSubmit}
+            columns={columns}
+            editingItem={editingItem}
+            setEditingItem={setEditingItem}
+            hasSEQ={hasSEQ}
+            brlFieldIdentifier={brlFieldIdentifier}
+            hasBRLFormatting={hasBRLFormatting}
+          />
+        </Dialog>
       </TableBody>
       <TableFooter className="justify-center border-t flex">
         <div className="mt-4">

@@ -23,6 +23,25 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
     setFormsDisabled(true);
   };
 
+  const fakeData = [
+    {
+      area: 1.0,
+      porcentagem: 1.0,
+      classe: "classe",
+      descricaoClasse: "descricaoClasse",
+      usoAtual: "usoAtual",
+      usoIndicado: "usoIndicado",
+    },
+    {
+      area: 2.0,
+      porcentagem: 2.0,
+      classe: "classe2",
+      descricaoClasse: "descricaoClasse2",
+      usoAtual: "usoAtual2",
+      usoIndicado: "usoIndicado2",
+    },
+  ];
+
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -38,7 +57,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
         {/* CONTEÚDO ABAIXO */}
         <div className="h-screen">
           <p className="text-indigo-800 font-semibold">Qualidade dos solos:</p>
-          <QualidadesDeSolo formsDisabled={formsDisabled} />
+          <QualidadesDeSolo formsDisabled={formsDisabled} data={fakeData} />
         </div>
         {/* CONTEÚDO ACIMA */}
       </div>
@@ -46,20 +65,56 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   );
 }
 
-function QualidadesDeSolo({ formsDisabled }) {
+function QualidadesDeSolo({ formsDisabled, data }) {
   const colunas = [
-    "Área",
-    "Porcentagem",
-    "Classe",
-    "Descrição da classe",
-    "Uso atual",
-    "Uso indicado",
+    { key: "area", label: "Área" },
+    { key: "porcentagem", label: "Porcentagem" },
+    { key: "classe", label: "Classe" },
+    { key: "descricaoClasse", label: "Descrição da classe" },
+    { key: "usoAtual", label: "Uso atual" },
+    { key: "usoIndicado", label: "Uso indicado" },
   ];
+
+  const [qualidadesDeSoloData, setQualidadesDeSoloData] = useState(data || []);
+
+  const handleAddQualidadesDeSoloItem = async (item) => {
+    if (!item.id) item.seq = qualidadesDeSoloData.length + 1;
+    setQualidadesDeSoloData((prev) => [...prev, item]);
+    // é enviado ao servidor depois, no onSave()
+  };
+
+  const handleEditQualidadesDeSoloItem = async (updatedItem) => {
+    setQualidadesDeSoloData((prev) =>
+      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    );
+  };
+
+  const handleDeleteQualidadesDeSoloItem = async (item) => {
+    /*const updatedData = await deleteInvestimento({
+      data: investimentosData,
+      itemToDelete: item,
+    });
+    if (updatedData) {
+      updatedData.forEach((item, index) => {
+        item.seq = index + 1;
+      });
+      setInvestimentosData(updatedData);
+    }*/
+    console.log("deletando qualidade_de_solo_item: ");
+    console.log(item);
+  };
+
   return (
     <div>
-      {/*<ReusableTable 
-      hasSEQ={false} data={} columns={colunas} onAddNewItem={} onDeleteItem={} onEditItem={} />*/}
-      <h1>qualidades table</h1>
+      <ReusableTable
+        hasSEQ={false}
+        data={data}
+        columns={colunas}
+        onAddNewItem={handleAddQualidadesDeSoloItem}
+        onDeleteItem={handleDeleteQualidadesDeSoloItem}
+        onEditItem={handleEditQualidadesDeSoloItem}
+        formsDisabled={formsDisabled}
+      />
     </div>
   );
 }
