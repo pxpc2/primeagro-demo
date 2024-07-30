@@ -44,6 +44,11 @@ export async function getProjetoFormsData() {
       area: calculateArea(totalArea, item.porcentagem),
     }));
 
+  formData.aba_cronograma = await getCronogramaData({
+    dadosSimuladorPNCF: undefined,
+    dadosInvestimentos: formData.aba_investimentos,
+  });
+
   return formData;
 }
 
@@ -54,6 +59,29 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO CRONOGRAMA -------------------------------------------------------------------------------------------- */
+
+/**
+ * Cada item do cronograma vai ser um item do investimentos, com  a descricao sendo
+ * categoria + item - descricao
+ */
+export async function getCronogramaData({
+  dadosSimuladorPNCF,
+  dadosInvestimentos,
+}) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, err } = await supabase.from("aba_cronograma").select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return [dados, dadosInvestimentos.dadosInvestimentos, dadosSimuladorPNCF];
+}
+/* FIM CRONOGRAMA -------------------------------------------------------------------------------------------- */
 
 /* INICIO TIPOS DE SOLO ------------------------------------------------------------------------------------------- */
 export async function getSoloQualidades() {
