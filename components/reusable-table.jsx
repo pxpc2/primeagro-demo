@@ -31,6 +31,13 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useForm } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 function ReusableDialog({
   form,
@@ -41,18 +48,35 @@ function ReusableDialog({
   hasSEQ,
   hasBRLFormatting,
   brlFieldIdentifier,
+  obs,
+  totalArea,
 }) {
+  const calculateArea = (percentage) => {
+    return ((totalArea * parseFloat(percentage)) / 100).toFixed(2);
+  };
   const formatBRL = (value) => {
     if (!value) return value;
     value = value.replace(/\D/g, "");
     value = (Number(value) / 100).toFixed(2).replace(".", ",");
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
+  const formatPercentage = (value) => {
+    if (!value) return value;
+    value = value.replace(/[^\d.,]/g, "");
+    return value;
+  };
   const handleChange = (e, fieldKey) => {
     if (hasBRLFormatting && fieldKey.includes(brlFieldIdentifier)) {
       const inputValue = e.target.value;
       const formattedValue = formatBRL(inputValue);
       form.setValue(fieldKey, formattedValue);
+    } else if (fieldKey === "porcentagem") {
+      const inputValue = e.target.value.replace("%", "");
+      const formattedValue = formatPercentage(inputValue);
+      form.setValue(fieldKey, formattedValue);
+
+      const area = calculateArea(formattedValue);
+      form.setValue("area", area);
     } else {
       form.setValue(fieldKey, e.target.value);
     }
@@ -79,21 +103,75 @@ function ReusableDialog({
             : "Insira os dados do novo item"}
         </DialogDescription>
       </DialogHeader>
-      <form onSubmit={handleDialogSubmit} className="flex flex-col gap-4 py-4">
+      <form
+        onSubmit={handleDialogSubmit}
+        className="flex flex-col gap-3.5 py-2"
+      >
         {columns.map((column) => (
           <div key={column.key} className="grid grid-cols-4 items-center gap-4">
             {(!hasSEQ || column.key !== "seq") && (
               <>
-                <Label htmlFor={column.key} className="text-right">
+                <Label
+                  htmlFor={column.key}
+                  className={`text-right text-xs ${
+                    column.key === "area" && obs === "tiposdesolo"
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {column.label}
                 </Label>
-                <Input
-                  type={column.key === "quantidade" ? "number" : ""}
-                  id={column.key}
-                  className="col-span-3"
-                  {...form.register(column.key)}
-                  onChange={(e) => handleChange(e, column.key)}
-                />
+                {column.key === "classe" ? (
+                  <Select
+                    {...form.register(column.key)}
+                    onValueChange={(value) => form.setValue(column.key, value)}
+                  >
+                    <SelectTrigger
+                      className="w-[180px]"
+                      placeholder="Selecione uma classe"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="classe1" className="text-xs">
+                        Classe I
+                      </SelectItem>
+                      <SelectItem value="classe2" className="text-xs">
+                        Classe II
+                      </SelectItem>
+                      <SelectItem value="classe3" className="text-xs">
+                        Classe III
+                      </SelectItem>
+                      <SelectItem value="classe4" className="text-xs">
+                        Classe IV
+                      </SelectItem>
+                      <SelectItem value="classe5" className="text-xs">
+                        Classe V
+                      </SelectItem>
+                      <SelectItem value="classe6" className="text-xs">
+                        Classe VI
+                      </SelectItem>
+                      <SelectItem value="classe7" className="text-xs">
+                        Classe VII
+                      </SelectItem>
+                      <SelectItem value="classe8" className="text-xs">
+                        Classe VIII
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input
+                    type={column.key === "quantidade" ? "number" : ""}
+                    id={column.key}
+                    className={`col-span-3 ${
+                      column.key === "area" && obs === "tiposdesolo"
+                        ? "hidden"
+                        : ""
+                    }`}
+                    {...form.register(column.key)}
+                    onChange={(e) => handleChange(e, column.key)}
+                  />
+                )}
               </>
             )}
           </div>
@@ -119,6 +197,8 @@ export default function ReusableTable({
   hasSEQ,
   hasBRLFormatting,
   brlFieldIdentifier,
+  obs,
+  calculateArea,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -238,6 +318,7 @@ export default function ReusableTable({
                 hasSEQ={hasSEQ}
                 brlFieldIdentifier={brlFieldIdentifier}
                 hasBRLFormatting={hasBRLFormatting}
+                obs={obs}
               />
             </Dialog>
           )}
