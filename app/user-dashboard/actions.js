@@ -20,9 +20,6 @@ export async function submitEnquadramentoForm({ formData }) {
     .select("*")
     .eq("authuser_id", user.id);
 
-  console.log("cliente: ");
-  console.log(cliente[0]);
-
   const dadosEnquadramento = {
     campo1: formData.campo1,
     campo2: formData.campo2,
@@ -35,8 +32,6 @@ export async function submitEnquadramentoForm({ formData }) {
     docs: formData.docs,
     cliente_id: cliente[0].id,
   };
-
-  console.log(dadosEnquadramento);
 
   const enquadramentoValues = { ...dadosEnquadramento };
   const erradas = [];
@@ -60,6 +55,9 @@ export async function submitEnquadramentoForm({ formData }) {
       aprovadoStatus = false;
       erradas.push(key);
     } else if (key === "campo8" && value === "Sim") {
+      aprovadoStatus = false;
+      erradas.push(key);
+    } else if (key === "campo6" && value === "Não") {
       aprovadoStatus = false;
       erradas.push(key);
     }
@@ -150,6 +148,23 @@ export async function completeProfile(
   if (error) {
     return redirect("/error?message=" + error.message);
   }
+  return redirect("/user-dashboard");
+}
+
+export async function deleteEnquadramento() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { error } = await supabase
+    .from("enquadramento_forms")
+    .delete()
+    .eq("authuser_id", user.id);
+  if (error) {
+    console.log(error);
+    return false;
+  }
+
   return redirect("/user-dashboard");
 }
 

@@ -52,7 +52,6 @@ export default function UserDashboardPage({
   dadosEnquadramento,
   isAdmin,
 }) {
-  console.log(dadosEnquadramento);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [role, setRole] = useState(null);
   const [selectedTab, setSelectedTab] = useState(

@@ -38,8 +38,6 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log("submitando: ");
-    console.log(data);
     setLoading(true);
     try {
       await submitEnquadramentoForm({ formData: data });

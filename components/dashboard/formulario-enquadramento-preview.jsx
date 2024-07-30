@@ -1,5 +1,17 @@
 import { DOCUMENTOS_ENQUADRAMENTO } from "@/utils/constants";
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "../ui/button";
+import { Trash2Icon } from "lucide-react";
+import { deleteEnquadramento } from "@/app/user-dashboard/actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 export default function FormularioEnquadramentoPreview({ dados, cliente }) {
   const questionMap = {
@@ -23,6 +35,14 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
       const doc = DOCUMENTOS_ENQUADRAMENTO.find((d) => d.id === docId);
       return doc ? doc.label : docId;
     });
+  };
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const statusEnquadramento = dados.erradas.length === 0;
+  const handleDeleteEnquadramento = async () => {
+    await deleteEnquadramento();
+    setIsDialogOpen(false);
   };
 
   const renderRespostas = () => {
@@ -66,7 +86,55 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
 
   return (
     <div>
-      <div>
+      {!statusEnquadramento && (
+        <div>
+          <div className="flex flex-col sm:flex-row gap-4 items-center py-4 text-sm">
+            <p>
+              Você possui 1 ou mais resposta(s) errrada(s). Para prosseguir,
+              refaça o questionário.
+            </p>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="hover:bg-red-600 hover:text-white sm:bg-inherit bg-red-600 sm:text-inherit text-white"
+                >
+                  Excluir e refazer enquadramento
+                  <Trash2Icon className="ml-1.5 w-4 h-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirmar Exclusão</DialogTitle>
+                  <DialogDescription>
+                    Tem certeza de que deseja excluir o enquadramento? Esta ação
+                    não pode ser desfeita.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDialogOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeleteEnquadramento}
+                  >
+                    Excluir
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <p className="mt-8 sm:mt-2 text-sm">
+            Veja abaixo suas respostas (erradas estarão contornadas em
+            vermelho):{" "}
+          </p>
+        </div>
+      )}
+      <div className="pt-8">
         <h3 className="text-base font-bold leading-7 text-gray-900">
           Dados Básicos
         </h3>
