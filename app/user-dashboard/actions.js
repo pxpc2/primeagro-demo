@@ -218,26 +218,3 @@ export async function getDocuments(authuser_id) {
   });
   return nomesExistentes;
 }
-
-export async function adminDeletarEnquadramento({ authuser_ID }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("enquadramento_forms")
-    .delete()
-    .eq("authuser_id", authuser_ID);
-  if (error) {
-    console.log(error);
-    return false;
-  } else {
-    const { error2 } = await supabase
-      .from("clientes")
-      .delete()
-      .eq("authuser_id", authuser_ID);
-    if (error2) {
-      console.log(error2);
-      return false;
-    }
-  }
-
-  return true;
-}
