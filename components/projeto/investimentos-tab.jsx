@@ -17,7 +17,26 @@ export default function InvestimentosTab({ data, isAdmin }) {
     { key: "valor_total", label: "Valor total" },
     { key: "fonte_financiamento", label: "Fonte de financiamento" },
   ];
-
+  const categoriaOptions = [
+    "hídrícos",
+    "acessos",
+    "produtivo",
+    "outros",
+    "equipamentos",
+    "habitação",
+    "eletrificação",
+    "ambiental",
+  ];
+  const itemOptions = {
+    hídrícos: ["item1", "item2", "item3"],
+    acessos: ["item4", "item5"],
+    produtivo: ["item6", "item7", "item8"],
+    outros: ["item9"],
+    equipamentos: ["item10", "item11"],
+    habitação: ["item12", "item13"],
+    eletrificação: ["item14"],
+    ambiental: ["item15", "item16"],
+  };
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [investimentosData, setInvestimentosData] = useState(
@@ -104,6 +123,8 @@ export default function InvestimentosTab({ data, isAdmin }) {
           onDeleteItem={handleDeleteInvestimentoItem}
           hasBRLFormatting={true}
           brlFieldIdentifier={"valor"}
+          categoriaOptions={categoriaOptions}
+          itemOptions={itemOptions}
         />
         {/* CONTEÚDO ACIMA */}
       </div>
