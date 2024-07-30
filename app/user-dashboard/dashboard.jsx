@@ -141,7 +141,7 @@ export default function UserDashboardPage({
                             disabled={
                               item.name === "Documentos" &&
                               (!usuario.status_pagamento ||
-                                !usuario.status_enquadramento)
+                                !dadosEnquadramento[0].erradas.length === 0)
                                 ? true
                                 : false
                             }
@@ -195,7 +195,7 @@ export default function UserDashboardPage({
                         disabled={
                           item.name === "Documentos" &&
                           (!usuario.status_pagamento ||
-                            !usuario.status_enquadramento)
+                            !dadosEnquadramento[0].erradas.length === 0)
                             ? true
                             : false
                         }
@@ -251,6 +251,7 @@ export default function UserDashboardPage({
               <DashboardSteps
                 cliente={usuario}
                 setSelectedTab={setSelectedTab}
+                dadosEnquadramento={dadosEnquadramento}
               />
             ) : !isAdmin && selectedTab === "Documentos" ? (
               <DocumentosDashboard cliente={usuario} />
@@ -279,7 +280,12 @@ export default function UserDashboardPage({
           </div>
           {selectedTab === "Geral" && !isAdmin && (
             <div>
-              <PagamentoCard cliente={usuario} />
+              <PagamentoCard
+                cliente={usuario}
+                status_enquadramento={
+                  dadosEnquadramento[0].erradas.length === 0
+                }
+              />
             </div>
           )}
           {!isAdmin && selectedTab === "Geral" && usuario.status_documentos && (

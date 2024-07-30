@@ -15,20 +15,10 @@ export async function submitEnquadramentoForm({ formData }) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const dadosBasicos = {
-    nome_completo: formData.nome_completo,
-    cpf: formData.cpf,
-    rg: formData.rg,
-    orgaoExpedidor: formData.orgaoExpedidor,
-    genero: formData.genero,
-    etnia: formData.etnia,
-    estadoCivil: formData.estadoCivil,
-    naturalidade: formData.naturalidade,
-    telefone: formData.telefone,
-    enderecoLinha: formData.enderecoLinha,
-    bairro: formData.bairro,
-    uf: formData.uf,
-  };
+  let { data: cliente, err } = await supabase
+    .from("clientes")
+    .select("*")
+    .eq("authuser_id", user.id);
 
   const dadosEnquadramento = {
     campo1: formData.campo1,
@@ -40,6 +30,7 @@ export async function submitEnquadramentoForm({ formData }) {
     campo7: formData.campo7,
     campo8: formData.campo8,
     docs: formData.docs,
+    cliente_id: cliente[0].id,
   };
 
   const enquadramentoValues = { ...dadosEnquadramento };
@@ -66,6 +57,9 @@ export async function submitEnquadramentoForm({ formData }) {
     } else if (key === "campo8" && value === "Sim") {
       aprovadoStatus = false;
       erradas.push(key);
+    } else if (key === "campo6" && value === "Não") {
+      aprovadoStatus = false;
+      erradas.push(key);
     }
   });
 
@@ -86,20 +80,41 @@ export async function submitEnquadramentoForm({ formData }) {
     .insert(enquadramentoValues);
   if (error) {
     return redirect("/error?message=" + error.message);
+  } else {
+    if (enquadramentoValues.erradas.length > 0) {
+    }
+    return redirect("/user-dashboard");
   }
-
-  return await completeProfile(
-    dadosBasicos,
-    aprovadoStatus,
-    user.id,
-    user.email
-  );
 }
 
 export async function getAllClients() {
   const supabase = createClient();
   let { data: clientes, error } = await supabase.from("clientes").select("*");
   return clientes;
+}
+
+export async function submitProfileForm({ dados }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const dadosBasicos = {
+    nome_completo: dados.nome_completo,
+    cpf: dados.cpf,
+    rg: dados.rg,
+    orgaoExpedidor: dados.orgaoExpedidor,
+    genero: dados.genero,
+    etnia: dados.etnia,
+    estadoCivil: dados.estadoCivil,
+    naturalidade: dados.naturalidade,
+    telefone: dados.telefone,
+    enderecoLinha: dados.enderecoLinha,
+    bairro: dados.bairro,
+    uf: dados.uf,
+  };
+
+  return await completeProfile(dadosBasicos, undefined, user.id, user.email);
 }
 
 export async function completeProfile(
@@ -133,6 +148,23 @@ export async function completeProfile(
   if (error) {
     return redirect("/error?message=" + error.message);
   }
+  return redirect("/user-dashboard");
+}
+
+export async function deleteEnquadramento() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { error } = await supabase
+    .from("enquadramento_forms")
+    .delete()
+    .eq("authuser_id", user.id);
+  if (error) {
+    console.log(error);
+    return false;
+  }
+
   return redirect("/user-dashboard");
 }
 
@@ -185,27 +217,4 @@ export async function getDocuments(authuser_id) {
     nomesExistentes.push(doc.name);
   });
   return nomesExistentes;
-}
-
-export async function adminDeletarEnquadramento({ authuser_ID }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("enquadramento_forms")
-    .delete()
-    .eq("authuser_id", authuser_ID);
-  if (error) {
-    console.log(error);
-    return false;
-  } else {
-    const { error2 } = await supabase
-      .from("clientes")
-      .delete()
-      .eq("authuser_id", authuser_ID);
-    if (error2) {
-      console.log(error2);
-      return false;
-    }
-  }
-
-  return true;
 }

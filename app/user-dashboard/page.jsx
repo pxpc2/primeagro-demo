@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import ProfileCreationPage from "../../components/profile-creation";
 import { getAplicacoes, getDadosEnquadramentoForm } from "./actions";
 import { isAdminUser } from "../projeto/actions";
+import ProfileCreationForm from "@/components/profileCreationForm";
 
 export default async function UserProtectedPage() {
   const supabase = createClient();
@@ -21,7 +22,15 @@ export default async function UserProtectedPage() {
     .select()
     .eq("authuser_id", user.id);
 
-  if (cliente[0] === undefined) return <ProfileCreationPage authID={user.id} />;
+  let { data: enquadramento, error2 } = await supabase
+    .from("enquadramento_forms")
+    .select()
+    .eq("authuser_id", user.id);
+
+  if (cliente[0] === undefined) return <ProfileCreationForm />;
+
+  if (enquadramento[0] === undefined)
+    return <ProfileCreationPage authID={user.id} />;
 
   const aps = await getAplicacoes();
   const dadosEnquadramento = await getDadosEnquadramentoForm();

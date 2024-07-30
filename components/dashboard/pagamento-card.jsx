@@ -5,9 +5,9 @@ import { ExternalLinkIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function PagamentoCard({ cliente }) {
+export default function PagamentoCard({ cliente, status_enquadramento }) {
   const [statusTexto, setStatusTexto] = useState("");
-  if (cliente.status_pagamento || !cliente.status_enquadramento) return;
+  if (cliente.status_pagamento || !status_enquadramento) return;
   return (
     <div className="text-center mt-8 sm:mt-12 flex flex-col items-center">
       <Loader2 className="animate-spin w-5 h-5 text-black" />
