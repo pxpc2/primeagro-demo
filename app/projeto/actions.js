@@ -81,6 +81,64 @@ export async function getCronogramaData({
   }
   return [dados, dadosInvestimentos.dadosInvestimentos, dadosSimuladorPNCF];
 }
+
+export async function submitCronogramaData({ cronogramaData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  const existingEntries = cronogramaData.filter((item) => item.id);
+  const newEntries = cronogramaData.filter((item) => !item.id);
+
+  if (existingEntries.length > 0) {
+    const dataToUpsert = existingEntries.map((item) => ({
+      id: item.id,
+      seq: item.seq,
+      investimento_id: item.investimento_id,
+      ano1: item.ano1,
+      ano2: item.ano2,
+      ano3: item.ano3,
+      ano4: item.ano4,
+      ano5: item.ano5,
+      authuser_id: authUserID,
+      descricao: item.descricao,
+    }));
+
+    const { error: updateError } = await supabase
+      .from("aba_cronograma")
+      .upsert(dataToUpsert, { onConflict: ["id"] });
+
+    if (updateError) {
+      console.log(updateError);
+      return redirect("/error?message=" + updateError.message);
+    }
+  }
+
+  if (newEntries.length > 0) {
+    const dataToInsert = newEntries.map((entry) => ({
+      seq: entry.seq,
+      investimento_id: entry.investimento_id,
+      ano1: entry.ano1,
+      ano2: entry.ano2,
+      ano3: entry.ano3,
+      ano4: entry.ano4,
+      ano5: entry.ano5,
+      authuser_id: authUserID,
+      descricao: entry.descricao,
+    }));
+
+    const { error: insertError } = await supabase
+      .from("aba_cronograma")
+      .insert(dataToInsert);
+
+    if (insertError) {
+      console.log(insertError);
+      return redirect("/error?message=" + insertError.message);
+    }
+  }
+}
 /* FIM CRONOGRAMA -------------------------------------------------------------------------------------------- */
 
 /* INICIO TIPOS DE SOLO ------------------------------------------------------------------------------------------- */

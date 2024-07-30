@@ -17,6 +17,7 @@ import {
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
+import { submitCronogramaData } from "@/app/projeto/actions";
 
 export default function CronogramaTab({ data, isAdmin }) {
   const anoInicial = useState(data?.anoInicial || "2024"); // ano de inicio do financiamento (vem da Aba SimuladorPNCF)
@@ -31,18 +32,22 @@ export default function CronogramaTab({ data, isAdmin }) {
     { key: "ano4", label: "Ano " + (parseInt(anoInicial) + 3).toString() },
     { key: "ano5", label: "Ano " + (parseInt(anoInicial) + 4).toString() },
   ];
-  const combinedData = investimentosData.map((item) => {
-    const cronogramaItem = cronogramaData.find((c) => c.seq === item.seq) || {};
-    return {
-      ...item,
-      descricao: `${item.categoria} ${item.item} - ${item.descricao}`,
-      ano1: cronogramaItem.ano1 || "",
-      ano2: cronogramaItem.ano2 || "",
-      ano3: cronogramaItem.ano3 || "",
-      ano4: cronogramaItem.ano4 || "",
-      ano5: cronogramaItem.ano5 || "",
-    };
-  });
+  const [combinedData, setCombinedData] = useState(
+    investimentosData.map((item) => {
+      const cronogramaItem =
+        cronogramaData.find((c) => c.seq === item.seq) || {};
+      return {
+        ...item,
+        descricao: `${item.categoria} ${item.item} - ${item.descricao}`,
+        investimento_id: item.id,
+        ano1: cronogramaItem.ano1 || "",
+        ano2: cronogramaItem.ano2 || "",
+        ano3: cronogramaItem.ano3 || "",
+        ano4: cronogramaItem.ano4 || "",
+        ano5: cronogramaItem.ano5 || "",
+      };
+    })
+  );
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -51,8 +56,22 @@ export default function CronogramaTab({ data, isAdmin }) {
   };
   const onSave = async () => {
     setLoading(true);
-    console.log(cronogramaData);
+    const updatedCronogramaData = combinedData.map((item) => ({
+      id: item.id,
+      seq: item.seq,
+      investimento_id: item.investimento_id,
+      ano1: item.ano1,
+      ano2: item.ano2,
+      ano3: item.ano3,
+      ano4: item.ano4,
+      ano5: item.ano5,
+      descricao: item.descricao,
+    }));
+    await submitCronogramaData({ cronogramaData: updatedCronogramaData });
+    setCronogramaData(updatedCronogramaData);
+    console.log(updatedCronogramaData);
     setLoading(false);
+    setFormsDisabled(true);
   };
   const handleCancel = () => {
     setFormsDisabled(true);
@@ -69,6 +88,14 @@ export default function CronogramaTab({ data, isAdmin }) {
       setInvestimentosData(updatedData);
     }*/
     console.log("deletando item " + item.seq);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    setCombinedData((prevData) => {
+      const newData = [...prevData];
+      newData[index][field] = value;
+      return newData;
+    });
   };
   return (
     <div className="p-4 bg-white">
@@ -98,7 +125,7 @@ export default function CronogramaTab({ data, isAdmin }) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {combinedData.map((item) => (
+              {combinedData.map((item, index) => (
                 <TableRow key={item.seq}>
                   <TableCell className="text-center">{item.seq}</TableCell>
                   <TableCell className="text-center">
@@ -110,7 +137,7 @@ export default function CronogramaTab({ data, isAdmin }) {
                       value={item.ano1}
                       disabled={formsDisabled}
                       onChange={(e) =>
-                        handleEditItem({ ...item, ano1: e.target.value })
+                        handleInputChange(index, "ano1", e.target.value)
                       }
                     />
                   </TableCell>
@@ -120,7 +147,7 @@ export default function CronogramaTab({ data, isAdmin }) {
                       value={item.ano2}
                       disabled={formsDisabled}
                       onChange={(e) =>
-                        handleEditItem({ ...item, ano2: e.target.value })
+                        handleInputChange(index, "ano2", e.target.value)
                       }
                     />
                   </TableCell>
@@ -130,7 +157,7 @@ export default function CronogramaTab({ data, isAdmin }) {
                       value={item.ano3}
                       disabled={formsDisabled}
                       onChange={(e) =>
-                        handleEditItem({ ...item, ano3: e.target.value })
+                        handleInputChange(index, "ano3", e.target.value)
                       }
                     />
                   </TableCell>
@@ -140,7 +167,7 @@ export default function CronogramaTab({ data, isAdmin }) {
                       value={item.ano4}
                       disabled={formsDisabled}
                       onChange={(e) =>
-                        handleEditItem({ ...item, ano4: e.target.value })
+                        handleInputChange(index, "ano4", e.target.value)
                       }
                     />
                   </TableCell>
@@ -150,7 +177,7 @@ export default function CronogramaTab({ data, isAdmin }) {
                       value={item.ano5}
                       disabled={formsDisabled}
                       onChange={(e) =>
-                        handleEditItem({ ...item, ano5: e.target.value })
+                        handleInputChange(index, "ano5", e.target.value)
                       }
                     />
                   </TableCell>
