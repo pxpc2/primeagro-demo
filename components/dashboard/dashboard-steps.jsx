@@ -8,20 +8,29 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DashboardSteps({ cliente, setSelectedTab }) {
+export default function DashboardSteps({
+  cliente,
+  setSelectedTab,
+  dadosEnquadramento,
+}) {
+  // dadosEnquadramento contém o array de erradas, podemos permitir que delete e responda novamente caso necessário.
+  if (dadosEnquadramento[0].erradas.length > 0) {
+  }
   const steps = [
     {
       id: "01",
       name: "Formulário de Enquadramento",
-      description: cliente.status_enquadramento
-        ? ENQUADRAMENTO_APROVADO
-        : ENQUADRAMENTO_REPROVADO,
+      description:
+        dadosEnquadramento[0].erradas.length === 0
+          ? ENQUADRAMENTO_APROVADO
+          : ENQUADRAMENTO_REPROVADO,
       href: "#",
-      status: cliente.status_enquadramento ? "complete" : "upcoming",
+      status:
+        dadosEnquadramento[0].erradas.length === 0 ? "complete" : "upcoming",
     },
   ];
 
-  if (cliente.status_enquadramento) {
+  if (dadosEnquadramento[0].erradas.length === 0) {
     steps.push({
       id: "02",
       name: "Pagamento",
