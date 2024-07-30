@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 
 export const metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={"h-full w-full antialiased"}>{children}</body>
+      <GoogleAnalytics gaID="AW-16657425488" />
     </html>
   );
 }
