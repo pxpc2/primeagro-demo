@@ -50,7 +50,13 @@ function ReusableDialog({
   brlFieldIdentifier,
   obs,
   totalArea,
+  categoriaOptions,
+  itemOptions,
 }) {
+  const [selectedCategoria, setSelectedCategoria] = useState(
+    editingItem?.categoria || ""
+  );
+
   const calculateArea = (percentage) => {
     return ((totalArea * parseFloat(percentage)) / 100).toFixed(2);
   };
@@ -159,6 +165,55 @@ function ReusableDialog({
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                ) : column.key === "categoria" ? (
+                  <Select
+                    value={selectedCategoria}
+                    onValueChange={(value) => {
+                      setSelectedCategoria(value);
+                      form.setValue(column.key, value);
+                    }}
+                  >
+                    <SelectTrigger
+                      className="w-[180px]"
+                      placeholder="Selecione uma categoria"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categoriaOptions.map((option) => (
+                        <SelectItem
+                          key={option}
+                          value={option}
+                          className="text-xs"
+                        >
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : column.key === "item" ? (
+                  <Select
+                    {...form.register(column.key)}
+                    onValueChange={(value) => form.setValue(column.key, value)}
+                  >
+                    <SelectTrigger
+                      className="w-[180px]"
+                      placeholder="Selecione um item"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {itemOptions[selectedCategoria]?.map((option) => (
+                        <SelectItem
+                          key={option}
+                          value={option}
+                          className="text-xs"
+                        >
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 ) : (
                   <Input
                     type={column.key === "quantidade" ? "number" : ""}
@@ -199,6 +254,8 @@ export default function ReusableTable({
   brlFieldIdentifier,
   obs,
   calculateArea,
+  categoriaOptions,
+  itemOptions,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -292,6 +349,8 @@ export default function ReusableTable({
             hasSEQ={hasSEQ}
             brlFieldIdentifier={brlFieldIdentifier}
             hasBRLFormatting={hasBRLFormatting}
+            categoriaOptions={categoriaOptions}
+            itemOptions={itemOptions}
           />
         </Dialog>
       </TableBody>
@@ -319,6 +378,8 @@ export default function ReusableTable({
                 brlFieldIdentifier={brlFieldIdentifier}
                 hasBRLFormatting={hasBRLFormatting}
                 obs={obs}
+                categoriaOptions={categoriaOptions}
+                itemOptions={itemOptions}
               />
             </Dialog>
           )}
