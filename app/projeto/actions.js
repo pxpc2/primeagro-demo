@@ -32,10 +32,28 @@ export async function getProjetoFormsData() {
     dadosPreAnalise: formData.aba_preanalise[0],
   });
 
-  formData.aba_tiposDeSolo = await getTiposDeSolo();
+  formData.aba_tiposDeSolo = [
+    await getTiposDeSolo({ dadosPreAnalise: formData.aba_preanalise[0] }),
+  ];
+  const totalArea = parseFloat(
+    formData.aba_dadosImovel[0]?.campo2.replace(",", ".") || 0
+  );
+  formData.aba_tiposDeSolo[0].tabelaQualidades =
+    formData.aba_tiposDeSolo[0].tabelaQualidades.map((item) => ({
+      ...item,
+      area: calculateArea(totalArea, item.porcentagem),
+    }));
 
   return formData;
 }
+
+const calculateArea = (totalArea, porcentagem) => {
+  porcentagem = String(porcentagem);
+  return (
+    (totalArea * parseFloat(porcentagem.replace(",", "."))) /
+    100
+  ).toFixed(4);
+};
 
 /* INICIO TIPOS DE SOLO ------------------------------------------------------------------------------------------- */
 export async function getSoloQualidades() {
@@ -50,7 +68,7 @@ export async function getSoloQualidades() {
   return dados;
 }
 
-export async function getTiposDeSolo() {
+export async function getTiposDeSolo({ dadosPreAnalise }) {
   const supabase = createClient();
   const tabelaQualidades = await getSoloQualidades();
   let { data: tiposDeSolo, err } = await supabase
@@ -60,7 +78,11 @@ export async function getTiposDeSolo() {
     console.log(err);
     return undefined;
   }
-  const dados = { tiposDeSolo, tabelaQualidades };
+  const dados = {
+    tiposDeSolo,
+    tabelaQualidades,
+    areaTotal: dadosPreAnalise.campo_5,
+  };
   return dados;
 }
 

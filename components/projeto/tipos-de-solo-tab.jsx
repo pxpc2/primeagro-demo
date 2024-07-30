@@ -11,19 +11,36 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  const calculateArea = (totalArea, porcentagem) => {
+    porcentagem = String(porcentagem);
+    return (
+      (totalArea * parseFloat(porcentagem.replace(",", "."))) /
+      100
+    ).toFixed(4);
+  };
   const [qualidadesDeSoloData, setQualidadesDeSoloData] = useState(
-    data?.tabelaQualidades.map((item) => ({
+    data[0]?.tabelaQualidades.map((item) => ({
       ...item,
       usoAtual: item.uso_atual,
       usoIndicado: item.uso_indicado,
       descricaoClasse: item.descricao_classe,
+      area: calculateArea(
+        parseFloat(data[0]?.areaTotal.replace(",", ".")),
+        item.porcentagem
+      ),
     })) || []
   );
-  const [relevo, setRelevo] = useState(data?.tiposDeSolo[0].relevo || "");
-  const [clima, setClima] = useState(data?.tiposDeSolo[0].clima || "");
+  console.log(data);
+  const [relevo, setRelevo] = useState(data[0]?.tiposDeSolo[0].relevo || "");
+  const [clima, setClima] = useState(data[0]?.tiposDeSolo[0].clima || "");
   const [pedregosidade, setPedregosidade] = useState(
-    data[0]?.tiposDeSolo?.pedregosidade || ""
+    data[0]?.tiposDeSolo[0]?.pedregosidade || ""
   );
+  const [totalArea, setTotalArea] = useState(
+    parseFloat(data[0]?.areaTotal.replace(",", ".")) || 0.0
+  );
+
   const onEdit = () => {
     setFormsDisabled(false);
   };
@@ -44,12 +61,21 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
     setFormsDisabled(true);
   };
   const handleAddQualidadesDeSoloItem = async (item) => {
-    setQualidadesDeSoloData((prev) => [...prev, item]);
-    // é enviado ao servidor depois, no onSave()
+    const newItem = {
+      ...item,
+      area: calculateArea(totalArea, item.porcentagem),
+    };
+    setQualidadesDeSoloData((prev) => [...prev, newItem]);
   };
   const handleEditQualidadesDeSoloItem = async (updatedItem) => {
+    const updatedItemWithArea = {
+      ...updatedItem,
+      area: calculateArea(totalArea, updatedItem.porcentagem),
+    };
     setQualidadesDeSoloData((prev) =>
-      prev.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+      prev.map((item) =>
+        item.id === updatedItem.id ? updatedItemWithArea : item
+      )
     );
   };
   const handleDeleteQualidadesDeSoloItem = async (item) => {
@@ -80,6 +106,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
             handleAddQualidadesDeSoloItem={handleAddQualidadesDeSoloItem}
             handleDeleteQualidadesDeSoloItem={handleDeleteQualidadesDeSoloItem}
             handleEditQualidadesDeSoloItem={handleEditQualidadesDeSoloItem}
+            calculateArea={calculateArea}
           />
           <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
             RELEVO
@@ -121,6 +148,7 @@ function QualidadesDeSolo({
   handleAddQualidadesDeSoloItem,
   handleDeleteQualidadesDeSoloItem,
   handleEditQualidadesDeSoloItem,
+  calculateArea,
 }) {
   const colunas = [
     { key: "area", label: "Área" },
@@ -141,6 +169,8 @@ function QualidadesDeSolo({
         onDeleteItem={handleDeleteQualidadesDeSoloItem}
         onEditItem={handleEditQualidadesDeSoloItem}
         formsDisabled={formsDisabled}
+        obs={"tiposdesolo"}
+        calculateArea={calculateArea}
       />
     </div>
   );
