@@ -65,13 +65,53 @@ const calculateArea = (totalArea, porcentagem) => {
 };
 
 /* INICIO SIB -------------------------------------------------------------------------------------------- */
+
+export async function getBenfeitoriasTotalValue() {
+  const supabase = createClient();
+  let { data: benfeitoriasImovel, error: err1 } = await supabase
+    .from("aba_inventario_benfeitoriasImovel")
+    .select("valor");
+  if (err1) {
+    console.log(err1);
+    return undefined;
+  }
+  let { data: benfeitoriasIndividuais, error: err2 } = await supabase
+    .from("aba_inventario_benfeitoriasIndividuais")
+    .select("valor");
+  if (err2) {
+    console.log(err2);
+    return undefined;
+  }
+
+  let valorTotal = 0.0;
+
+  const parseCurrency = (value) => {
+    return parseFloat(value.replace(".", "").replace(",", "."));
+  };
+
+  benfeitoriasImovel?.forEach((item) => {
+    valorTotal += parseCurrency(item.valor);
+  });
+  benfeitoriasIndividuais?.forEach((item) => {
+    valorTotal += parseCurrency(item.valor);
+  });
+
+  console.log("valor total das benfeitorias: " + valorTotal);
+  return valorTotal;
+}
+
 export async function getSIBData({ dadosImovel }) {
   // vai pegar todos os dados do SIB.
   const supabase = createClient();
   const dadosProjeto = await getSIBDadosDoProjeto();
-  return { dadosProjeto, dadosImovel };
+  const valorAvaliado = await getSIBValorAvaliado();
+  return {
+    dadosProjeto,
+    dadosImovel,
+    valorAvaliado,
+    valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
+  };
 }
-
 export async function getSIBDadosDoProjeto() {
   const supabase = createClient();
   const {
@@ -79,6 +119,18 @@ export async function getSIBDadosDoProjeto() {
   } = await supabase.auth.getUser();
   let { data: dados, err } = await supabase
     .from("aba_sib_dadosProjeto")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return dados;
+}
+
+export async function getSIBValorAvaliado() {
+  const supabase = createClient();
+  let { data: dados, err } = await supabase
+    .from("aba_sib_valorAvaliado")
     .select("*");
   if (err) {
     console.log(err);
@@ -102,6 +154,29 @@ export async function submitSIBDadosProjeto({ formData }) {
   };
   const { error } = await supabase
     .from("aba_sib_dadosProjeto")
+    .upsert([{ ...dados }], {
+      onConflict: ["authuser_id"],
+    });
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
+
+export async function submitSIBValorAvaliado({ formData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  const dados = {
+    valor_terra_nua: formData.valorTerraNua,
+    valor_benfeitorias: formData.valorBenfeitorias,
+    valor_total_imovel: formData.valorTotalImovel,
+    vti_ha: formData.vtiHa,
+    authuser_id: authUserID,
+  };
+  const { error } = await supabase
+    .from("aba_sib_valorAvaliado")
     .upsert([{ ...dados }], {
       onConflict: ["authuser_id"],
     });
