@@ -32,13 +32,14 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
     })) || []
   );
   console.log(data);
-  const [relevo, setRelevo] = useState(data[0]?.tiposDeSolo[0].relevo || "");
-  const [clima, setClima] = useState(data[0]?.tiposDeSolo[0].clima || "");
+  const [relevo, setRelevo] = useState(data[0]?.tiposDeSolo[0]?.relevo || "");
+  const [clima, setClima] = useState(data[0]?.tiposDeSolo[0]?.clima || "");
   const [pedregosidade, setPedregosidade] = useState(
     data[0]?.tiposDeSolo[0]?.pedregosidade || ""
   );
+  const area = data[0]?.areaTotal ? data[0]?.areaTotal : "0.0";
   const [totalArea, setTotalArea] = useState(
-    parseFloat(data[0]?.areaTotal.replace(",", ".")) || 0.0
+    parseFloat(area.replace(",", ".")) || 0.0
   );
 
   const onEdit = () => {
