@@ -39,7 +39,7 @@ export async function getProjetoFormsData() {
     formData.aba_dadosImovel[0]?.campo2.replace(",", ".") || 0
   );
   formData.aba_tiposDeSolo[0].tabelaQualidades =
-    formData.aba_tiposDeSolo[0].tabelaQualidades.map((item) => ({
+    formData.aba_tiposDeSolo[0]?.tabelaQualidades?.map((item) => ({
       ...item,
       area: calculateArea(totalArea, item.porcentagem),
     }));
@@ -167,7 +167,7 @@ export async function getTiposDeSolo({ dadosPreAnalise }) {
   const dados = {
     tiposDeSolo,
     tabelaQualidades,
-    areaTotal: dadosPreAnalise.campo_5,
+    areaTotal: dadosPreAnalise?.campo_5 || 0.0,
   };
   return dados;
 }
@@ -384,15 +384,16 @@ async function getDadosImovel({ dadosPreAnalise }) {
   if (dadosImovel[0] === undefined) return {};
 
   if (!dadosImovel[0].campo1) {
-    dadosImovel[0].campo1 = dadosPreAnalise.campo_4;
+    dadosImovel[0].campo1 = dadosPreAnalise?.campo_4 || "";
   }
   if (!dadosImovel[0].campo2) {
-    dadosImovel[0].campo2 = dadosPreAnalise.campo_5;
+    dadosImovel[0].campo2 = dadosPreAnalise?.campo_5;
   }
   if (!dadosImovel[0].campo3) {
-    dadosImovel[0].campo3 = dadosPreAnalise.campo_7;
+    dadosImovel[0].campo3 = dadosPreAnalise?.campo_7;
   }
-  const [strPre, strPos] = dadosPreAnalise.campo_3.split("-"); // ex: campos_gerais-mg
+  const str = dadosPreAnalise?.campo_3 || "";
+  const [strPre, strPos] = str.split("-"); // ex: campos_gerais-mg
   if (!dadosImovel[0].campo4) {
     dadosImovel[0].campo4 = strPre.replace(/_/g, " ").toUpperCase();
   }
@@ -448,6 +449,7 @@ async function getPreAnalise() {
   let { data: aba_preanalise, err } = await supabase
     .from("aba_preanalise")
     .select("*");
+  console.log(aba_preanalise);
   return aba_preanalise;
 }
 
