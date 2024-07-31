@@ -49,6 +49,10 @@ export async function getProjetoFormsData() {
     dadosInvestimentos: formData.aba_investimentos,
   });
 
+  formData.aba_sib = await getSIBData({
+    dadosImovel: formData.aba_dadosImovel[0],
+  });
+
   return formData;
 }
 
@@ -59,6 +63,53 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO SIB -------------------------------------------------------------------------------------------- */
+export async function getSIBData({ dadosImovel }) {
+  // vai pegar todos os dados do SIB.
+  const supabase = createClient();
+  const dadosProjeto = await getSIBDadosDoProjeto();
+  return { dadosProjeto, dadosImovel };
+}
+
+export async function getSIBDadosDoProjeto() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, err } = await supabase
+    .from("aba_sib_dadosProjeto")
+    .select("*");
+  if (err) {
+    console.log(err);
+    return undefined;
+  }
+  return dados;
+}
+
+export async function submitSIBDadosProjeto({ formData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  const dados = {
+    numero_beneficiarios: formData.numBeneficiarios,
+    teto_nacional: formData.tetoNacional,
+    valor_minimo_negociacao: formData.valorMinimoNegociacao,
+    valor_maximo_negociacao: formData.valorMaximoNegociacao,
+    authuser_id: authUserID,
+  };
+  const { error } = await supabase
+    .from("aba_sib_dadosProjeto")
+    .upsert([{ ...dados }], {
+      onConflict: ["authuser_id"],
+    });
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
+/* FIM SIB -------------------------------------------------------------------------------------------- */
 
 /* INICIO CRONOGRAMA -------------------------------------------------------------------------------------------- */
 
@@ -173,8 +224,6 @@ export async function getTiposDeSolo({ dadosPreAnalise }) {
 }
 
 export async function submitTiposDeSolo({ data }) {
-  console.log("tipos de solo data: ");
-  console.log(data);
   const supabase = createClient();
   const {
     data: { user },
@@ -449,7 +498,6 @@ async function getPreAnalise() {
   let { data: aba_preanalise, err } = await supabase
     .from("aba_preanalise")
     .select("*");
-  console.log(aba_preanalise);
   return aba_preanalise;
 }
 

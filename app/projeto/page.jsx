@@ -11,6 +11,7 @@ import InventarioTab from "@/components/projeto/inventario-tab";
 import InvestimentosTab from "@/components/projeto/investimentos-tab";
 import TiposDeSoloTab from "@/components/projeto/tipos-de-solo-tab";
 import CronogramaTab from "@/components/projeto/cronograma-tab";
+import SIBTab from "@/components/projeto/sib-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -86,6 +87,9 @@ export default function ProjetoPage() {
         return (
           <CronogramaTab data={formData?.aba_cronograma} isAdmin={isAdmin} />
         );
+
+      case "SIB":
+        return <SIBTab data={formData?.aba_sib} isAdmin={isAdmin} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
