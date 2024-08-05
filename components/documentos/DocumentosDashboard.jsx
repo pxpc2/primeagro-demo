@@ -1,7 +1,9 @@
+"use client";
+
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import DocumentoInstance from "./DocInstance";
 import { DOCUMENTOS } from "@/utils/constants";
-import { getDocuments } from "@/app/user-dashboard/actions";
+import { downloadDoc, getDocuments } from "@/app/user-dashboard/actions";
 import { useEffect, useState } from "react";
 
 function classNames(...classes) {
@@ -36,6 +38,7 @@ export default function DocumentosDashboard({ cliente }) {
 
     fetchDocuments();
   }, [cliente.authuser_id, reload]);
+
   const handleDocumentSubmit = () => {
     setReload((prev) => !prev);
   };

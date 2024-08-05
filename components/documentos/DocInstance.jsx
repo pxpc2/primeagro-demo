@@ -7,8 +7,22 @@ import {
   EllipsisHorizontalIcon,
   EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
+import { EyeIcon, Trash2Icon } from "lucide-react";
+import { useEffect } from "react";
 
-export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
+export default function DocumentoInstance({
+  doc,
+  status,
+  onSubmit,
+  authid,
+  onView,
+}) {
+  const handleView = () => {
+    if (onView) {
+      onView(doc);
+    }
+  };
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     await handleUpload(file);
@@ -82,8 +96,11 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
         </span>
       </td>
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-        {doc.status === "Ativo" ? (
-          <></>
+        {status ? (
+          <div className="flex flex-row w-full">
+            <EyeIcon className="w-4 h-4 inline-block mr-2 text-indigo-600" />
+            <Trash2Icon className="w-4 h-4 inline-block ml-2 text-red-700" />
+          </div>
         ) : (
           <div className="flex flex-row w-full">
             <label
@@ -99,7 +116,7 @@ export default function DocumentoInstance({ doc, status, onSubmit, authid }) {
                 onChange={handleFileChange}
               />
             </label>
-            <label className="ml-2 w-[24px] hover:cursor-pointer text-gray-500">
+            <label className="ml-2 w-[24px] hover:cursor-pointer text-gray-500 mt-0.5">
               <EllipsisVerticalIcon />
             </label>
           </div>
