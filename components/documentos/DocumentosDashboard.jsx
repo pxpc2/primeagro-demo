@@ -3,7 +3,11 @@
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import DocumentoInstance from "./DocInstance";
 import { DOCUMENTOS } from "@/utils/constants";
-import { downloadDoc, getDocuments } from "@/app/user-dashboard/actions";
+import {
+  deleteDoc,
+  downloadDoc,
+  getDocuments,
+} from "@/app/user-dashboard/actions";
 import { useEffect, useState } from "react";
 
 function classNames(...classes) {
@@ -70,6 +74,23 @@ export default function DocumentosDashboard({ cliente }) {
     }
   };
 
+  const handleDeleteDocument = async (docName) => {
+    try {
+      await deleteDoc(cliente.authuser_id, docName);
+
+      setDocStatus((prevStatus) => {
+        const newStatus = { ...prevStatus };
+        const docId = docName.split(".")[0];
+        newStatus[docId] = false;
+        return newStatus;
+      });
+
+      setReload((prev) => !prev);
+    } catch (error) {
+      console.error("Erro ao deletar o documento: ", error);
+    }
+  };
+
   const handleTabChange = (tabId) => {
     console.log("setting to tab " + tabId);
     setCurrentTab(tabId);
@@ -83,7 +104,6 @@ export default function DocumentosDashboard({ cliente }) {
   return (
     <div>
       <div className="sm:hidden">
-        {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
         <select
           id="tabs"
           name="tabs"
@@ -183,6 +203,7 @@ export default function DocumentosDashboard({ cliente }) {
                       onSubmit={handleDocumentSubmit}
                       authid={cliente.authuser_id}
                       onView={handleViewDocument}
+                      onDelete={handleDeleteDocument}
                     />
                   ))}
                 </tbody>
