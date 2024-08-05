@@ -233,3 +233,16 @@ export async function downloadDoc(authuser_id, docName) {
 
   return data.signedUrl;
 }
+
+export async function deleteDoc(authuser_id, docName) {
+  const supabase = createClient();
+  const docPath = `${authuser_id}/${docName}`;
+
+  const { error } = await supabase.storage.from("Documentos").remove([docPath]);
+
+  if (error) {
+    throw new Error("Erro ao deletar o documento: " + error.message);
+  }
+
+  return true;
+}

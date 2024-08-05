@@ -8,7 +8,16 @@ import {
   EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
 import { EyeIcon, Trash2Icon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 
 export default function DocumentoInstance({
   doc,
@@ -16,10 +25,27 @@ export default function DocumentoInstance({
   onSubmit,
   authid,
   onView,
+  onDelete,
 }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDeleteConfirm = () => {
+    onDelete(`${doc.id}.pdf`);
+    setIsDialogOpen(false);
+  };
+
   const handleView = () => {
     if (onView) {
       onView(doc);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const docName = `${doc.id}.pdf`;
+      await onDelete(docName);
+    } catch (error) {
+      console.error("Erro ao deletar o documento: ", error);
     }
   };
 
@@ -90,7 +116,13 @@ export default function DocumentoInstance({
       </td>
       <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
         <span
-          className={`inline-flex items-center rounded-md ${corBg} px-2 py-1 text-xs font-medium ${corTexto} ring-1 ring-inset ${corRing} `}
+          className={`inline-flex items-center rounded-md ${
+            status ? "bg-green-50" : "bg-red-50"
+          } px-2 py-1 text-xs font-medium ${
+            status ? "text-green-600" : "text-red-600"
+          } ring-1 ring-inset ${
+            status ? "ring-green-800/40" : "ring-red-800/40"
+          } `}
         >
           {status ? "Concluído" : "Pendente"}
         </span>
@@ -98,10 +130,37 @@ export default function DocumentoInstance({
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
         {status ? (
           <div className="flex flex-row w-full">
-            <button onClick={handleView}>
+            <button onClick={() => onView(doc)}>
               <EyeIcon className="h-4 w-4 inline-block mr-2 text-blue-600 hover:text-blue-800" />
             </button>
-            <Trash2Icon className="w-4 h-4 inline-block ml-2 text-red-700 mt-1" />
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Trash2Icon className="w-4 h-4 inline-block ml-2 text-red-700 mt-1 cursor-pointer hover:text-red-900" />
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirmar Exclusão</DialogTitle>
+                  <DialogDescription>
+                    Tem certeza de que deseja excluir este documento? Esta ação
+                    não pode ser desfeita.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <button
+                    onClick={handleDeleteConfirm}
+                    className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                  >
+                    Excluir
+                  </button>
+                  <button
+                    onClick={() => setIsDialogOpen(false)}
+                    className="ml-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
+                  >
+                    Cancelar
+                  </button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         ) : (
           <div className="flex flex-row w-full">
