@@ -67,7 +67,11 @@ export default function DocumentosDashboard({ cliente }) {
     try {
       const signedUrl = await downloadDoc(cliente.authuser_id, docName);
       if (signedUrl) {
-        window.open(signedUrl, "_blank");
+        const link = document.createElement("a");
+        link.href = signedUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.click();
       }
     } catch (error) {
       console.error("Baixar o documento gerou o seguinte erro: ", error);
