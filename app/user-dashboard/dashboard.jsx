@@ -120,8 +120,8 @@ export default function UserDashboardPage({
                 <Image
                   src="/logo-04.svg"
                   alt="ConfidensAgro"
-                  height={120}
-                  width={120}
+                  height={160}
+                  width={160}
                 />
               </div>
               <nav className="flex flex-1 flex-col">
@@ -173,8 +173,8 @@ export default function UserDashboardPage({
               <Image
                 src="/logo-04.svg"
                 alt="ConfidensAgro"
-                height={128}
-                width={128}
+                height={160}
+                width={160}
               />
             </Link>
           </div>
@@ -246,7 +246,7 @@ export default function UserDashboardPage({
             selectedTab === "Geral" ? "sm:justify-center" : "py-8"
           }`}
         >
-          <div className="rounded-sm bg-white px-5 py-6 shadow sm:px-6">
+          <div className="rounded-sm bg-white px-1 py-6 shadow sm:px-6">
             {!isAdmin && selectedTab === "Geral" ? (
               <DashboardSteps
                 cliente={usuario}
