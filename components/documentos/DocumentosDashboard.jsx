@@ -58,6 +58,18 @@ export default function DocumentosDashboard({ cliente }) {
     }
   };
 
+  const handleViewDocument = async (doc) => {
+    const docName = `${doc.id}.pdf`;
+    try {
+      const signedUrl = await downloadDoc(cliente.authuser_id, docName);
+      if (signedUrl) {
+        window.open(signedUrl, "_blank");
+      }
+    } catch (error) {
+      console.error("Baixar o documento gerou o seguinte erro: ", error);
+    }
+  };
+
   const handleTabChange = (tabId) => {
     console.log("setting to tab " + tabId);
     setCurrentTab(tabId);
@@ -170,6 +182,7 @@ export default function DocumentosDashboard({ cliente }) {
                       status={docStatus[doc.id]}
                       onSubmit={handleDocumentSubmit}
                       authid={cliente.authuser_id}
+                      onView={handleViewDocument}
                     />
                   ))}
                 </tbody>

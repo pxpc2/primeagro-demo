@@ -98,8 +98,10 @@ export default function DocumentoInstance({
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
         {status ? (
           <div className="flex flex-row w-full">
-            <EyeIcon className="w-4 h-4 inline-block mr-2 text-indigo-600" />
-            <Trash2Icon className="w-4 h-4 inline-block ml-2 text-red-700" />
+            <button onClick={handleView}>
+              <EyeIcon className="h-4 w-4 inline-block mr-2 text-blue-600 hover:text-blue-800" />
+            </button>
+            <Trash2Icon className="w-4 h-4 inline-block ml-2 text-red-700 mt-1" />
           </div>
         ) : (
           <div className="flex flex-row w-full">
@@ -115,9 +117,6 @@ export default function DocumentoInstance({
                 className="sr-only"
                 onChange={handleFileChange}
               />
-            </label>
-            <label className="ml-2 w-[24px] hover:cursor-pointer text-gray-500 mt-0.5">
-              <EllipsisVerticalIcon />
             </label>
           </div>
         )}

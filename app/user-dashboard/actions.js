@@ -213,7 +213,7 @@ export async function getDocuments(authuser_id) {
     return redirect("/error?message=" + error.message);
   }
   let nomesExistentes = [];
-  data.forEach((doc) => {
+  data.forEach(async (doc) => {
     nomesExistentes.push(doc.name);
   });
   return nomesExistentes;
@@ -222,11 +222,14 @@ export async function getDocuments(authuser_id) {
 export async function downloadDoc(authuser_id, docName) {
   const supabase = createClient();
   const docPath = `${authuser_id}/${docName}`;
+
   const { data, error } = await supabase.storage
     .from("Documentos")
-    .download(docPath);
+    .createSignedUrl(docPath, 60); // signed url válida por 60 seg
+
   if (error) {
-    return redirect("/error?message=" + error.message);
+    throw new Error("Erro ao gerar URL de download de PDF: " + error.message);
   }
-  return data;
+
+  return data.signedUrl;
 }
