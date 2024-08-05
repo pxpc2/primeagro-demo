@@ -130,7 +130,7 @@ export default function DocumentoInstance({
       <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
         {status ? (
           <div className="flex flex-row w-full">
-            <button onClick={() => onView(doc)}>
+            <button onClick={handleView}>
               <EyeIcon className="h-4 w-4 inline-block mr-2 text-blue-600 hover:text-blue-800" />
             </button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
