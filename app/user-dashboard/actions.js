@@ -218,3 +218,15 @@ export async function getDocuments(authuser_id) {
   });
   return nomesExistentes;
 }
+
+export async function downloadDoc(authuser_id, docName) {
+  const supabase = createClient();
+  const docPath = `${authuser_id}/${docName}`;
+  const { data, error } = await supabase.storage
+    .from("Documentos")
+    .download(docPath);
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+  return data;
+}
