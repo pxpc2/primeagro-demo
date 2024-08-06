@@ -53,6 +53,8 @@ export async function getProjetoFormsData() {
     dadosImovel: formData.aba_dadosImovel[0],
   });
 
+  formData.aba_evolucao_rebanho = await getEvolucaoRebanho();
+
   return formData;
 }
 
@@ -63,6 +65,28 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
+
+export async function getEvolucaoRebanho() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_evolucao_rebanho")
+    .select("*, aba_evolucao_rebanho_indicadores_tecnicos(*)")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+
+/* FIM EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
 
 /* INICIO SIB -------------------------------------------------------------------------------------------- */
 
@@ -95,8 +119,6 @@ export async function getBenfeitoriasTotalValue() {
   benfeitoriasIndividuais?.forEach((item) => {
     valorTotal += parseCurrency(item.valor);
   });
-
-  console.log("valor total das benfeitorias: " + valorTotal);
   return valorTotal;
 }
 

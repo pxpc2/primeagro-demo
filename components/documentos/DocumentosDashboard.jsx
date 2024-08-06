@@ -67,7 +67,6 @@ export default function DocumentosDashboard({ cliente }) {
     try {
       const signedUrl = await downloadDoc(cliente.authuser_id, docName);
       if (signedUrl) {
-        // Use window.location.href to open the URL
         window.location.href = signedUrl;
       }
     } catch (error) {

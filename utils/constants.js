@@ -428,3 +428,14 @@ export const PROJETO_TABS = [
 ];
 
 export const ADMIN_EMAIL = ["pedrodaia.c@gmail.com", "teste2@teste"];
+
+export const INDICADORES_TECNICOS_DESCRICOES = [
+  "Parição",
+  "Mortalidade de bezerros(as)",
+  "Mortalidade de garrotes(as)",
+  "Mortalidade de adultos",
+  "Descarte matriz existente",
+  "Descarte adquiridos",
+  "Período de ordenha",
+  "Produção leite/dia",
+];
