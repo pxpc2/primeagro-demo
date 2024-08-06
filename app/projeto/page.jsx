@@ -12,6 +12,7 @@ import InvestimentosTab from "@/components/projeto/investimentos-tab";
 import TiposDeSoloTab from "@/components/projeto/tipos-de-solo-tab";
 import CronogramaTab from "@/components/projeto/cronograma-tab";
 import SIBTab from "@/components/projeto/sib-tab";
+import EvolucaoRebanhoTab from "@/components/projeto/evolucao-rebanho-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -90,6 +91,13 @@ export default function ProjetoPage() {
 
       case "SIB":
         return <SIBTab data={formData?.aba_sib} isAdmin={isAdmin} />;
+      case "Evolução do rebanho":
+        return (
+          <EvolucaoRebanhoTab
+            data={formData?.aba_evolucao_rebanho[0]}
+            isAdmin={isAdmin}
+          />
+        );
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }
