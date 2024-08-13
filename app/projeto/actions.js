@@ -123,42 +123,27 @@ export async function getBenfeitoriasTotalValue() {
 }
 
 export async function getSIBData({ dadosImovel }) {
-  // vai pegar todos os dados do SIB.
-  const supabase = createClient();
-  const dadosProjeto = await getSIBDadosDoProjeto();
-  const valorAvaliado = await getSIBValorAvaliado();
-  return {
-    dadosProjeto,
-    dadosImovel,
-    valorAvaliado,
-    valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
-  };
-}
-export async function getSIBDadosDoProjeto() {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  let { data: dados, err } = await supabase
-    .from("aba_sib_dadosProjeto")
-    .select("*");
-  if (err) {
-    console.log(err);
-    return undefined;
-  }
-  return dados;
-}
 
-export async function getSIBValorAvaliado() {
-  const supabase = createClient();
-  let { data: dados, err } = await supabase
-    .from("aba_sib_valorAvaliado")
-    .select("*");
-  if (err) {
-    console.log(err);
+  let { data: sibData, error } = await supabase
+    .from("aba_sib")
+    .select("*, aba_sib_dadosProjeto(*), aba_sib_valorAvaliado(*)")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
     return undefined;
   }
-  return dados;
+
+  return {
+    dadosProjeto: sibData?.[0]?.aba_sib_dadosProjeto || [],
+    valorAvaliado: sibData?.[0]?.aba_sib_valorAvaliado || [],
+    dadosImovel,
+    valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
+  };
 }
 
 export async function submitSIBDadosProjeto({ formData }) {
@@ -167,18 +152,33 @@ export async function submitSIBDadosProjeto({ formData }) {
     data: { user },
   } = await supabase.auth.getUser();
   const authUserID = user.id;
+
+  let { data: sibRecord, error: sibError } = await supabase
+    .from("aba_sib")
+    .upsert({ authuser_id: authUserID }, { onConflict: ["authuser_id"] })
+    .select()
+    .single();
+
+  if (sibError) {
+    console.log(sibError);
+    return redirect("/error?message=" + sibError.message);
+  }
+
   const dados = {
     numero_beneficiarios: formData.numBeneficiarios,
     teto_nacional: formData.tetoNacional,
     valor_minimo_negociacao: formData.valorMinimoNegociacao,
     valor_maximo_negociacao: formData.valorMaximoNegociacao,
+    sib_id: sibRecord.id,
     authuser_id: authUserID,
   };
+
   const { error } = await supabase
     .from("aba_sib_dadosProjeto")
     .upsert([{ ...dados }], {
-      onConflict: ["authuser_id"],
+      onConflict: ["sib_id"],
     });
+
   if (error) {
     return redirect("/error?message=" + error.message);
   }
@@ -190,22 +190,38 @@ export async function submitSIBValorAvaliado({ formData }) {
     data: { user },
   } = await supabase.auth.getUser();
   const authUserID = user.id;
+
+  let { data: sibRecord, error: sibError } = await supabase
+    .from("aba_sib")
+    .upsert({ authuser_id: authUserID }, { onConflict: ["authuser_id"] })
+    .select()
+    .single();
+
+  if (sibError) {
+    console.log(sibError);
+    return redirect("/error?message=" + sibError.message);
+  }
+
   const dados = {
     valor_terra_nua: formData.valorTerraNua,
     valor_benfeitorias: formData.valorBenfeitorias,
     valor_total_imovel: formData.valorTotalImovel,
     vti_ha: formData.vtiHa,
+    sib_id: sibRecord.id,
     authuser_id: authUserID,
   };
+
   const { error } = await supabase
     .from("aba_sib_valorAvaliado")
     .upsert([{ ...dados }], {
-      onConflict: ["authuser_id"],
+      onConflict: ["sib_id"],
     });
+
   if (error) {
     return redirect("/error?message=" + error.message);
   }
 }
+
 /* FIM SIB -------------------------------------------------------------------------------------------- */
 
 /* INICIO CRONOGRAMA -------------------------------------------------------------------------------------------- */
