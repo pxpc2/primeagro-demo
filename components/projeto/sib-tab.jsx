@@ -17,41 +17,89 @@ import {
   submitSIBValorAvaliado,
 } from "@/app/projeto/actions";
 
+function parseCurrencyToFloat(value) {
+  const numericValue = value.replace(/[^\d,]/g, "").replace(",", ".");
+  return parseFloat(numericValue);
+}
+
 export default function SIBTab({ data, isAdmin }) {
   console.log(data);
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
+  };
+
   /* Dados do Projeto */
   const [numBeneficiarios, setNumBeneficiarios] = useState(
     data?.dadosProjeto?.numero_beneficiarios || 1
   );
-  const [tetoNacional, setTetoNacional] = useState(
-    data?.dadosProjeto?.teto_nacional || ""
-  );
-  const [valorMinimoNegociacao, setValorMinimoNegociacao] = useState(
-    data?.dadosImovel?.campo16
-      ? (parseFloat(data?.dadosImovel?.campo16) * 0.9).toFixed(2)
-      : "Valor avaliado indisp"
-  );
-  const [valorMaximoNegociacao, setValorMaximoNegociacao] = useState(
-    data?.dadosImovel?.campo16
-      ? (parseFloat(data?.dadosImovel?.campo16) * 1.1).toFixed(2)
-      : "Valor avaliado indisp"
-  );
+
+  const [tetoNacional, setTetoNacional] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.dadosProjeto?.teto_nacional || 0;
+    setTetoNacional(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleTetoNacionalChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setTetoNacional(formatCurrency(value));
+  };
+
+  const [valorMinimoNegociacao, setValorMinimoNegociacao] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.dadosImovel?.campo16
+      ? parseFloat(data?.dadosImovel?.campo16) * 0.9
+      : 0;
+    setValorMinimoNegociacao(formatCurrency(initialValue));
+  }, [data]);
+
+  const [valorMaximoNegociacao, setValorMaximoNegociacao] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.dadosImovel?.campo16
+      ? parseFloat(data?.dadosImovel?.campo16) * 1.1
+      : 0;
+    setValorMaximoNegociacao(formatCurrency(initialValue));
+  }, [data]);
   /* Fim Dados do Projeto */
 
   /* Valor Avaliado */
-  const [valorTerraNua, setValorTerraNua] = useState(
-    data?.valorAvaliado?.valor_terra_nua || ""
-  );
-  const [valorBenfeitorias, setValorBenfeitorias] = useState(
-    data?.valorTotalBenfeitorias || ""
-  );
-  const [valorTotalImovel, setValorTotalImovel] = useState(
-    data?.valorAvaliado?.valor_total_imovel || ""
-  );
+  const [valorTerraNua, setValorTerraNua] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorAvaliado?.valor_terra_nua || 0;
+    setValorTerraNua(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleValorTerraNuaChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setValorTerraNua(formatCurrency(value));
+  };
+
+  const [valorBenfeitorias, setValorBenfeitorias] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorTotalBenfeitorias || 0;
+    setValorBenfeitorias(formatCurrency(initialValue));
+  }, [data]);
+
+  const [valorTotalImovel, setValorTotalImovel] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorAvaliado?.valor_total_imovel || 0;
+    setValorTotalImovel(formatCurrency(initialValue));
+  }, [data]);
+
   const [vtiHa, setVtiHa] = useState(data?.valorAvaliado?.vti_ha || "");
   /* Fim Valor Avaliado */
 
@@ -59,43 +107,103 @@ export default function SIBTab({ data, isAdmin }) {
   const [valorImovelNegociado, setValorImovelNegociado] = useState(0);
 
   useEffect(() => {
-    const campo17 = data?.dadosImovel?.campo17 || ""; // I15 no excel
+    const campo17 = data?.dadosImovel?.campo17 || "";
 
     const computedValorImovelNegociado =
       campo17 === "" ? 0 : parseFloat(campo17);
 
-    const formattedValorImovelNegociado = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(computedValorImovelNegociado);
+    const formattedValorImovelNegociado = formatCurrency(
+      computedValorImovelNegociado
+    );
 
     setValorImovelNegociado(formattedValorImovelNegociado);
   }, [data]);
 
-  const [custoMedicaoInterna, setCustoMedicaoInterna] = useState(
-    data?.valorImovelCustos?.custoMedicaoInterna || ""
-  );
-  const [valorITBI, setValorITBI] = useState(
-    data?.valorImovelCustos?.valorITBI || ""
-  );
-  const [despesasCartorarias, setDespesasCartorarias] = useState(
-    data?.valorImovelCustos?.despesasCartorarias || ""
-  );
-  const [elaboracaoProjeto, setElaboracaoProjeto] = useState(
-    data?.valorImovelCustos?.elaboracaoProjeto || ""
-  );
-  const [valorATER, setValorATER] = useState(
-    data?.valorImovelCustos?.valorATER || ""
-  );
-  const [valorTotalDespesas, setValorTotalDespesas] = useState(
-    data?.valorImovelCustos?.valorTotalDespesas || ""
-  );
-  const [valorTotalInvestimentos, setValorTotalInvestimentos] = useState(
-    data?.valorImovelCustos?.valorTotalInvestimentos || ""
-  );
-  const [valorTotalFinanciamento, setValorTotalFinanciamento] = useState(
-    data?.valorImovelCustos?.valorTotalFinanciamento || ""
-  );
+  const [custoMedicaoInterna, setCustoMedicaoInterna] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.custoMedicaoInterna || 0;
+    setCustoMedicaoInterna(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleCustoMedicaoInternaChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setCustoMedicaoInterna(formatCurrency(value));
+  };
+
+  const [valorITBI, setValorITBI] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.valorITBI || 0;
+    setValorITBI(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleValorITBIChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setValorITBI(formatCurrency(value));
+  };
+
+  const [despesasCartorarias, setDespesasCartorarias] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.despesasCartorarias || 0;
+    setDespesasCartorarias(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleDespesasCartorariasChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setDespesasCartorarias(formatCurrency(value));
+  };
+
+  const [elaboracaoProjeto, setElaboracaoProjeto] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.elaboracaoProjeto || 0;
+    setElaboracaoProjeto(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleElaboracaoProjetoChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setElaboracaoProjeto(formatCurrency(value));
+  };
+
+  const [valorATER, setValorATER] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.valorATER || 0;
+    setValorATER(formatCurrency(initialValue));
+  }, [data]);
+
+  const handleValorATERChange = (e) => {
+    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
+    value = parseFloat(value || 0);
+    setValorATER(formatCurrency(value));
+  };
+
+  const [valorTotalDespesas, setValorTotalDespesas] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.valorTotalDespesas || 0;
+    setValorTotalDespesas(formatCurrency(initialValue));
+  }, [data]);
+
+  const [valorTotalInvestimentos, setValorTotalInvestimentos] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.valorTotalInvestimentos || 0;
+    setValorTotalInvestimentos(formatCurrency(initialValue));
+  }, [data]);
+
+  const [valorTotalFinanciamento, setValorTotalFinanciamento] = useState("");
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.valorTotalFinanciamento || 0;
+    setValorTotalFinanciamento(formatCurrency(initialValue));
+  }, [data]);
   /* Fim VALOR IMÓVEL + CUSTOS */
 
   const onEdit = () => {
@@ -106,16 +214,16 @@ export default function SIBTab({ data, isAdmin }) {
     const response1 = await submitSIBDadosProjeto({
       formData: {
         numBeneficiarios,
-        tetoNacional,
-        valorMinimoNegociacao,
-        valorMaximoNegociacao,
+        tetoNacional: parseCurrencyToFloat(tetoNacional),
+        valorMinimoNegociacao: parseCurrencyToFloat(valorMinimoNegociacao),
+        valorMaximoNegociacao: parseCurrencyToFloat(valorMaximoNegociacao),
       },
     });
     const response2 = await submitSIBValorAvaliado({
       formData: {
-        valorTerraNua,
-        valorBenfeitorias,
-        valorTotalImovel,
+        valorTerraNua: parseCurrencyToFloat(valorTerraNua),
+        valorBenfeitorias: parseCurrencyToFloat(valorBenfeitorias),
+        valorTotalImovel: parseCurrencyToFloat(valorTotalImovel),
         vtiHa,
       },
     });
@@ -146,19 +254,16 @@ export default function SIBTab({ data, isAdmin }) {
                   numBeneficiarios={numBeneficiarios}
                   setNumBeneficiarios={setNumBeneficiarios}
                   tetoNacional={tetoNacional}
-                  setTetoNacional={setTetoNacional}
+                  handleTetoNacionalChange={handleTetoNacionalChange}
                   valorMinimoNegociacao={valorMinimoNegociacao}
-                  setValorMinimoNegociacao={setValorMinimoNegociacao}
                   valorMaximoNegociacao={valorMaximoNegociacao}
-                  setValorMaximoNegociacao={setValorMaximoNegociacao}
                 />
               </div>
               <div>
-                {" "}
                 <ValorImovelAvaliadoTable
                   formsDisabled={formsDisabled}
                   valorTerraNua={valorTerraNua}
-                  setValorTerraNua={setValorTerraNua}
+                  handleValorTerraNuaChange={handleValorTerraNuaChange}
                   valorBenfeitorias={valorBenfeitorias}
                   setValorBenfeitorias={setValorBenfeitorias}
                   valorTotalImovel={valorTotalImovel}
@@ -173,32 +278,23 @@ export default function SIBTab({ data, isAdmin }) {
                 <ValorImovelCustosTable
                   formsDisabled={formsDisabled}
                   valorImovelNegociado={valorImovelNegociado}
-                  setValorImovelNegociado={setValorImovelNegociado}
-                  setCustoMedicaoInterna={setCustoMedicaoInterna}
-                  valorITBI={data?.valorImovelCustos?.valorITBI || ""}
-                  setValorITBI={setValorITBI}
-                  despesasCartorarias={
-                    data?.valorImovelCustos?.despesasCartorarias || ""
+                  custoMedicaoInterna={custoMedicaoInterna}
+                  handleCustoMedicaoInternaChange={
+                    handleCustoMedicaoInternaChange
                   }
-                  setDespesasCartorarias={setDespesasCartorarias}
-                  elaboracaoProjeto={
-                    data?.valorImovelCustos?.elaboracaoProjeto || ""
+                  valorITBI={valorITBI}
+                  handleValorITBIChange={handleValorITBIChange}
+                  despesasCartorarias={despesasCartorarias}
+                  handleDespesasCartorariasChange={
+                    handleDespesasCartorariasChange
                   }
-                  setElaboracaoProjeto={setElaboracaoProjeto}
-                  valorATER={data?.valorImovelCustos?.valorATER || ""}
-                  setValorATER={setValorATER}
-                  valorTotalDespesas={
-                    data?.valorImovelCustos?.valorTotalDespesas || ""
-                  }
-                  setValorTotalDespesas={setValorTotalDespesas}
-                  valorTotalInvestimentos={
-                    data?.valorImovelCustos?.valorTotalInvestimentos || ""
-                  }
-                  setValorTotalInvestimentos={setValorTotalInvestimentos}
-                  valorTotalFinanciamento={
-                    data?.valorImovelCustos?.valorTotalFinanciamento || ""
-                  }
-                  setValorTotalFinanciamento={setValorTotalFinanciamento}
+                  elaboracaoProjeto={elaboracaoProjeto}
+                  handleElaboracaoProjetoChange={handleElaboracaoProjetoChange}
+                  valorATER={valorATER}
+                  handleValorATERChange={handleValorATERChange}
+                  valorTotalDespesas={valorTotalDespesas}
+                  valorTotalInvestimentos={valorTotalInvestimentos}
+                  valorTotalFinanciamento={valorTotalFinanciamento}
                 />
               </div>
             </div>
@@ -214,7 +310,7 @@ function DadosDoProjetoTable({
   numBeneficiarios,
   setNumBeneficiarios,
   tetoNacional,
-  setTetoNacional,
+  handleTetoNacionalChange,
   valorMinimoNegociacao,
   valorMaximoNegociacao,
 }) {
@@ -241,7 +337,7 @@ function DadosDoProjetoTable({
             <Input
               type="text"
               value={tetoNacional}
-              onChange={(e) => setTetoNacional(e.target.value)}
+              onChange={handleTetoNacionalChange}
               disabled={formsDisabled}
             />
           </div>
@@ -266,36 +362,13 @@ function DadosDoProjetoTable({
 function ValorImovelAvaliadoTable({
   formsDisabled,
   valorTerraNua,
-  setValorTerraNua,
+  handleValorTerraNuaChange,
   valorBenfeitorias,
-  setValorBenfeitorias,
   valorTotalImovel,
   setValorTotalImovel,
   vtiHa,
   setVtiHa,
 }) {
-  const [formattedValorBenfeitorias, setFormattedValorBenfeitorias] =
-    useState("");
-  useEffect(() => {
-    if (valorBenfeitorias) {
-      setFormattedValorBenfeitorias(formatCurrency(valorBenfeitorias));
-    } else {
-      setFormattedValorBenfeitorias(formatCurrency("0.0"));
-    }
-  }, [valorBenfeitorias]);
-
-  const handleValorBenfeitoriasChange = (e) => {
-    const value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    setValorBenfeitorias(value);
-    setFormattedValorBenfeitorias(formatCurrency(value));
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
       <div className="bg-blue-700 p-4">
@@ -310,7 +383,7 @@ function ValorImovelAvaliadoTable({
             <Input
               type="text"
               value={valorTerraNua}
-              onChange={(e) => setValorTerraNua(e.target.value)}
+              onChange={handleValorTerraNuaChange}
               disabled={formsDisabled}
             />
           </div>
@@ -318,9 +391,9 @@ function ValorImovelAvaliadoTable({
             <p className="font-semibold">2 - VALOR DAS BENFEITORIAS</p>
             <Input
               type="text"
-              value={formattedValorBenfeitorias}
-              onChange={handleValorBenfeitoriasChange}
+              value={valorBenfeitorias}
               disabled
+              className="bg-blue-800 text-white"
             />
           </div>
           <div>
@@ -350,23 +423,19 @@ function ValorImovelAvaliadoTable({
 function ValorImovelCustosTable({
   formsDisabled,
   valorImovelNegociado,
-  setValorImovelNegociado,
   custoMedicaoInterna,
-  setCustoMedicaoInterna,
+  handleCustoMedicaoInternaChange,
   valorITBI,
-  setValorITBI,
+  handleValorITBIChange,
   despesasCartorarias,
-  setDespesasCartorarias,
+  handleDespesasCartorariasChange,
   elaboracaoProjeto,
-  setElaboracaoProjeto,
+  handleElaboracaoProjetoChange,
   valorATER,
-  setValorATER,
+  handleValorATERChange,
   valorTotalDespesas,
-  setValorTotalDespesas,
   valorTotalInvestimentos,
-  setValorTotalInvestimentos,
   valorTotalFinanciamento,
-  setValorTotalFinanciamento,
 }) {
   const [statusMessage, setStatusMessage] = useState("VALORES VÁLIDOS");
   const [statusColor, setStatusColor] = useState("green-600");
@@ -385,7 +454,6 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorImovelNegociado}
-              onChange={(e) => setValorImovelNegociado(e.target.value)}
               disabled={true}
               className="bg-blue-800 text-white"
             />
@@ -395,7 +463,7 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={custoMedicaoInterna}
-              onChange={(e) => setCustoMedicaoInterna(e.target.value)}
+              onChange={handleCustoMedicaoInternaChange}
               disabled={formsDisabled}
             />
           </div>
@@ -404,7 +472,7 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorITBI}
-              onChange={(e) => setValorITBI(e.target.value)}
+              onChange={handleValorITBIChange}
               disabled={formsDisabled}
             />
           </div>
@@ -413,7 +481,7 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={despesasCartorarias}
-              onChange={(e) => setDespesasCartorarias(e.target.value)}
+              onChange={handleDespesasCartorariasChange}
               disabled={formsDisabled}
             />
           </div>
@@ -422,7 +490,7 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={elaboracaoProjeto}
-              onChange={(e) => setElaboracaoProjeto(e.target.value)}
+              onChange={handleElaboracaoProjetoChange}
               disabled={formsDisabled}
             />
           </div>
@@ -431,7 +499,7 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorATER}
-              onChange={(e) => setValorATER(e.target.value)}
+              onChange={handleValorATERChange}
               disabled={formsDisabled}
             />
           </div>
@@ -444,9 +512,8 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorTotalDespesas}
-              onChange={(e) => setValorTotalDespesas(e.target.value)}
               disabled={true}
-              className="bg-blue-800"
+              className="bg-blue-800 text-white"
             />
           </div>
           <div>
@@ -454,9 +521,8 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorTotalInvestimentos}
-              onChange={(e) => setValorTotalInvestimentos(e.target.value)}
               disabled={true}
-              className="bg-blue-800"
+              className="bg-blue-800 text-white"
             />
           </div>
           <div>
@@ -464,9 +530,8 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorTotalFinanciamento}
-              onChange={(e) => setValorTotalFinanciamento(e.target.value)}
               disabled={true}
-              className="bg-blue-800"
+              className="bg-blue-800 text-white"
             />
           </div>
         </div>
