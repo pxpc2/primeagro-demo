@@ -60,17 +60,20 @@ function ReusableDialog({
   const calculateArea = (percentage) => {
     return ((totalArea * parseFloat(percentage)) / 100).toFixed(2);
   };
+
   const formatBRL = (value) => {
     if (!value) return value;
     value = value.replace(/\D/g, "");
     value = (Number(value) / 100).toFixed(2).replace(".", ",");
     return value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
+
   const formatPercentage = (value) => {
     if (!value) return value;
     value = value.replace(/[^\d.,]/g, "");
     return value;
   };
+
   const handleChange = (e, fieldKey) => {
     if (hasBRLFormatting && fieldKey.includes(brlFieldIdentifier)) {
       const inputValue = e.target.value;
@@ -87,6 +90,7 @@ function ReusableDialog({
       form.setValue(fieldKey, e.target.value);
     }
   };
+
   useEffect(() => {
     if (editingItem) {
       columns.forEach((column) => {
@@ -127,7 +131,26 @@ function ReusableDialog({
                 >
                   {column.label}
                 </Label>
-                {column.key === "classe" ? (
+                {column.key === "fonte_financiamento" ? (
+                  <Select
+                    value={form.watch(column.key) || ""}
+                    onValueChange={(value) => form.setValue(column.key, value)}
+                  >
+                    <SelectTrigger
+                      className="w-[180px]"
+                      placeholder="Selecione uma fonte"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="SIB">SIB</SelectItem>
+                      <SelectItem value="PRONAF-A">PRONAF-A</SelectItem>
+                      <SelectItem value="Recursos Próprios">
+                        Recursos Próprios
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : column.key === "classe" ? (
                   <Select
                     {...form.register(column.key)}
                     onValueChange={(value) => form.setValue(column.key, value)}
@@ -216,7 +239,7 @@ function ReusableDialog({
                   </Select>
                 ) : (
                   <Input
-                    type={column.key === "quantidade" ? "number" : ""}
+                    type={column.key === "quantidade" ? "number" : "text"}
                     id={column.key}
                     className={`col-span-3 ${
                       column.key === "area" && obs === "tiposdesolo"
