@@ -18,6 +18,15 @@ export default function IndicadoresTecnicos({ data, anoInicial }) {
       onChange(descricao, ano, value);
     }
   };
+  const indicadoresTecnicos = Array.isArray(
+    data.aba_evolucao_rebanho_indicadores_tecnicos
+  )
+    ? data.aba_evolucao_rebanho_indicadores_tecnicos
+    : [];
+
+  const findDataForDescricao = (descricao) => {
+    return indicadoresTecnicos.find((item) => item.descricao === descricao);
+  };
 
   return (
     <div className="mt-8">
@@ -32,31 +41,32 @@ export default function IndicadoresTecnicos({ data, anoInicial }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DESCRICOES.map((descricao, index) => (
-            <TableRow key={index}>
-              <TableCell className="font-medium">{descricao}</TableCell>
-              {anos.map((ano, i) => (
-                <TableCell key={i}>
-                  <Input
-                    type="text"
-                    value={
-                      data[descricao]
-                        ? data[descricao][`ano${i + 1}`] || ""
-                        : ""
-                    }
-                    onChange={(e) =>
-                      handleInputChange(
-                        descricao,
-                        `ano${i + 1}`,
-                        e.target.value
-                      )
-                    }
-                    className="w-full text-center"
-                  />
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {DESCRICOES.map((descricao, index) => {
+            const dataItem = findDataForDescricao(descricao);
+            return (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{descricao}</TableCell>
+                {anos.map((ano, i) => (
+                  <TableCell key={i}>
+                    <Input
+                      type="text"
+                      value={
+                        dataItem ? `${dataItem[`ano${i + 1}`] || ""}%` : ""
+                      }
+                      onChange={(e) =>
+                        handleInputChange(
+                          descricao,
+                          `ano${i + 1}`,
+                          e.target.value.replace("%", "")
+                        )
+                      }
+                      className="w-full text-center"
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
