@@ -13,6 +13,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import {
+  submitSIBCustos,
   submitSIBDadosProjeto,
   submitSIBValorAvaliado,
 } from "@/app/projeto/actions";
@@ -223,6 +224,16 @@ export default function SIBTab({ data, isAdmin }) {
         valorBenfeitorias: parseCurrency(valorBenfeitorias),
         valorTotalImovel: parseCurrency(valorTotalImovel),
         vtiHa,
+      },
+    });
+    const response3 = await submitSIBCustos({
+      formData: {
+        valorImovelNegociado: parseCurrency(valorImovelNegociado),
+        custoMedicaoInterna: parseCurrency(custoMedicaoInterna),
+        valorITBI: parseCurrency(valorITBI),
+        despesasCartorarias: parseCurrency(despesasCartorarias),
+        elaboracaoProjeto: parseCurrency(elaboracaoProjeto),
+        valorATER: parseCurrency(valorATER),
       },
     });
     setLoading(false);
