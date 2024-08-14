@@ -17,6 +17,7 @@ import {
   submitSIBDadosProjeto,
   submitSIBValorAvaliado,
 } from "@/app/projeto/actions";
+import { INVESTIMENTO_CATEGORIAS } from "@/utils/constants";
 
 function parseCurrency(value) {
   if (typeof value === "string") {
@@ -46,7 +47,6 @@ function calculateValorTotalDespesas(valorImovelNegociado, values) {
 }
 
 export default function SIBTab({ data, isAdmin }) {
-  console.log(data);
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -292,7 +292,7 @@ export default function SIBTab({ data, isAdmin }) {
         isAdmin={isAdmin}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
-        <div className="h-screen text-sm py-4">
+        <div className="h-full text-sm py-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-0 justify-between">
               <div>
@@ -345,6 +345,9 @@ export default function SIBTab({ data, isAdmin }) {
                 />
               </div>
             </div>
+          </div>
+          <div className="pt-8">
+            <QuadroResumoInvestimentos formsDisabled={formsDisabled} />
           </div>
         </div>
       </div>
@@ -585,6 +588,84 @@ function ValorImovelCustosTable({
       </div>
       <div className={`${statusColor} p-4 text-center font-bold text-white`}>
         {statusMessage}
+      </div>
+    </div>
+  );
+}
+
+function QuadroResumoInvestimentos({ formsDisabled }) {
+  const categorias = INVESTIMENTO_CATEGORIAS;
+
+  return (
+    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-4">
+      <div className="bg-blue-700 p-4">
+        <h3 className="text-md font-bold leading-6 text-center text-white">
+          QUADRO RESUMO DOS INVESTIMENTOS
+        </h3>
+      </div>
+      <div className="bg-white p-4 text-gray-800">
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th className="text-left p-2">ITEM</th>
+              <th className="text-right p-2">SIB</th>
+              <th className="text-right p-2">PRONAF-A</th>
+              <th className="text-right p-2">RECURSOS PRÓPRIOS</th>
+              <th className="text-right p-2">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categorias.map((category, index) => (
+              <tr key={index}>
+                <td className="text-left p-2">{category}</td>
+                <td className="text-right p-2">
+                  {/* VALORES DE SIB */}
+                  <span>{"0,00"}</span>
+                </td>
+                <td className="text-right p-2">
+                  {/* PRONAF-A  */}
+                  <span>{"0,00"}</span>
+                </td>
+                <td className="text-right p-2">
+                  {/* Recursos Próprios */}
+                  <span>{"0,00"}</span>
+                </td>
+                <td className="text-right p-2">
+                  {/* TOTAL */}
+                  <span>{"0,00"}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="text-left p-2 font-bold bg-blue-700 text-white">
+                TOTAL INVESTIDO
+              </td>
+              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+                0,00
+              </td>
+              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+                0,00
+              </td>
+              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+                0,00
+              </td>
+              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+                0,00
+              </td>
+            </tr>
+            <tr>
+              <td className="text-left p-2 font-bold bg-gray-300">
+                VALORES DISPONÍVEIS E NÃO INVESTIDOS
+              </td>
+              <td className="text-right p-2 font-bold bg-gray-300">0,00</td>
+              <td className="text-right p-2 font-bold bg-gray-300">0,00</td>
+              <td className="text-right p-2 font-bold bg-gray-300">0,00</td>
+              <td className="text-right p-2 font-bold bg-gray-300">0,00</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
   );
