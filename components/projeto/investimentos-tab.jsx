@@ -94,6 +94,11 @@ export default function InvestimentosTab({ data, isAdmin }) {
             {UF.toUpperCase()}
           </h1>
         </div>
+        <p className="text-red-600 font-bold">
+          A tabela abaixo está com problemas, favor verificar o valor total (não
+          está multiplicando pela quantidade*valor_unidade), e somente editar ou
+          deletar 1 (um) item por vez, salvar antes de prosseguir.
+        </p>
         <ReusableTable
           // passar um custom dialog para essa tabela
           data={investimentosData}

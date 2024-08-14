@@ -18,10 +18,19 @@ import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { submitCronogramaData } from "@/app/projeto/actions";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 export default function CronogramaTab({ data, isAdmin }) {
   const anoInicial = useState(data?.anoInicial || "2024"); // ano de inicio do financiamento (vem da Aba SimuladorPNCF)
   const [cronogramaData, setCronogramaData] = useState(data[0] || []);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [investimentosData, setInvestimentosData] = useState(data[1] || []);
   const colunas = [
     { key: "seq", label: "SEQ" },
@@ -87,7 +96,7 @@ export default function CronogramaTab({ data, isAdmin }) {
       });
       setInvestimentosData(updatedData);
     }*/
-    console.log("deletando item " + item.seq);
+    setIsDialogOpen(true);
   };
 
   const handleInputChange = (index, field, value) => {
@@ -199,6 +208,29 @@ export default function CronogramaTab({ data, isAdmin }) {
           </Table>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="pb-4 font-bold text-red-800">
+              Você não pode excluir este item.
+            </DialogTitle>
+            <DialogDescription className="text-gray-700">
+              Este item pertence a sua lista de INVESTIMENTOS. Para excluir,
+              favor deletar o investimento correspondente e a mudança refletirá
+              aqui.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              onClick={() => setIsDialogOpen(false)}
+              className=" hover:bg-green-700 hover:text-gray-100"
+              variant="outline"
+            >
+              Entendido!
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
