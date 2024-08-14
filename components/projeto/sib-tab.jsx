@@ -17,9 +17,31 @@ import {
   submitSIBValorAvaliado,
 } from "@/app/projeto/actions";
 
-function parseCurrencyToFloat(value) {
-  const numericValue = value.replace(/[^\d,]/g, "").replace(",", ".");
-  return parseFloat(numericValue);
+function parseCurrency(value) {
+  if (typeof value === "string") {
+    return parseFloat(
+      value.replace(/\./g, "").replace(",", ".").replace("R$", "").trim()
+    );
+  }
+  return parseFloat(value) || 0;
+}
+
+function calculateValorITBI(value) {
+  if (!value || isNaN(value)) {
+    return 0;
+  }
+
+  const result = Math.ceil(value * 0.02);
+  return result;
+}
+
+function calculateValorTotalDespesas(valorImovelNegociado, values) {
+  if (valorImovelNegociado === 0) {
+    return 0;
+  }
+
+  const sum = values.reduce((acc, curr) => acc + (parseFloat(curr) || 0), 0);
+  return sum;
 }
 
 export default function SIBTab({ data, isAdmin }) {
@@ -106,19 +128,6 @@ export default function SIBTab({ data, isAdmin }) {
   /* VALOR IMÓVEL + CUSTOS */
   const [valorImovelNegociado, setValorImovelNegociado] = useState(0);
 
-  useEffect(() => {
-    const campo17 = data?.dadosImovel?.campo17 || "";
-
-    const computedValorImovelNegociado =
-      campo17 === "" ? 0 : parseFloat(campo17);
-
-    const formattedValorImovelNegociado = formatCurrency(
-      computedValorImovelNegociado
-    );
-
-    setValorImovelNegociado(formattedValorImovelNegociado);
-  }, [data]);
-
   const [custoMedicaoInterna, setCustoMedicaoInterna] = useState("");
 
   useEffect(() => {
@@ -133,17 +142,6 @@ export default function SIBTab({ data, isAdmin }) {
   };
 
   const [valorITBI, setValorITBI] = useState("");
-
-  useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.valorITBI || 0;
-    setValorITBI(formatCurrency(initialValue));
-  }, [data]);
-
-  const handleValorITBIChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setValorITBI(formatCurrency(value));
-  };
 
   const [despesasCartorarias, setDespesasCartorarias] = useState("");
 
@@ -214,16 +212,16 @@ export default function SIBTab({ data, isAdmin }) {
     const response1 = await submitSIBDadosProjeto({
       formData: {
         numBeneficiarios,
-        tetoNacional: parseCurrencyToFloat(tetoNacional),
-        valorMinimoNegociacao: parseCurrencyToFloat(valorMinimoNegociacao),
-        valorMaximoNegociacao: parseCurrencyToFloat(valorMaximoNegociacao),
+        tetoNacional: parseCurrency(tetoNacional),
+        valorMinimoNegociacao: parseCurrency(valorMinimoNegociacao),
+        valorMaximoNegociacao: parseCurrency(valorMaximoNegociacao),
       },
     });
     const response2 = await submitSIBValorAvaliado({
       formData: {
-        valorTerraNua: parseCurrencyToFloat(valorTerraNua),
-        valorBenfeitorias: parseCurrencyToFloat(valorBenfeitorias),
-        valorTotalImovel: parseCurrencyToFloat(valorTotalImovel),
+        valorTerraNua: parseCurrency(valorTerraNua),
+        valorBenfeitorias: parseCurrency(valorBenfeitorias),
+        valorTotalImovel: parseCurrency(valorTotalImovel),
         vtiHa,
       },
     });
@@ -233,6 +231,44 @@ export default function SIBTab({ data, isAdmin }) {
   const handleCancel = () => {
     setFormsDisabled(true);
   };
+
+  // USE EFFECT GERAL (CALCULOS INICIAIS NECESSARIOS)
+  useEffect(() => {
+    const campo17 = data?.dadosImovel?.campo17 || "";
+    const computedValorImovelNegociado =
+      campo17 === "" ? 0 : parseFloat(campo17);
+    const formattedValorImovelNegociado = formatCurrency(
+      computedValorImovelNegociado
+    );
+    setValorImovelNegociado(formattedValorImovelNegociado);
+
+    const valorITBI = calculateValorITBI(computedValorImovelNegociado);
+    const formattedValorITBI = formatCurrency(valorITBI);
+    setValorITBI(formattedValorITBI);
+
+    const valoresH5aH9 = [
+      parseCurrency(custoMedicaoInterna),
+      parseCurrency(valorITBI),
+      parseCurrency(despesasCartorarias),
+      parseCurrency(elaboracaoProjeto),
+      parseCurrency(valorATER),
+    ];
+    const totalDespesas = calculateValorTotalDespesas(
+      computedValorImovelNegociado,
+      valoresH5aH9
+    );
+    const formattedTotalDespesas = formatCurrency(totalDespesas);
+    setValorTotalDespesas(formattedTotalDespesas);
+  }, [
+    data,
+    custoMedicaoInterna,
+    valorITBI,
+    despesasCartorarias,
+    elaboracaoProjeto,
+    valorATER,
+  ]);
+  // FIM USE EFFECT GERAL
+
   return (
     <div className="p-4 bg-white">
       <Heading
@@ -283,7 +319,7 @@ export default function SIBTab({ data, isAdmin }) {
                     handleCustoMedicaoInternaChange
                   }
                   valorITBI={valorITBI}
-                  handleValorITBIChange={handleValorITBIChange}
+                  setValorITBI={setValorITBI}
                   despesasCartorarias={despesasCartorarias}
                   handleDespesasCartorariasChange={
                     handleDespesasCartorariasChange
@@ -426,7 +462,7 @@ function ValorImovelCustosTable({
   custoMedicaoInterna,
   handleCustoMedicaoInternaChange,
   valorITBI,
-  handleValorITBIChange,
+  setValorITBI,
   despesasCartorarias,
   handleDespesasCartorariasChange,
   elaboracaoProjeto,
@@ -438,7 +474,7 @@ function ValorImovelCustosTable({
   valorTotalFinanciamento,
 }) {
   const [statusMessage, setStatusMessage] = useState("VALORES VÁLIDOS");
-  const [statusColor, setStatusColor] = useState("green-600");
+  const [statusColor, setStatusColor] = useState("bg-green-600");
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-0">
@@ -472,8 +508,8 @@ function ValorImovelCustosTable({
             <Input
               type="text"
               value={valorITBI}
-              onChange={handleValorITBIChange}
-              disabled={formsDisabled}
+              onChange={(e) => setValorITBI(e.target.value)}
+              disabled={true}
             />
           </div>
           <div>
@@ -536,7 +572,7 @@ function ValorImovelCustosTable({
           </div>
         </div>
       </div>
-      <div className={`bg-${statusColor} p-4 text-center font-bold text-white`}>
+      <div className={`${statusColor} p-4 text-center font-bold text-white`}>
         {statusMessage}
       </div>
     </div>
