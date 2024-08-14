@@ -51,6 +51,7 @@ export async function getProjetoFormsData() {
 
   formData.aba_sib = await getSIBData({
     dadosImovel: formData.aba_dadosImovel[0],
+    dadosInvestimentos: formData.aba_investimentos,
   });
 
   formData.aba_evolucao_rebanho = await getEvolucaoRebanho();
@@ -122,7 +123,7 @@ export async function getBenfeitoriasTotalValue() {
   return valorTotal;
 }
 
-export async function getSIBData({ dadosImovel }) {
+export async function getSIBData({ dadosImovel, dadosInvestimentos }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -150,6 +151,7 @@ export async function getSIBData({ dadosImovel }) {
     dadosProjeto: sibData?.aba_sib_dadosProjeto || [],
     valorAvaliado: sibData?.aba_sib_valorAvaliado || [],
     dadosImovel,
+    dadosInvestimentos,
     valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
     valorImovelCustos: {
       custoMedicaoInterna: sibData?.aba_sib_custos?.custo_medicao_interna || 0,

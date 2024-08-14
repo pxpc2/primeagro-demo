@@ -46,17 +46,20 @@ function calculateValorTotalDespesas(valorImovelNegociado, values) {
   return sum;
 }
 
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(value);
+};
+
 export default function SIBTab({ data, isAdmin }) {
+  console.log(data);
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
+  const [totalInvestedSIB, setTotalInvestedSIB] = useState(0.0);
 
   /* Dados do Projeto */
   const [numBeneficiarios, setNumBeneficiarios] = useState(
@@ -340,14 +343,18 @@ export default function SIBTab({ data, isAdmin }) {
                   valorATER={valorATER}
                   handleValorATERChange={handleValorATERChange}
                   valorTotalDespesas={valorTotalDespesas}
-                  valorTotalInvestimentos={valorTotalInvestimentos}
-                  valorTotalFinanciamento={valorTotalFinanciamento}
+                  valorTotalInvestimentos={totalInvestedSIB}
+                  tetoNacional={tetoNacional}
                 />
               </div>
             </div>
           </div>
           <div className="pt-8">
-            <QuadroResumoInvestimentos formsDisabled={formsDisabled} />
+            <QuadroResumoInvestimentos
+              formsDisabled={formsDisabled}
+              data={data}
+              setTotalInvestedSIB={setTotalInvestedSIB}
+            />
           </div>
         </div>
       </div>
@@ -472,7 +479,7 @@ function ValorImovelAvaliadoTable({
 
 function ValorImovelCustosTable({
   formsDisabled,
-  valorImovelNegociado,
+  valorImovelNegociado, // H4
   custoMedicaoInterna,
   handleCustoMedicaoInternaChange,
   valorITBI,
@@ -484,11 +491,44 @@ function ValorImovelCustosTable({
   valorATER,
   handleValorATERChange,
   valorTotalDespesas,
-  valorTotalInvestimentos,
-  valorTotalFinanciamento,
+  valorTotalInvestimentos, // B20
+  tetoNacional, // B5
 }) {
   const [statusMessage, setStatusMessage] = useState("VALORES VÁLIDOS");
   const [statusColor, setStatusColor] = useState("bg-green-600");
+
+  // H12
+  const valorTotalFinanciamento =
+    parseCurrency(valorImovelNegociado) +
+    parseCurrency(valorTotalDespesas) +
+    parseCurrency(valorTotalInvestimentos);
+
+  useEffect(() => {
+    if (valorTotalInvestimentos < 0) {
+      setStatusMessage("VERIFIQUE SEU PROJETO");
+      setStatusColor("bg-red-600");
+    } else if (parseCurrency(valorImovelNegociado) === 0) {
+      setStatusMessage("");
+    } else if (
+      valorTotalFinanciamento >
+      parseCurrency(valorImovelNegociado) * 2
+    ) {
+      setStatusMessage("VERIFIQUE SEU PROJETO");
+      setStatusColor("bg-red-600");
+    } else if (valorTotalFinanciamento > parseCurrency(tetoNacional)) {
+      setStatusMessage("VERIFIQUE SEU PROJETO");
+      setStatusColor("bg-red-600");
+    } else {
+      setStatusMessage("VALORES VÁLIDOS");
+      setStatusColor("bg-green-600");
+    }
+  }, [
+    valorImovelNegociado,
+    valorTotalDespesas,
+    valorTotalInvestimentos,
+    tetoNacional,
+    valorTotalFinanciamento,
+  ]);
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-0">
@@ -570,7 +610,7 @@ function ValorImovelCustosTable({
             <p className="font-semibold">VALOR TOTAL DOS INVESTIMENTOS</p>
             <Input
               type="text"
-              value={valorTotalInvestimentos}
+              value={formatCurrency(valorTotalInvestimentos)}
               disabled={true}
               className="bg-blue-800 text-white"
             />
@@ -579,7 +619,7 @@ function ValorImovelCustosTable({
             <p className="font-semibold">VALOR TOTAL DO FINANCIAMENTO</p>
             <Input
               type="text"
-              value={valorTotalFinanciamento}
+              value={formatCurrency(valorTotalFinanciamento)}
               disabled={true}
               className="bg-blue-800 text-white"
             />
@@ -593,8 +633,45 @@ function ValorImovelCustosTable({
   );
 }
 
-function QuadroResumoInvestimentos({ formsDisabled }) {
+function QuadroResumoInvestimentos({
+  data,
+  formsDisableds,
+  setTotalInvestedSIB,
+}) {
   const categorias = INVESTIMENTO_CATEGORIAS;
+  const somasCategorias = categorias.reduce((acc, category) => {
+    acc[category] = { SIB: 0, PRONAF_A: 0, Recursos_Proprios: 0, Total: 0 };
+    return acc;
+  }, {});
+  data?.dadosInvestimentos?.dadosInvestimentos?.forEach((investimento) => {
+    const { categoria, fonte_financiamento, valor_total } = investimento;
+
+    const valor = parseCurrency(valor_total);
+
+    if (fonte_financiamento === "SIB") {
+      somasCategorias[categoria].SIB += valor;
+    } else if (fonte_financiamento === "PRONAF-A") {
+      somasCategorias[categoria].PRONAF_A += valor;
+    } else if (fonte_financiamento === "Recursos Próprios") {
+      somasCategorias[categoria].Recursos_Proprios += valor;
+    }
+
+    somasCategorias[categoria].Total += valor;
+  });
+  const totalInvested = categorias.reduce(
+    (acc, category) => {
+      acc.SIB += somasCategorias[category].SIB;
+      acc.PRONAF_A += somasCategorias[category].PRONAF_A;
+      acc.Recursos_Proprios += somasCategorias[category].Recursos_Proprios;
+      acc.Total += somasCategorias[category].Total;
+      return acc;
+    },
+    { SIB: 0, PRONAF_A: 0, Recursos_Proprios: 0, Total: 0 }
+  );
+
+  useEffect(() => {
+    setTotalInvestedSIB(totalInvested.SIB);
+  }, [totalInvested.SIB, setTotalInvestedSIB]);
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-4">
@@ -619,20 +696,16 @@ function QuadroResumoInvestimentos({ formsDisabled }) {
               <tr key={index}>
                 <td className="text-left p-2">{category}</td>
                 <td className="text-right p-2">
-                  {/* VALORES DE SIB */}
-                  <span>{"0,00"}</span>
+                  {formatCurrency(somasCategorias[category].SIB)}
                 </td>
                 <td className="text-right p-2">
-                  {/* PRONAF-A  */}
-                  <span>{"0,00"}</span>
+                  {formatCurrency(somasCategorias[category].PRONAF_A)}
                 </td>
                 <td className="text-right p-2">
-                  {/* Recursos Próprios */}
-                  <span>{"0,00"}</span>
+                  {formatCurrency(somasCategorias[category].Recursos_Proprios)}
                 </td>
                 <td className="text-right p-2">
-                  {/* TOTAL */}
-                  <span>{"0,00"}</span>
+                  {formatCurrency(somasCategorias[category].Total)}
                 </td>
               </tr>
             ))}
@@ -643,16 +716,16 @@ function QuadroResumoInvestimentos({ formsDisabled }) {
                 TOTAL INVESTIDO
               </td>
               <td className="text-right p-2 font-bold bg-blue-700 text-white">
-                0,00
+                {formatCurrency(totalInvested.SIB)}
               </td>
               <td className="text-right p-2 font-bold bg-blue-700 text-white">
-                0,00
+                {formatCurrency(totalInvested.PRONAF_A)}
               </td>
               <td className="text-right p-2 font-bold bg-blue-700 text-white">
-                0,00
+                {formatCurrency(totalInvested.Recursos_Proprios)}
               </td>
               <td className="text-right p-2 font-bold bg-blue-700 text-white">
-                0,00
+                {formatCurrency(totalInvested.Total)}
               </td>
             </tr>
             <tr>
