@@ -128,21 +128,36 @@ export async function getSIBData({ dadosImovel }) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  let { data: sibData, error } = await supabase
+  let { data: sibData, error: sibError } = await supabase
     .from("aba_sib")
-    .select("*, aba_sib_dadosProjeto(*), aba_sib_valorAvaliado(*)")
-    .eq("authuser_id", user.id);
+    .select(
+      `
+      *,
+      aba_sib_dadosProjeto(*),
+      aba_sib_valorAvaliado(*),
+      aba_sib_custos(*)
+    `
+    )
+    .eq("authuser_id", user.id)
+    .single();
 
-  if (error) {
-    console.log(error);
+  if (sibError) {
+    console.log(sibError);
     return undefined;
   }
 
   return {
-    dadosProjeto: sibData?.[0]?.aba_sib_dadosProjeto || [],
-    valorAvaliado: sibData?.[0]?.aba_sib_valorAvaliado || [],
+    dadosProjeto: sibData?.aba_sib_dadosProjeto || [],
+    valorAvaliado: sibData?.aba_sib_valorAvaliado || [],
     dadosImovel,
     valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
+    valorImovelCustos: {
+      custoMedicaoInterna: sibData?.aba_sib_custos?.custo_medicao_interna || 0,
+      valorITBI: sibData?.aba_sib_custos?.valor_itbi || 0,
+      despesasCartorarias: sibData?.aba_sib_custos?.despesas_cartorarias || 0,
+      elaboracaoProjeto: sibData?.aba_sib_custos?.elaboracao_projeto || 0,
+      valorATER: sibData?.aba_sib_custos?.valor_ater || 0,
+    },
   };
 }
 
@@ -213,6 +228,45 @@ export async function submitSIBValorAvaliado({ formData }) {
 
   const { error } = await supabase
     .from("aba_sib_valorAvaliado")
+    .upsert([{ ...dados }], {
+      onConflict: ["sib_id"],
+    });
+
+  if (error) {
+    return redirect("/error?message=" + error.message);
+  }
+}
+
+export async function submitSIBCustos({ formData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  let { data: sibRecord, error: sibError } = await supabase
+    .from("aba_sib")
+    .upsert({ authuser_id: authUserID }, { onConflict: ["authuser_id"] })
+    .select()
+    .single();
+
+  if (sibError) {
+    console.log(sibError);
+    return redirect("/error?message=" + sibError.message);
+  }
+
+  const dados = {
+    custo_medicao_interna: formData.custoMedicaoInterna,
+    valor_itbi: formData.valorITBI,
+    despesas_cartorarias: formData.despesasCartorarias,
+    elaboracao_projeto: formData.elaboracaoProjeto,
+    valor_ater: formData.valorATER,
+    sib_id: sibRecord.id,
+    authuser_id: authUserID,
+  };
+
+  const { error } = await supabase
+    .from("aba_sib_custos")
     .upsert([{ ...dados }], {
       onConflict: ["sib_id"],
     });
