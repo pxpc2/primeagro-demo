@@ -441,7 +441,7 @@ export const INDICADORES_TECNICOS_DESCRICOES = [
 ];
 
 export const INVESTIMENTO_CATEGORIAS = [
-  "Hídrícos",
+  "Hidrícos",
   "Acessos",
   "Produtivo",
   "Outros",
@@ -452,7 +452,7 @@ export const INVESTIMENTO_CATEGORIAS = [
 ];
 
 export const INVESTIMENTO_ITENS = {
-  Hídrícos: [
+  Hidrícos: [
     "AÇUDE",
     "CACIMBÃO",
     "CAIXA D'ÁGUA ELEVADA",
