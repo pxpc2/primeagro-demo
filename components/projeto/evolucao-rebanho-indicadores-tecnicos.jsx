@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/table";
 import { Input } from "../ui/input";
 
-export default function IndicadoresTecnicos({ data, anoInicial }) {
+export default function IndicadoresTecnicos({
+  data,
+  anoInicial,
+  formsDisabled,
+}) {
   const DESCRICOES = INDICADORES_TECNICOS_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
@@ -29,8 +33,8 @@ export default function IndicadoresTecnicos({ data, anoInicial }) {
   };
 
   return (
-    <div className="mt-8">
-      <h1 className="text-xl font-bold">Indicadores Técnicos</h1>
+    <div className="w-full">
+      <h1 className="text-lg font-bold">Indicadores Técnicos</h1>
       <Table className="mt-4 w-full">
         <TableHeader>
           <TableRow>
@@ -61,6 +65,7 @@ export default function IndicadoresTecnicos({ data, anoInicial }) {
                         )
                       }
                       className="w-full text-center"
+                      disabled={formsDisabled}
                     />
                   </TableCell>
                 ))}
