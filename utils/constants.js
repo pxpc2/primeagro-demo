@@ -440,6 +440,17 @@ export const INDICADORES_TECNICOS_DESCRICOES = [
   "Produção leite/dia",
 ];
 
+export const BOVINOCULTURA_DESCRICOES = [
+  "Touro",
+  "Matrizes",
+  "Bezerros (0 a 12 meses)",
+  "Bezerras (0 a 12 meses)",
+  "Garrotes (12 a 24 meses)",
+  "Garrotas (12 a 24 meses)",
+  "Novilhos (24 a 36 meses)",
+  "Novilhas (24 a 36 meses)",
+];
+
 export const INVESTIMENTO_CATEGORIAS = [
   "Hidrícos",
   "Acessos",

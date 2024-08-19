@@ -503,6 +503,16 @@ function ValorImovelCustosTable({
     parseCurrency(valorTotalDespesas) +
     parseCurrency(valorTotalInvestimentos);
 
+  // K11 (tava escondido)
+  const valorTotalInvestimentosAlternativo =
+    parseCurrency(valorImovelNegociado) - parseCurrency(valorTotalDespesas);
+
+  // K12
+  const valorTotalFinanciamentoAlternativo =
+    parseCurrency(valorImovelNegociado) +
+    parseCurrency(valorTotalDespesas) +
+    parseCurrency(valorTotalInvestimentosAlternativo);
+
   useEffect(() => {
     if (valorTotalInvestimentos < 0) {
       setStatusMessage("VERIFIQUE SEU PROJETO");
