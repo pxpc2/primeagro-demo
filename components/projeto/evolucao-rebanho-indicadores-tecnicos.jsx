@@ -33,7 +33,7 @@ export default function IndicadoresTecnicos({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
       <h1 className="text-lg font-bold">Indicadores Técnicos</h1>
       <Table className="mt-4 w-full">
         <TableHeader>

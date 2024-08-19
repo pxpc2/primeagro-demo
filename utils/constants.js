@@ -451,6 +451,14 @@ export const BOVINOCULTURA_DESCRICOES = [
   "Novilhas (24 a 36 meses)",
 ];
 
+export const VENDA_ANIMAIS_PRODUTOS_DESCRICOES = [
+  "Matrizes Descartadas",
+  "Novilho Vendido",
+  "Novilha Vendida",
+  "Queijo (kg)",
+  "Leite para venda (litros)",
+];
+
 export const INVESTIMENTO_CATEGORIAS = [
   "Hidrícos",
   "Acessos",
