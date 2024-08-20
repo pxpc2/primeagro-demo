@@ -13,6 +13,7 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
     setFormsDisabled(false);
   };
   const onSave = async () => {};
+
   const handleCancel = () => {
     setFormsDisabled(true);
   };
