@@ -36,7 +36,7 @@ export async function getProjetoFormsData() {
     await getTiposDeSolo({ dadosPreAnalise: formData.aba_preanalise[0] }),
   ];
   const totalArea = parseFloat(
-    formData.aba_dadosImovel[0]?.campo2.replace(",", ".") || 0
+    formData.aba_dadosImovel[0]?.campo2?.replace(",", ".") || 0
   );
   formData.aba_tiposDeSolo[0].tabelaQualidades =
     formData.aba_tiposDeSolo[0]?.tabelaQualidades?.map((item) => ({
@@ -610,13 +610,14 @@ async function getDadosImovel({ dadosPreAnalise }) {
   if (!dadosImovel[0].campo3) {
     dadosImovel[0].campo3 = dadosPreAnalise?.campo_7;
   }
+  console.log(dadosPreAnalise);
   const str = dadosPreAnalise?.campo_3 || "";
   const [strPre, strPos] = str.split("-"); // ex: campos_gerais-mg
   if (!dadosImovel[0].campo4) {
     dadosImovel[0].campo4 = strPre.replace(/_/g, " ").toUpperCase();
   }
   if (!dadosImovel[0].campo5) {
-    dadosImovel[0].campo5 = strPos.toUpperCase();
+    dadosImovel[0].campo5 = strPos?.toUpperCase() || "";
   }
 
   return dadosImovel;
@@ -712,6 +713,10 @@ export async function submitPreAnaliseForm({ formData }) {
       mappedData[key] = value;
     }
   });
+
+  console.log("submitando");
+  console.log(mappedData);
+
   const { error } = await supabase
     .from("aba_preanalise")
     .upsert([{ ...mappedData, authuser_id: authUserID }], {

@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Heading from "./Header";
 import { submitPreAnaliseForm } from "@/app/projeto/actions";
 import {
@@ -34,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { MUNICIPIOS } from "@/utils/municipios";
 
 const getFieldNameByNumber = (number) => {
   const fieldNames = {
@@ -86,6 +87,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const parsed = parseFormData(defaultValues[0]);
+  console.log(defaultValues);
   const [text17, setText17] = useState(
     parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
       ? "Preenche o requisito"
@@ -103,7 +105,16 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   );
   const form = useForm({
     defaultValues: parsed,
+    codigoIBGE: defaultValues[0]?.codigoIBGE || "",
   });
+
+  const municipiosMap = useMemo(() => {
+    return MUNICIPIOS.reduce((acc, municipio) => {
+      const key = `${municipio.NOME_MUNICIPIO.toLowerCase()}-${municipio.UF.toLowerCase()}`;
+      acc[key] = municipio;
+      return acc;
+    }, {});
+  }, []);
 
   const handleRadioChange = (value, setText) => {
     if (value === "nao") {
@@ -116,7 +127,11 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   useEffect(() => {
     if (defaultValues) {
       const parsed = parseFormData(defaultValues[0]);
-      form.reset(parsed);
+      form.reset({
+        ...parsed,
+        codigoIBGE: defaultValues[0]?.codigoIBGE || "",
+      });
+
       setText17(
         parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
           ? "Preenche o requisito"
@@ -176,6 +191,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   const onSave = () => {
     setLoading(true);
     form.handleSubmit(async (data) => {
+      console.log(data);
       data["23-dataElaboracao"] = dataElaboracao;
       data["24-creaCfta"] = creaCfta;
       data["25-engenheiroResponsavel"] = engenheiroResponsavel;
@@ -205,7 +221,11 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full p-4  gap-4">
           <div className="p-4 bg-gray-50 shadow-sm">
-            <InformacoesIniciaisForm form={form} formDisabled={formsDisabled} />
+            <InformacoesIniciaisForm
+              form={form}
+              formDisabled={formsDisabled}
+              municipiosMap={municipiosMap}
+            />
           </div>
         </div>
         <div className="w-full  p-4 gap-4">
@@ -318,7 +338,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   );
 }
 
-function InformacoesIniciaisForm({ formDisabled, form }) {
+function InformacoesIniciaisForm({ formDisabled, form, municipiosMap }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -371,7 +391,15 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                 <FormItem>
                   <FormLabel>3. Município do imóvel</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      const selectedMunicipio =
+                        municipiosMap[value.toLowerCase()];
+                      form.setValue(
+                        "codigoIBGE",
+                        selectedMunicipio?.COD_MUNICIPIO || ""
+                      );
+                      field.onChange(value);
+                    }}
                     defaultValue={field.value}
                     disabled={formDisabled}
                   >
@@ -381,17 +409,18 @@ function InformacoesIniciaisForm({ formDisabled, form }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="campo_dos_goytacazes-rj">
-                        Campo dos Goytacazes / RJ
-                      </SelectItem>
-                      <SelectItem value="campos_gerais-mg">
-                        Campos Gerais / MG
-                      </SelectItem>
-                      <SelectItem value="varginha-mg">Varginha / MG</SelectItem>
+                      {MUNICIPIOS.map((municipio) => (
+                        <SelectItem
+                          key={`${municipio.NOME_MUNICIPIO}-${municipio.UF}`}
+                          value={`${municipio.NOME_MUNICIPIO.toLowerCase()}-${municipio.UF.toLowerCase()}`}
+                        >
+                          {`${municipio.NOME_MUNICIPIO} / ${municipio.UF}`}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>
-                    Município aonde está localizado o imóvel.
+                    Município onde está localizado o imóvel.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
