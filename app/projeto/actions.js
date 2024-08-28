@@ -764,6 +764,23 @@ export async function submitDadosImovelForm({ formData }) {
   }
 }
 
+export async function getInventarioIndividual() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+
 export async function getInventario() {
   const supabase = createClient();
   const {
@@ -785,6 +802,8 @@ export async function getInventario() {
   const infraestruturaTableData = await getInfraestruturaData();
   const atividadesAgricolasTableData = await getAtividadesAgricolas();
 
+  const inventarioIndividualData = await getInventarioIndividual();
+
   return {
     aba_inventario,
     benfeitoriasImovel,
@@ -793,6 +812,7 @@ export async function getInventario() {
     outrosBensTableData,
     infraestruturaTableData,
     atividadesAgricolasTableData,
+    inventarioIndividualData,
   };
 }
 
@@ -940,6 +960,40 @@ export async function deleteAtividadesAgricolas({ id }) {
   });
 }
 
+export async function submitInventarioIndividual({ data }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  const inventarioIndividualData = {
+    reprodutores: data[0].reprodutores,
+    matrizes: data[0].matrizes,
+    bezerros: data[0].bezerros,
+    bezerras: data[0].bezerras,
+    garrotes: data[0].garrotes,
+    garrotas: data[0].garrotas,
+    novilhos: data[0].novilhos,
+    novilhas: data[0].novilhas,
+    authuser_id: authUserID,
+  };
+
+  console.log("data inside submitInventarioIndividual2");
+  console.log(inventarioIndividualData);
+
+  const { error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .upsert(inventarioIndividualData, {
+      onConflict: ["authuser_id"],
+    });
+
+  if (error) {
+    console.log(error);
+    throw new Error("Error submitting inventario individual data");
+  }
+}
+
 export async function submitInventario({
   data,
   coletivosData,
@@ -948,6 +1002,7 @@ export async function submitInventario({
   outrosBensData,
   infraestruturaData,
   atividadesAgricolasData,
+  inventarioIndividualData,
 }) {
   const supabase = createClient();
 
@@ -961,6 +1016,9 @@ export async function submitInventario({
     tableData: individuaisData,
     tableType: "individuais",
   });
+
+  console.log("data inside submitInventario");
+  console.log(data);
 
   await submitFiltered({
     data: maquinasEquipamentosData,
@@ -978,6 +1036,8 @@ export async function submitInventario({
     data: atividadesAgricolasData,
     tableName: "aba_inventario_atividadesAgricolas",
   });
+
+  await submitInventarioIndividual({ data: inventarioIndividualData });
 
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
