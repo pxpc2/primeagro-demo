@@ -69,8 +69,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import InventarioIndividual from "./inventario-individual";
 import ReusableTable from "../reusable-table";
+import InventarioIndividualComponent from "./inventario-individual";
 
 export default function InventarioTab({ isAdmin }) {
   const [editingItem, setEditingItem] = useState(null);
@@ -86,12 +86,6 @@ export default function InventarioTab({ isAdmin }) {
   const [initialIndividualValues, setInitialIndividualValues] = useState({});
   const [coletivosTableData, setColetivosTableData] = useState([]);
   const [individuaisTableData, setIndividuaisTableData] = useState([]);
-  const [inventariosIndividuais, setInventariosIndividuais] = useState([]);
-  const [tempInventariosIndividuais, setTempInventariosIndividuais] = useState(
-    []
-  );
-  const [inventariosIndividuaisItens, setInventariosIndividuaisItens] =
-    useState([]);
   const [maquinasEquipamentosTableData, setMaquinasEquipamentosTableData] =
     useState([]);
   const [outrosBensTableData, setOutrosBensTableData] = useState([]);
@@ -99,9 +93,15 @@ export default function InventarioTab({ isAdmin }) {
   const [atividadesAgricolasTableData, setAtividadesAgricolasTableData] =
     useState([]);
 
+  const [initialInventarioIndividualData, setInitialInventarioIndividualData] =
+    useState([]);
+
+  const [inventarioIndividualData, setInventarioIndividualData] = useState([]);
+
   const refreshData = async () => {
     const dados = await getInventario();
     setData(dados);
+    console.log(dados);
     setInitialColetivoValues({
       benfeitorias_coletivas_numero_familias_irao_adquirir:
         dados?.aba_inventario?.[0]
@@ -120,13 +120,12 @@ export default function InventarioTab({ isAdmin }) {
     });
     setColetivosTableData(dados.benfeitoriasImovel || []);
     setIndividuaisTableData(dados.benfeitoriasIndividuais || []);
-    setInventariosIndividuais(dados.inventariosIndividuais || []);
-    setTempInventariosIndividuais(dados.inventariosIndividuais || []);
-    setInventariosIndividuaisItens(dados.inventariosIndividuaisItens || []);
     setMaquinasEquipamentosTableData(dados.maquinasEquipamentosTableData || []);
     setOutrosBensTableData(dados.outrosBensTableData || []);
     setInfraestruturaTableData(dados.infraestruturaTableData || []);
     setAtividadesAgricolasTableData(dados.atividadesAgricolasTableData || []);
+    setInventarioIndividualData(dados.inventarioIndividualData || []);
+    setInitialInventarioIndividualData(dados.inventarioIndividualData || []);
   };
 
   useEffect(() => {
@@ -157,22 +156,25 @@ export default function InventarioTab({ isAdmin }) {
     setLoading(true);
     const coletivaData = coletivoForm.getValues();
     const individualData = individualForm.getValues();
+
     const combinedData = {
       ...coletivaData,
       ...individualData,
     };
+
+    console.log("submiting data");
+    console.log(inventarioIndividualData);
+
     submitInventario({
       data: combinedData,
       coletivosData: coletivosTableData,
       individuaisData: individuaisTableData,
-      inventariosIndividuais: tempInventariosIndividuais,
-      inventariosIndividuaisItens: inventariosIndividuaisItens,
       maquinasEquipamentosData: maquinasEquipamentosTableData,
       outrosBensData: outrosBensTableData,
       infraestruturaData: infraestruturaTableData,
       atividadesAgricolasData: atividadesAgricolasTableData,
+      inventarioIndividualData: inventarioIndividualData,
     }).then(async () => {
-      setInventariosIndividuais(tempInventariosIndividuais);
       await refreshData();
       setFormsDisabled(true);
       setLoading(false);
@@ -201,7 +203,23 @@ export default function InventarioTab({ isAdmin }) {
   const handleCancel = () => {
     coletivoForm.reset(initialColetivoValues);
     individualForm.reset(initialIndividualValues);
-    setTempInventariosIndividuais(inventariosIndividuais);
+
+    console.log(initialInventarioIndividualData);
+    setInventarioIndividualData(initialInventarioIndividualData || []);
+
+    setColetivosTableData(initialColetivoValues.coletivosTableData || []);
+    setIndividuaisTableData(initialIndividualValues.individuaisTableData || []);
+    setMaquinasEquipamentosTableData(
+      initialIndividualValues.maquinasEquipamentosTableData || []
+    );
+    setOutrosBensTableData(initialIndividualValues.outrosBensTableData || []);
+    setInfraestruturaTableData(
+      initialIndividualValues.infraestruturaTableData || []
+    );
+    setAtividadesAgricolasTableData(
+      initialIndividualValues.atividadesAgricolasTableData || []
+    );
+
     setFormsDisabled(true);
   };
 
@@ -576,19 +594,12 @@ export default function InventarioTab({ isAdmin }) {
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Inventário Individual</h1>
         </div>
-        <div className="flex w-full items-center justify-center">
-          <InventarioIndividual
-            inventariosIndividuais={inventariosIndividuais}
-            setInventariosIndividuais={setInventariosIndividuais}
-            formDisabled={formsDisabled}
-            setIsDialogOpen={setIsDialogOpen}
-            setTempInventariosIndividuais={setTempInventariosIndividuais}
-            tempInventariosIndividuais={tempInventariosIndividuais}
-            itens={inventariosIndividuaisItens}
-            setItens={setInventariosIndividuaisItens}
-            onAddInventarioItem={(newItem) =>
-              setInventariosIndividuaisItens((prev) => [...prev, newItem])
-            }
+        <div className="flex w-full">
+          <InventarioIndividualComponent
+            data={inventarioIndividualData}
+            initialData={initialInventarioIndividualData}
+            formsDisabled={formsDisabled}
+            setData={setInventarioIndividualData}
           />
         </div>
 
