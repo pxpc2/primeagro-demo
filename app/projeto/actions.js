@@ -610,7 +610,6 @@ async function getDadosImovel({ dadosPreAnalise }) {
   if (!dadosImovel[0].campo3) {
     dadosImovel[0].campo3 = dadosPreAnalise?.campo_7;
   }
-  console.log(dadosPreAnalise);
   const str = dadosPreAnalise?.campo_3 || "";
   const [strPre, strPos] = str.split("-"); // ex: campos_gerais-mg
   if (!dadosImovel[0].campo4) {
@@ -765,6 +764,23 @@ export async function submitDadosImovelForm({ formData }) {
   }
 }
 
+export async function getInventarioIndividual() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_inventario_inventarioIndividual")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+
 export async function getInventario() {
   const supabase = createClient();
   const {
@@ -781,23 +797,22 @@ export async function getInventario() {
 
   const benfeitoriasImovel = await getInventarioBenfeitoriasImovel();
   const benfeitoriasIndividuais = await getInventarioBenfeitoriasIndividuais();
-  const inventariosIndividuais = await getInventariosIndividuais();
-  const inventariosIndividuaisItens = await getInventarioItems();
   const maquinasEquipamentosTableData = await getMaquinasEquipamentosData();
   const outrosBensTableData = await getOutrosBensData();
   const infraestruturaTableData = await getInfraestruturaData();
   const atividadesAgricolasTableData = await getAtividadesAgricolas();
 
+  const inventarioIndividualData = await getInventarioIndividual();
+
   return {
     aba_inventario,
     benfeitoriasImovel,
     benfeitoriasIndividuais,
-    inventariosIndividuais,
-    inventariosIndividuaisItens,
     maquinasEquipamentosTableData,
     outrosBensTableData,
     infraestruturaTableData,
     atividadesAgricolasTableData,
+    inventarioIndividualData,
   };
 }
 
@@ -945,116 +960,37 @@ export async function deleteAtividadesAgricolas({ id }) {
   });
 }
 
-export async function getInventariosIndividuais() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  let { data: inventariosIndividuais, error } = await supabase
-    .from("aba_inventario_inventarioIndividual")
-    .select("*");
-
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-  return inventariosIndividuais;
-}
-
-export async function addNewInventarioIndividual({ data }) {
+export async function submitInventarioIndividual({ data }) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   const authUserID = user.id;
-  const entries = {
-    ...data,
+
+  const inventarioIndividualData = {
+    reprodutores: data[0].reprodutores,
+    matrizes: data[0].matrizes,
+    bezerros: data[0].bezerros,
+    bezerras: data[0].bezerras,
+    garrotes: data[0].garrotes,
+    garrotas: data[0].garrotas,
+    novilhos: data[0].novilhos,
+    novilhas: data[0].novilhas,
     authuser_id: authUserID,
   };
-  let { error } = await supabase
-    .from("aba_inventario_inventarioIndividual")
-    .insert(entries);
-  if (error) {
-    console.log(error);
-    return redirect("/error?message=" + error.message);
-  }
-}
 
-export async function deleteInventarioIndividual({ inventarioID }) {
-  const supabase = createClient();
+  console.log("data inside submitInventarioIndividual2");
+  console.log(inventarioIndividualData);
+
   const { error } = await supabase
     .from("aba_inventario_inventarioIndividual")
-    .delete()
-    .eq("id", inventarioID);
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-  return inventarioID;
-}
-
-export async function deleteInventarioItem({ itemID }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("aba_inventario_inventarioIndividualItem")
-    .delete()
-    .eq("id", itemID);
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-  return true;
-}
-
-export async function getInventarioItems() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  let { data: inventariosIndividuais, error } = await supabase
-    .from("aba_inventario_inventarioIndividualItem")
-    .select("*");
+    .upsert(inventarioIndividualData, {
+      onConflict: ["authuser_id"],
+    });
 
   if (error) {
     console.log(error);
-    return undefined;
-  }
-  return inventariosIndividuais;
-}
-
-export async function submitInventariosIndividuais({ data }) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const newInventariosIndividuais = data?.filter((item) => !item.id);
-  for (const newItem of newInventariosIndividuais) {
-    const newEntry = { ...newItem, authuser_id: user.id };
-    const { error: insertError } = await supabase
-      .from("aba_inventario_inventarioIndividual")
-      .insert(newEntry);
-    if (insertError) {
-      console.log(insertError);
-      return redirect("/error?message=" + insertError.message);
-    }
-  }
-}
-
-export async function submitInventariosIndividuaisItens({ data }) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const newItens = data?.filter((item) => !item.id);
-  for (const newItem of newItens) {
-    const entry = { ...newItem, authuser_id: user.id };
-    const { error: error } = await supabase
-      .from("aba_inventario_inventarioIndividualItem")
-      .insert(entry);
-    if (error) {
-      console.log(error);
-      return redirect("/error?message=" + error.message);
-    }
+    throw new Error("Error submitting inventario individual data");
   }
 }
 
@@ -1062,12 +998,11 @@ export async function submitInventario({
   data,
   coletivosData,
   individuaisData,
-  inventariosIndividuais,
-  inventariosIndividuaisItens,
   maquinasEquipamentosData,
   outrosBensData,
   infraestruturaData,
   atividadesAgricolasData,
+  inventarioIndividualData,
 }) {
   const supabase = createClient();
 
@@ -1082,14 +1017,8 @@ export async function submitInventario({
     tableType: "individuais",
   });
 
-  await submitInventariosIndividuais({
-    data: inventariosIndividuais,
-    authUserID: authUserID,
-  });
-
-  await submitInventariosIndividuaisItens({
-    data: inventariosIndividuaisItens,
-  });
+  console.log("data inside submitInventario");
+  console.log(data);
 
   await submitFiltered({
     data: maquinasEquipamentosData,
@@ -1107,6 +1036,8 @@ export async function submitInventario({
     data: atividadesAgricolasData,
     tableName: "aba_inventario_atividadesAgricolas",
   });
+
+  await submitInventarioIndividual({ data: inventarioIndividualData });
 
   const dados = {
     benfeitorias_coletivas_valor_por_familia:
