@@ -111,7 +111,7 @@ export default function ProjetoPage() {
       <div className="w-full h-screen flex items-center justify-center align-middle text-center">
         <div className="flex flex-col gap-4 items-center text-center justify-center">
           <h1 className="text-xl font-semibold">Carregando o seu projeto</h1>
-          <Loader2 className="animate-spin  sm:h-[20%] sm:w-[20%] w-5 h-5 text-black" />
+          <Loader2 className="animate-spin  sm:h-[20%] sm:w-[20%] w-5 h-5 text-slate-100" />
         </div>
       </div>
     );
@@ -119,7 +119,7 @@ export default function ProjetoPage() {
 
   return (
     <div className="overflow-hidden rounded-lg shadow h-full flex flex-col justify-center">
-      <div className="px-4 py-5 sm:px-6">
+      <div className="px-4 py-5 sm:px-6 bg-gray-200">
         <div>
           <div className="sm:hidden">
             <label htmlFor="tabs" className="sr-only">
@@ -159,7 +159,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-tl-lg" : "",
                     tabIdx === firstRowTabs.length - 1 ? "rounded-tr-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border"
+                    "tab flex items-center justify-center border border-gray-400"
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -190,7 +190,7 @@ export default function ProjetoPage() {
                     tabIdx === 0 ? "rounded-bl-lg" : "",
                     tabIdx === secondRowTabs.length - 1 ? "rounded-br-lg" : "",
                     "group relative min-w-0 flex-1 overflow-hidden bg-gray-100 px-4 py-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10",
-                    "tab flex items-center justify-center border"
+                    "tab flex items-center justify-center border border-gray-400"
                   )}
                   aria-current={tab.name === currentTab ? "page" : undefined}
                 >
@@ -210,7 +210,7 @@ export default function ProjetoPage() {
           </div>
         </div>
       </div>
-      <div className="bg-gray-50 w-full h-full p-5 overflow-hidden">
+      <div className="bg-gray-200 w-full h-full p-5 overflow-hidden">
         {renderContent(currentTab)}
       </div>
     </div>

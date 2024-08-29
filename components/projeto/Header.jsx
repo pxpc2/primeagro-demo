@@ -22,7 +22,7 @@ export default function Heading({
           <ol role="list" className="flex items-center space-x-4">
             <li>
               <div className="flex">
-                <p className="text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-default">
+                <p className="text-sm font-medium text-gray-200 hover:text-gray-500 hover:cursor-default">
                   Projeto
                 </p>
               </div>
@@ -30,10 +30,10 @@ export default function Heading({
             <li>
               <div className="flex items-center">
                 <ChevronRightIcon
-                  className="h-5 w-5 flex-shrink-0 text-gray-400"
+                  className="h-5 w-5 flex-shrink-0 text-gray-200"
                   aria-hidden="true"
                 />
-                <p className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:cursor-default">
+                <p className="ml-4 text-sm font-medium text-gray-200 hover:text-gray-500 hover:cursor-default">
                   {tabName}
                 </p>
               </div>
@@ -44,17 +44,13 @@ export default function Heading({
       <div className="mt-5 flex lg:ml-4 lg:mt-0">
         {!isEditing ? (
           <span className="mr-3 sm:block">
-            <button
-              type="button"
-              onClick={onEdit}
-              className="inline-flex items-center rounded-md bg-white px-3 py-2 w-full text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >
+            <Button type="button" onClick={onEdit} variant="outline">
               Editar
               <PencilIcon
-                className="ml-1.5 h-3.5 w-3.5 text-gray-400"
+                className="ml-1.5 h-3.5 w-3.5 text-gray-100"
                 aria-hidden="true"
               />
-            </button>
+            </Button>
           </span>
         ) : (
           <div className="flex flex-row gap-6">
