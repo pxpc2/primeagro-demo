@@ -74,7 +74,7 @@ export default function InvestimentosTab({ data, isAdmin }) {
       : "IMÓVEL SEM NOME";
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Investimentos"}
         onEdit={onEdit}
@@ -85,7 +85,7 @@ export default function InvestimentosTab({ data, isAdmin }) {
         onCancel={handleCancel}
       />
 
-      <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 sm:py-2  flex flex-col gap-8">
         {/* CONTEÚDO ABAIXO */}
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">
@@ -94,7 +94,7 @@ export default function InvestimentosTab({ data, isAdmin }) {
             {UF.toUpperCase()}
           </h1>
         </div>
-        <p className="text-red-600 font-bold">
+        <p className="text-red-500 font-bold">
           A tabela abaixo está com problemas, favor verificar o valor total (não
           está multiplicando pela quantidade*valor_unidade), e somente editar ou
           deletar 1 (um) item por vez, salvar antes de prosseguir.

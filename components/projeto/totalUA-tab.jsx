@@ -24,7 +24,7 @@ export default function TotalTab({ data, isAdmin }) {
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Total (UA)"}
         onEdit={onEdit}
@@ -97,13 +97,13 @@ function AnimalTable({ title, ifValue, categories, data, formsDisabled }) {
     <Table className="mt-4 w-full">
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/4">{title}</TableHead>
+          <TableHead className="w-1/4 text-white">{title}</TableHead>
           <TableHead className="text-right" colSpan={4}>
             i.f.+prolif: {ifValue}
           </TableHead>
         </TableRow>
         <TableRow>
-          <TableHead className="w-1/4">CATEGORIAS</TableHead>
+          <TableHead className="w-1/4 text-gray-200">CATEGORIAS</TableHead>
           <TableHead>Nº. MATRIZES NA ESTABILIZAÇÃO</TableHead>
           <TableHead>No. CAB.</TableHead>
           <TableHead>
@@ -129,7 +129,7 @@ function AnimalTable({ title, ifValue, categories, data, formsDisabled }) {
           const dataItem = findDataForCategoria(categoria);
           return (
             <TableRow key={index}>
-              <TableCell className="font-medium">{categoria}</TableCell>
+              <TableCell className=" text-gray-200">{categoria}</TableCell>
               <TableCell>
                 <Input
                   type="text"

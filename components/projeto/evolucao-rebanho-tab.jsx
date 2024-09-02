@@ -19,7 +19,7 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
   };
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Evolução do rebanho"}
         onEdit={onEdit}

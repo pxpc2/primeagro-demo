@@ -47,7 +47,7 @@ export default function DadosImovelTab({ defaultValues, isAdmin }) {
     setFormsDisabled(true);
   };
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Dados do Imóvel"}
         onEdit={onEdit}
@@ -57,9 +57,9 @@ export default function DadosImovelTab({ defaultValues, isAdmin }) {
         onCancel={handleCancel}
         isAdmin={isAdmin}
       />
-      <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 sm:py-2 flex flex-col gap-8">
         <div className="p-4  flex flex-col gap-8">
-          <p className="text-indigo-800 font-semibold">Dados do imóvel:</p>
+          <p className="text-gray-100 font-semibold">Dados do imóvel:</p>
           <DadosImovelCampos form={form} formsDisabled={formsDisabled} />
           <BlueFields
             form={form}
@@ -445,7 +445,7 @@ function BlueFields({ form, formsDisabled }) {
             name="campo19"
             render={({ field }) => (
               <FormItem className="text-center text-white w-full">
-                <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+                <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                   Indicações de acesso ao imóvel
                 </button>
                 <FormControl>
@@ -489,7 +489,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo21"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Eletrificação existente (tipo, distribuição até onde chega)
               </button>
               <FormControl>
@@ -509,7 +509,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo22"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Abastecimento de água existente (para uso domestico)
               </button>
               <FormControl>
@@ -529,7 +529,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo23"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Recursos hídricos existente (perenes / não perenes)
               </button>
               <FormControl>
@@ -549,7 +549,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo24"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Matas, capoeiras e áreas de extrativismo vegetal
               </button>
               <FormControl>
@@ -569,7 +569,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo25"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Outros recursos naturais
               </button>
               <FormControl>
@@ -584,7 +584,7 @@ function BlueFields({ form, formsDisabled }) {
             </FormItem>
           )}
         />
-        <p className="text-indigo-800 font-semibold pt-2 sm:pt-6">
+        <p className="text-gray-100 font-semibold pt-2 sm:pt-6">
           Complementação dos dados do imóvel:
         </p>
         <FormField
@@ -592,7 +592,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo26"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Providencias necessárias para melhorar as condições de acesso
               </button>
               <FormControl>
@@ -612,7 +612,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo27"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Providencias para melhorar a eletrificação existentes -
                 Planejado
               </button>
@@ -633,7 +633,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo28"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Abastecimento de água - Planejado
               </button>
               <FormControl>
@@ -653,7 +653,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo29"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Recursos hídricos (perenes / não perenes) - Planejado
               </button>
               <FormControl>
@@ -673,7 +673,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo30"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Matas, capoeiras e áreas de extrativismo vegetal - Planejado
               </button>
               <FormControl>
@@ -693,7 +693,7 @@ function BlueFields({ form, formsDisabled }) {
           name="campo31"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full font-semibold bg-blue-700 py-2 cursor-default">
+              <button className="w-full font-semibold bg-indigo-800 py-2 cursor-default">
                 Outros recursos naturais - Planejados / recomendados
               </button>
               <FormControl>
@@ -737,7 +737,7 @@ const condicoesList = [
 function CondicoesTable({ form, formsDisabled }) {
   return (
     <Table>
-      <TableHeader className="bg-blue-700">
+      <TableHeader className="bg-indigo-800">
         <TableRow className="">
           <TableHead className=" text-white">Condições de acesso</TableHead>
           <TableHead className="text-white">KM</TableHead>

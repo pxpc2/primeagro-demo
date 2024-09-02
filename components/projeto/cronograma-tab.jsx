@@ -107,7 +107,7 @@ export default function CronogramaTab({ data, isAdmin }) {
     });
   };
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Cronograma"}
         onEdit={onEdit}
@@ -117,7 +117,7 @@ export default function CronogramaTab({ data, isAdmin }) {
         onCancel={handleCancel}
         isAdmin={isAdmin}
       />
-      <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 sm:py-2 flex flex-col gap-8">
         <div className="h-screen">
           <Table className="border-collapse text-xs">
             <TableCaption className="text-xs">

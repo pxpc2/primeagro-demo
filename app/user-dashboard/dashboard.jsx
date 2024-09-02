@@ -240,7 +240,7 @@ export default function UserDashboardPage({
         </a>
       </div>
 
-      <main className="py-2 lg:pl-72 sm:h-full ">
+      <main className="py-2 lg:pl-72 sm:h-full bg-gray-200 ">
         <div
           className={`px-4 sm:px-6 lg:px-8 flex flex-col align-middle h-full  ${
             selectedTab === "Geral" ? "sm:justify-center" : "py-8"

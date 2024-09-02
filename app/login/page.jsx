@@ -33,7 +33,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
     if (message) notify();
   }, [message, toast]);
   return (
-    <div className="flex min-h-full flex-1 bg-gray-50">
+    <div className="flex min-h-full flex-1 bg-gray-900/80">
       <div className="flex flex-1 flex-col justify-center px-6 py-8 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div>
@@ -47,14 +47,14 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               />
             </a>
 
-            <h2 className="mt-4 text-lg font-bold leading-9 tracking-tight text-popover-foreground">
+            <h2 className="mt-4 text-lg font-bold text-orange-500 leading-9 tracking-tight text-popover-foreground">
               Entre com sua conta
             </h2>
-            <div className="flex gap-2 text-[0.8rem]">
+            <div className="flex gap-2 text-gray-50 text-[0.8rem]">
               Não possui conta?
               <Dialog>
                 <DialogTrigger asChild>
-                  <p className="text-primary hover:cursor-pointer hover:underline">
+                  <p className="text-indigo-700 hover:cursor-pointer hover:underline">
                     Registrar agora!
                   </p>
                 </DialogTrigger>
@@ -113,7 +113,12 @@ function LoginForm({ message }) {
             <FormItem>
               <FormLabel>E-mail</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="email@email.com" {...field} />
+                <Input
+                  type="email"
+                  placeholder="email@email.com"
+                  {...field}
+                  className="bg-black"
+                />
               </FormControl>
               <FormDescription>
                 Este é o endereço de e-mail usado na criação de sua conta.

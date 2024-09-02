@@ -208,7 +208,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
     setFormsDisabled(true);
   };
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Pré Análise"}
         onEdit={onEdit}
@@ -220,7 +220,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
       />
       <div className=" w-full flex flex-row justify-evenly">
         <div className="w-full p-4  gap-4">
-          <div className="p-4 bg-gray-50 shadow-sm">
+          <div className="p-4  shadow-sm">
             <InformacoesIniciaisForm
               form={form}
               formDisabled={formsDisabled}
@@ -229,7 +229,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
           </div>
         </div>
         <div className="w-full  p-4 gap-4">
-          <div className="p-4 bg-gray-50 h-full shadow-sm">
+          <div className="p-4   h-full shadow-sm">
             <PreAnaliseForm
               form={form}
               formDisabled={formsDisabled}

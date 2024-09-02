@@ -50,7 +50,7 @@ export default function InventarioIndividualComponent({
         BOVINOS
       </h2>
       <Table className="min-w-full border border-gray-300">
-        <TableHeader>
+        <TableHeader className="">
           <TableRow className="bg-gray-200">
             <TableHead className="text-center py-2 border-r border-gray-300">
               DESCRIÇÃO
@@ -75,8 +75,8 @@ export default function InventarioIndividualComponent({
               </TableCell>
             </TableRow>
           ))}
-          <TableRow className="bg-gray-100 font-semibold">
-            <TableCell className="text-left border-t border-gray-300 py-2 px-4">
+          <TableRow className="bg-gray-100 font-semibold hover:text-white text-black">
+            <TableCell className="text-left border-t border-gray-300   py-2 px-4">
               TOTAL
             </TableCell>
             <TableCell className="text-center border-t border-gray-300 py-2 px-4">

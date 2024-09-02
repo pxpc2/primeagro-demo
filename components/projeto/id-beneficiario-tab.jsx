@@ -39,7 +39,7 @@ export default function IdentificacaoBeneficiarioTab({
     setFormsDisabled(true);
   };
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Identificação do Beneficiário"}
         onEdit={onEdit}
@@ -49,15 +49,13 @@ export default function IdentificacaoBeneficiarioTab({
         isAdmin={isAdmin}
         onCancel={handleCancel}
       />
-      <div className="w-full mt-4 sm:px-4 bg-gray-50 sm:py-2 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4  sm:py-2 flex flex-col gap-8">
         <div className="p-4  flex flex-col gap-8">
-          <p className="text-indigo-800 font-semibold">
-            Dados do candidato(a):{" "}
-          </p>
+          <p className="text-gray-100 font-semibold">Dados do candidato(a): </p>
           <DadosCandidatoForm form={form} formsDisabled={formsDisabled} />
         </div>
-        <div className="p-4 bg-gray-50 flex flex-col gap-8">
-          <p className="text-indigo-800 font-semibold">Dados do conjuge: </p>
+        <div className="p-4 flex flex-col gap-8">
+          <p className="text-gray-100 font-semibold">Dados do conjuge: </p>
           <DadosConjugeForm form={form} formsDisabled={formsDisabled} />
         </div>
       </div>
@@ -556,7 +554,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo25"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-blue-700 py-2 cursor-default">
+              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
                 HISTÓRICO DA FORMAÇÃO DO GRUPAMENTO
               </button>
               <FormControl>
@@ -576,7 +574,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo26"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-blue-700 py-2 cursor-default">
+              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
                 JUSTIFICATIVA
               </button>
               <FormControl>
@@ -596,7 +594,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo27"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-blue-700 py-2 cursor-default">
+              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
                 MERCADO E COMERCIALIZAÇÃO
               </button>
               <FormControl>

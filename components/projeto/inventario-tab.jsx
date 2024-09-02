@@ -397,15 +397,15 @@ export default function InventarioTab({ isAdmin }) {
 
   if (loadingData) {
     return (
-      <div className="flex justify-center items-center h-full flex-col gap-4">
-        <p>Carregando inventário...</p>
+      <div className="flex justify-center items-center h-full flex-col gap-4 ">
+        <p className="text-black font-medium">Carregando inventário...</p>
         <Loader2 className="animate-spin  w-5 h-5 text-black" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"Dados do Imóvel"}
         onEdit={onEdit}
@@ -415,12 +415,12 @@ export default function InventarioTab({ isAdmin }) {
         onCancel={handleCancel}
         isAdmin={isAdmin}
       />
-      <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 sm:py-2 flex flex-col gap-8">
         <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Dados do imóvel</h1>
         </div>
         <div className="p-4  flex flex-col gap-8">
-          <p className="text-indigo-800 font-semibold">
+          <p className="text-white font-semibold">
             Benfeitorias / equipamentos existentes coletivos:
           </p>
           <EquipamentosExistentesTable
@@ -508,7 +508,7 @@ export default function InventarioTab({ isAdmin }) {
             Benfeitorias pagas pelo beneficiário
           </h1>
         </div>
-        <p className="text-indigo-800 font-semibold">
+        <p className="text-white font-semibold">
           Benfeitorias / equipamentos existentes individuais:
         </p>
         <EquipamentosExistentesTable
