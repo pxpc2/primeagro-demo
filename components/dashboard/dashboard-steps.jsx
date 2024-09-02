@@ -105,7 +105,9 @@ export default function DashboardSteps({
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium">{step.name}</span>
+                        <span className="text-sm font-medium text-green-800">
+                          {step.name}
+                        </span>
                         <span className="text-sm sm:text-sm mt-1 sm:mt-0 font-normal text-gray-500">
                           {step.description}
                         </span>

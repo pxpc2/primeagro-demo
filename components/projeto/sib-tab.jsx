@@ -284,7 +284,7 @@ export default function SIBTab({ data, isAdmin }) {
   // FIM USE EFFECT GERAL
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-gray-900/80">
       <Heading
         tabName={"SIB"}
         onEdit={onEdit}
@@ -294,7 +294,7 @@ export default function SIBTab({ data, isAdmin }) {
         onCancel={handleCancel}
         isAdmin={isAdmin}
       />
-      <div className="w-full mt-4 sm:px-4 sm:py-2 bg-gray-50 flex flex-col gap-8">
+      <div className="w-full mt-4 sm:px-4 sm:py-2  flex flex-col gap-8">
         <div className="h-full text-sm py-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-0 justify-between">
@@ -372,7 +372,7 @@ function DadosDoProjetoTable({
   valorMaximoNegociacao,
 }) {
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden border shadow sm:rounded-lg text-sm">
       <div className="bg-blue-700 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           DADOS DO PROJETO
@@ -427,7 +427,7 @@ function ValorImovelAvaliadoTable({
   setVtiHa,
 }) {
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden border shadow sm:rounded-lg text-sm">
       <div className="bg-blue-700 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           VALOR DO IMÓVEL AVALIADO
@@ -541,7 +541,7 @@ function ValorImovelCustosTable({
   ]);
 
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-0">
+    <div className="overflow-hidden border  shadow sm:rounded-lg text-sm mt-0">
       <div className="bg-blue-700 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           VALOR DO IMÓVEL + CUSTOS
@@ -684,7 +684,7 @@ function QuadroResumoInvestimentos({
   }, [totalInvested.SIB, setTotalInvestedSIB]);
 
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm mt-4">
+    <div className="overflow-hidden border shadow sm:rounded-lg text-sm mt-4">
       <div className="bg-blue-700 p-4">
         <h3 className="text-md font-bold leading-6 text-center text-white">
           QUADRO RESUMO DOS INVESTIMENTOS
