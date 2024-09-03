@@ -14,6 +14,7 @@ import CronogramaTab from "@/components/projeto/cronograma-tab";
 import SIBTab from "@/components/projeto/sib-tab";
 import EvolucaoRebanhoTab from "@/components/projeto/evolucao-rebanho-tab";
 import TotalTab from "@/components/projeto/totalUA-tab";
+import ReceitasTab from "@/components/projeto/receitas-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -101,6 +102,8 @@ export default function ProjetoPage() {
         );
       case "Total (UA)":
         return <TotalTab data={formData?.aba_total_ua} isAdmin={isAdmin} />;
+      case "Receitas":
+        return <ReceitasTab data={formData?.aba_receitas} isAdmin={isAdmin} />;
       default:
         return <h1 className="h-screen">{tabName}</h1>;
     }

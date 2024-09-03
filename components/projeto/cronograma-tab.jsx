@@ -26,9 +26,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { ANO_INICIAL } from "@/utils/constants";
 
 export default function CronogramaTab({ data, isAdmin }) {
-  const anoInicial = useState(data?.anoInicial || "2024"); // ano de inicio do financiamento (vem da Aba SimuladorPNCF)
+  const anoInicial = useState(data?.anoInicial || ANO_INICIAL); // ano de inicio do financiamento (vem da Aba SimuladorPNCF)
   const [cronogramaData, setCronogramaData] = useState(data[0] || []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [investimentosData, setInvestimentosData] = useState(data[1] || []);
