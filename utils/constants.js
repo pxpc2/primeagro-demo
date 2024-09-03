@@ -1,3 +1,5 @@
+export const ANO_INICIAL = 2024;
+
 export const ENQUADRAMENTO_APROVADO =
   "A ConfidensAgro tem o prazer de lhe informar que você está ENQUADRADO como beneficiário de acordo com suas respostas.";
 
