@@ -373,7 +373,7 @@ function DadosDoProjetoTable({
 }) {
   return (
     <div className="overflow-hidden border shadow sm:rounded-lg text-sm">
-      <div className="bg-blue-700 p-4">
+      <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           DADOS DO PROJETO
         </h3>
@@ -428,7 +428,7 @@ function ValorImovelAvaliadoTable({
 }) {
   return (
     <div className="overflow-hidden border shadow sm:rounded-lg text-sm">
-      <div className="bg-blue-700 p-4">
+      <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           VALOR DO IMÓVEL AVALIADO
         </h3>
@@ -542,7 +542,7 @@ function ValorImovelCustosTable({
 
   return (
     <div className="overflow-hidden border  shadow sm:rounded-lg text-sm mt-0">
-      <div className="bg-blue-700 p-4">
+      <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-white">
           VALOR DO IMÓVEL + CUSTOS
         </h3>
@@ -685,7 +685,7 @@ function QuadroResumoInvestimentos({
 
   return (
     <div className="overflow-hidden border shadow sm:rounded-lg text-sm mt-4">
-      <div className="bg-blue-700 p-4">
+      <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-center text-white">
           QUADRO RESUMO DOS INVESTIMENTOS
         </h3>
@@ -722,19 +722,19 @@ function QuadroResumoInvestimentos({
           </tbody>
           <tfoot>
             <tr>
-              <td className="text-left p-2 font-bold bg-blue-700 text-white">
+              <td className="text-left p-2 font-bold bg-gray-800 text-white">
                 TOTAL INVESTIDO
               </td>
-              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+              <td className="text-right p-2 font-bold bg-gray-800 text-white">
                 {formatCurrency(totalInvested.SIB)}
               </td>
-              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+              <td className="text-right p-2 font-bold bg-gray-800 text-white">
                 {formatCurrency(totalInvested.PRONAF_A)}
               </td>
-              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+              <td className="text-right p-2 font-bold bg-gray-800 text-white">
                 {formatCurrency(totalInvested.Recursos_Proprios)}
               </td>
-              <td className="text-right p-2 font-bold bg-blue-700 text-white">
+              <td className="text-right p-2 font-bold bg-gray-800 text-white">
                 {formatCurrency(totalInvested.Total)}
               </td>
             </tr>

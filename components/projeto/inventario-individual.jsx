@@ -50,9 +50,9 @@ export default function InventarioIndividualComponent({
         BOVINOS
       </h2>
       <Table className="min-w-full border border-gray-300">
-        <TableHeader className="">
-          <TableRow className="bg-gray-200 hover:text-white ">
-            <TableHead className="text-center py-2 border-r border-gray-300">
+        <TableHeader>
+          <TableRow className="bg-gray-200 hover:bg-gray-400">
+            <TableHead className="text-center text-black py-2 border-r border-gray-300">
               DESCRIÇÃO
             </TableHead>
             <TableHead className="text-center py-2 text-black">CB.</TableHead>

@@ -33,11 +33,6 @@ export default function EvolucaoRebanhoBovinocultura({
           data={data}
           formsDisabled={formsDisabled}
         />
-        <EquivalenciaUA_FINAL
-          data={data}
-          anoInicial={anoInicial}
-          formsDisabled={formsDisabled}
-        />
       </div>
     </div>
   );
@@ -50,8 +45,8 @@ function ReprodutorMatrizTable({ formsDisabled }) {
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
-      <div className="bg-gray-100 p-4">
-        <h3 className="text-md font-bold leading-6 text-gray-800 ">
+      <div className="bg-gray-800 p-4">
+        <h3 className="text-md font-bold leading-6 text-white ">
           Relação reprodutor / matrizes a adquirir:
         </h3>
       </div>
@@ -115,8 +110,8 @@ function EquivalenciaUATable({ formsDisabled }) {
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
-      <div className="bg-gray-100 p-4">
-        <h3 className="text-md font-bold leading-6 text-gray-800">
+      <div className="bg-gray-800 p-4">
+        <h3 className="text-md font-bold leading-6 text-white">
           Equivalência em UA
         </h3>
       </div>
@@ -217,7 +212,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
 
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
-      <h2 className="text-lg font-bold">Tabela de evolução do rebanho</h2>
+      <h2 className="text-lg font-bold">Tabela de evolução</h2>
       <Table className="mt-4 w-full">
         <TableHeader>
           <TableRow>
@@ -253,7 +248,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
               </TableRow>
             );
           })}
-          <TableRow>
+          <TableRow className="bg-gray-400 text-black hover:text-white">
             <TableCell className="font-bold">TOTAL DO REBANHO</TableCell>
             {anos.map((ano, i) => (
               <TableCell key={i}>
@@ -284,6 +279,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
 }
 
 function VendasAnimaisTable({ data, anoInicial, formsDisabled }) {
+  const equivalenciaUAData = data.equivalencia_ua || {};
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
@@ -341,26 +337,18 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled }) {
               </TableRow>
             );
           })}
-          <TableRow>
-            <TableCell className="font-bold">LEITE PARA VENDA</TableCell>
+          <TableRow className="bg-gray-400 text-black hover:text-white">
+            <TableCell className="font-bold text-md">Equivalência UA</TableCell>
             {anos.map((ano, i) => (
               <TableCell key={i}>
                 <Input
                   type="text"
-                  value={
-                    data.leite_para_venda
-                      ? data.leite_para_venda[`ano${i + 1}`] || "-"
-                      : "-"
-                  }
+                  value={equivalenciaUAData[`ano${i + 1}`] || ""}
                   onChange={(e) =>
-                    handleInputChange(
-                      "LEITE PARA VENDA",
-                      `ano${i + 1}`,
-                      e.target.value
-                    )
+                    handleInputChange(`ano${i + 1}`, e.target.value)
                   }
                   className="w-full text-center"
-                  disabled={formsDisabled}
+                  disabled={true}
                 />
               </TableCell>
             ))}
@@ -380,15 +368,13 @@ function EquivalenciaUA_FINAL({ data, anoInicial, formsDisabled }) {
     }
   };
 
-  const equivalenciaUAData = data.equivalencia_ua || {};
-
   return (
     <Table className="mt-4 w-full  p-4">
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/4"></TableHead>
           {anos.map((ano) => (
-            <TableHead key={ano}>{ano}</TableHead>
+            <TableHead key={ano}></TableHead>
           ))}
         </TableRow>
       </TableHeader>

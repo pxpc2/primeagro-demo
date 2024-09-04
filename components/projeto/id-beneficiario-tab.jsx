@@ -554,7 +554,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo25"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
+              <button className="w-full bg-gray-800 py-2 cursor-default font-bold">
                 HISTÓRICO DA FORMAÇÃO DO GRUPAMENTO
               </button>
               <FormControl>
@@ -574,7 +574,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo26"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
+              <button className="w-full bg-gray-800 py-2 cursor-default font-bold">
                 JUSTIFICATIVA
               </button>
               <FormControl>
@@ -594,7 +594,7 @@ function DadosConjugeForm({ form, formsDisabled }) {
           name="campo27"
           render={({ field }) => (
             <FormItem className="text-center text-white w-full">
-              <button className="w-full bg-indigo-800 py-2 cursor-default font-bold">
+              <button className="w-full bg-gray-800 py-2 cursor-default font-bold">
                 MERCADO E COMERCIALIZAÇÃO
               </button>
               <FormControl>

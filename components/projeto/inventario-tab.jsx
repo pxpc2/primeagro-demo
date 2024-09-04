@@ -416,7 +416,7 @@ export default function InventarioTab({ isAdmin }) {
         isAdmin={isAdmin}
       />
       <div className="w-full mt-4 sm:px-4 sm:py-2 flex flex-col gap-8">
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+        <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Dados do imóvel</h1>
         </div>
         <div className="p-4  flex flex-col gap-8">
@@ -503,7 +503,7 @@ export default function InventarioTab({ isAdmin }) {
             </div>
           </form>
         </Form>
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+        <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">
             Benfeitorias pagas pelo beneficiário
           </h1>
@@ -591,7 +591,7 @@ export default function InventarioTab({ isAdmin }) {
           </form>
         </Form>
 
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+        <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">Inventário Individual</h1>
         </div>
         <div className="flex w-full">
@@ -604,7 +604,7 @@ export default function InventarioTab({ isAdmin }) {
         </div>
 
         <div>
-          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
             <h1 className="text-white font-semibold">
               Máquinas e Equipamentos
             </h1>
@@ -621,7 +621,7 @@ export default function InventarioTab({ isAdmin }) {
           />
         </div>
         <div>
-          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
             <h1 className="text-white font-semibold">Outros bens</h1>
           </div>
           <ReusableTable
@@ -636,7 +636,7 @@ export default function InventarioTab({ isAdmin }) {
           />
         </div>
         <div>
-          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
             <h1 className="text-white font-semibold">Infraestrutura</h1>
           </div>
           <ReusableTable
@@ -651,7 +651,7 @@ export default function InventarioTab({ isAdmin }) {
           />
         </div>
         <div>
-          <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+          <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
             <h1 className="text-white font-semibold">
               Atividades agrícolas já existentes no imóvel
             </h1>
