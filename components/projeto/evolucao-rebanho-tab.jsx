@@ -31,11 +31,6 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
       />
       <div className="flex flex-col gap-8">
         <div className="mt-4 flex flex-col gap-8">
-          <div className="bg-blue-700 p-4">
-            <h3 className="text-md font-bold leading-6 text-white">
-              EVOLUÇÃO DO REBANHO - INDIVIDUAL
-            </h3>
-          </div>
           <IndicadoresTecnicos
             data={data || []}
             anoInicial={anoInicial}
@@ -43,11 +38,6 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
           />
         </div>
         <div>
-          <div className="bg-blue-700 p-4 mb-8">
-            <h3 className="text-md font-bold leading-6 text-white">
-              REBANHO: BOVINOCULTURA DE LEITE
-            </h3>
-          </div>
           <EvolucaoRebanhoBovinocultura
             data={data || []}
             formsDisabled={formsDisabled}

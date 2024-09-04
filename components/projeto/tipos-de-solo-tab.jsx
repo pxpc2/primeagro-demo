@@ -109,7 +109,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
             handleEditQualidadesDeSoloItem={handleEditQualidadesDeSoloItem}
             calculateArea={calculateArea}
           />
-          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+          <div className="w-full bg-gray-800 py-2 font-semibold text-center text-gray-100">
             RELEVO
           </div>
           <Textarea
@@ -118,7 +118,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
             disabled={formsDisabled}
             onChange={(e) => setRelevo(e.target.value)}
           />
-          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+          <div className="w-full bg-gray-800 py-2 font-semibold text-center text-gray-100">
             CLIMA
           </div>
           <Textarea
@@ -127,7 +127,7 @@ export default function TiposDeSoloTab({ data, isAdmin }) {
             disabled={formsDisabled}
             onChange={(e) => setClima(e.target.value)}
           />
-          <div className="w-full bg-blue-700 py-2 font-semibold text-center text-gray-100">
+          <div className="w-full bg-gray-800 py-2 font-semibold text-center text-gray-100">
             PEDREGOSIDADE
           </div>
           <Textarea

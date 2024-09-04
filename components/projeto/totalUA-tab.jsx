@@ -35,7 +35,7 @@ export default function TotalTab({ data, isAdmin }) {
         isAdmin={isAdmin}
       />
       <div className="flex flex-col gap-8 mt-4">
-        <div className="bg-blue-700 p-4">
+        <div className="bg-gray-800 p-4">
           <h3 className="text-md font-bold leading-6 text-white">
             CALCULO DO SUPORTE FORRAGEIRO
           </h3>

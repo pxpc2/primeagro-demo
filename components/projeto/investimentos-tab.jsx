@@ -87,7 +87,7 @@ export default function InvestimentosTab({ data, isAdmin }) {
 
       <div className="w-full mt-4 sm:px-4 sm:py-2  flex flex-col gap-8">
         {/* CONTEÚDO ABAIXO */}
-        <div className=" bg-blue-600 flex text-center items-center w-full justify-center py-2">
+        <div className=" bg-gray-800 flex text-center items-center w-full justify-center py-2">
           <h1 className="text-white font-semibold">
             RELAÇÃO DOS INVESTIMENTOS A SEREM IMPLANTADOS NO{" "}
             {nomeImovel.toUpperCase()} - {cidade.toUpperCase()} /{" "}
