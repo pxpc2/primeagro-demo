@@ -3,6 +3,7 @@
 import { ADMIN_EMAIL } from "@/utils/constants";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { get } from "react-hook-form";
 
 /**
  *
@@ -60,6 +61,8 @@ export async function getProjetoFormsData() {
     dadosEvolucaoRebanho: formData.aba_evolucao_rebanho,
   });
 
+  formData.aba_orcamentos = await getOrcamentosData();
+
   return formData;
 }
 
@@ -70,6 +73,26 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO ORÇAMENTOS ------------------------------------------------------------------------------------------- */
+async function getOrcamentosData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_orcamentos")
+    .select("*")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+/* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
 
 /* INICIO RECEITAS ------------------------------------------------------------------------------------------- */
 async function getReceitasData({ dadosEvolucaoRebanho }) {
