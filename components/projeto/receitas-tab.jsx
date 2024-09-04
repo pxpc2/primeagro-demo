@@ -29,13 +29,18 @@ export default function ReceitasTab({ data, isAdmin }) {
     setFormsDisabled(true);
   };
 
+  /**
+   * @TODO
+   */
   const onSave = async () => {
     console.log("enviando receitas");
   };
 
+  /**
+   * @TODO
+   */
   const handleInputChange = (descricao, ano, field, value) => {
-    console.log(`Changing ${field} for ${descricao} in year ${ano}:`, value);
-    // handle changes here
+    console.log(`Trocando ${field} por ${descricao} do ano ${ano}:`, value);
   };
 
   return (
