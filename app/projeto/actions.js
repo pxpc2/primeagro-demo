@@ -61,7 +61,9 @@ export async function getProjetoFormsData() {
     dadosEvolucaoRebanho: formData.aba_evolucao_rebanho,
   });
 
-  formData.aba_orcamentos = await getOrcamentosData();
+  formData.aba_orcamentos = await getOrcamentosData({
+    dadosInvestimentos: formData.aba_investimentos.dadosInvestimentos,
+  });
 
   return formData;
 }
@@ -75,7 +77,7 @@ const calculateArea = (totalArea, porcentagem) => {
 };
 
 /* INICIO ORÇAMENTOS ------------------------------------------------------------------------------------------- */
-async function getOrcamentosData() {
+async function getOrcamentosData({ dadosInvestimentos }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -90,7 +92,7 @@ async function getOrcamentosData() {
     return undefined;
   }
 
-  return dados;
+  return { dadosOrcamento: dados, dadosInvestimentos: dadosInvestimentos };
 }
 /* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
 
