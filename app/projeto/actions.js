@@ -56,6 +56,10 @@ export async function getProjetoFormsData() {
 
   formData.aba_evolucao_rebanho = await getEvolucaoRebanho();
 
+  formData.aba_receitas = await getReceitasData({
+    dadosEvolucaoRebanho: formData.aba_evolucao_rebanho,
+  });
+
   return formData;
 }
 
@@ -66,6 +70,26 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO RECEITAS ------------------------------------------------------------------------------------------- */
+async function getReceitasData({ dadosEvolucaoRebanho }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_receitas")
+    .select("*")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return { dadosReceita: dados, dadosEvolucaoRebanho: dadosEvolucaoRebanho };
+}
+/* fim RECEITAS ------------------------------------------------------------------------------------------- */
 
 /* INICIO EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
 
