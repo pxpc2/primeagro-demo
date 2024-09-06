@@ -18,8 +18,10 @@ import {
 export default function ReceitasTab({ data, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const anos = Array.from({ length: 5 }, (_, index) => ANO_INICIAL + index);
+  const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
+
+  console.log(data);
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -58,7 +60,7 @@ export default function ReceitasTab({ data, isAdmin }) {
         {DESCRICOES.map((descricao, index) => (
           <div
             key={index}
-            className="border border-gray-300 p-4 rounded-lg bg-gray-800 shadow-md"
+            className="border border-gray-300 p-4 rounded-lg bg-gray-800 shadow-md mb-6"
           >
             <h3 className="font-bold text-lg mb-4">{descricao}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
