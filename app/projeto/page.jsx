@@ -97,7 +97,7 @@ export default function ProjetoPage() {
       case "Evolução do rebanho":
         return (
           <EvolucaoRebanhoTab
-            data={formData?.aba_evolucao_rebanho[0]}
+            data={formData?.aba_evolucao_rebanho}
             isAdmin={isAdmin}
           />
         );

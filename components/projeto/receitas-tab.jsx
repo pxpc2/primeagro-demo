@@ -21,6 +21,8 @@ export default function ReceitasTab({ data, isAdmin }) {
   const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
 
+  console.log(data);
+
   const onEdit = () => {
     setFormsDisabled(false);
   };

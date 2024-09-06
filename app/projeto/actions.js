@@ -133,7 +133,10 @@ export async function getEvolucaoRebanho() {
     return undefined;
   }
 
-  return dados;
+  return {
+    dadosEvolucaoRebanho: dados,
+    dadosInventario: await getInventarioIndividual(),
+  };
 }
 
 /* FIM EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
