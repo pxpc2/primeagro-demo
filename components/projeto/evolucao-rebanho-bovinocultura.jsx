@@ -297,7 +297,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
   };
 
   const findDataForDescricao = (descricao) => {
-    return inventario[descricao.toLowerCase()];
+    return inventario ? inventario[descricao?.toLowerCase()] : {};
   };
 
   const calculateTotals = () => {
@@ -351,7 +351,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
                         )
                       }
                       className="w-full text-center"
-                      disabled={formsDisabled}
+                      disabled={true}
                     />
                   </TableCell>
                 ))}
