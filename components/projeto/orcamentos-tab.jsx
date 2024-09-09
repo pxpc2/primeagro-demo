@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 export default function OrcamentosTab({ data, isAdmin }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const initialOrcamentosState = data.dadosInvestimentos.map((item) => ({
+  const initialOrcamentosState = data?.dadosInvestimentos?.map((item) => ({
     ...item,
     orcamentos: [], // passarei aqui os itens de orcamento
   }));
@@ -26,7 +26,7 @@ export default function OrcamentosTab({ data, isAdmin }) {
 
   const addNewOrcamento = (investimentoId) => {
     setOrcamentos((prevOrcamentos) =>
-      prevOrcamentos.map((item) =>
+      prevOrcamentos?.map((item) =>
         item.id === investimentoId
           ? {
               ...item,
@@ -52,7 +52,7 @@ export default function OrcamentosTab({ data, isAdmin }) {
         item.id === investimentoId
           ? {
               ...item,
-              orcamentos: item.orcamentos.map((orcamento, i) =>
+              orcamentos: item?.orcamentos?.map((orcamento, i) =>
                 i === index ? { ...orcamento, [field]: value } : orcamento
               ),
             }
@@ -73,15 +73,15 @@ export default function OrcamentosTab({ data, isAdmin }) {
         isAdmin={isAdmin}
       />
       <div className="grid grid-cols-1 gap-6 mt-8">
-        {orcamentos.map((investimento) => (
+        {orcamentos?.map((investimento) => (
           <div
             key={investimento.id}
             className="border border-gray-700 p-4 rounded-lg bg-gray-800 shadow-md"
           >
             <h3 className="font-bold text-lg mb-4">
-              {investimento.item} - {investimento.descricao}
+              {investimento?.item} - {investimento?.descricao}
             </h3>
-            {investimento.orcamentos.map((orcamento, index) => (
+            {investimento?.orcamentos?.map((orcamento, index) => (
               <div key={index} className="flex gap-4 mb-4">
                 <div className="w-1/5">
                   <label className="block text-sm">Descrição</label>
