@@ -139,6 +139,101 @@ export async function getEvolucaoRebanho() {
   };
 }
 
+export async function submitEvolucaoRebanho({
+  indicadoresData,
+  bovinoculturaData,
+}) {
+  console.log(indicadoresData);
+  console.log(bovinoculturaData);
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  let { data: evolucaoRebanhoData, error: evolucaoRebanhoError } =
+    await supabase
+      .from("aba_evolucao_rebanho")
+      .select("id")
+      .eq("authuser_id", authUserID)
+      .single();
+
+  if (evolucaoRebanhoError && evolucaoRebanhoError.code === "PGRST116") {
+    const { data: newEvolucaoRebanho, error: newEvolucaoRebanhoError } =
+      await supabase
+        .from("aba_evolucao_rebanho")
+        .insert([{ authuser_id: authUserID }])
+        .select("id")
+        .single();
+
+    if (newEvolucaoRebanhoError) {
+      console.error(
+        "Error creating Evolucao Rebanho record:",
+        newEvolucaoRebanhoError
+      );
+      throw new Error(newEvolucaoRebanhoError.message);
+    }
+
+    evolucaoRebanhoData = newEvolucaoRebanho;
+  }
+
+  const evolucaoRebanhoID = evolucaoRebanhoData.id;
+
+  const indicadoresDataMapped = indicadoresData?.map((item) => ({
+    ...item,
+    authuser_id: authUserID,
+    evolucao_rebanho_id: evolucaoRebanhoID,
+  }));
+
+  const geral_campos = [
+    "id",
+    "created_at",
+    "authuser_id",
+    "animaisAdquirir_reprodutores",
+    "animaisAdquirir_matrizes",
+    "relacao_reprodutores",
+    "relacao_matrizes",
+    "estabilizacao_plantel",
+    "equivalenciaUA_touro",
+    "equivalenciaUA_matrizes",
+    "equivalenciaUA_novilhos",
+    "equivalenciaUA_garrotes",
+    "equivalenciaUA_bezerros",
+  ];
+
+  const bovinoculturaDataMapped = bovinoculturaData.map((item) => {
+    const filteredItem = Object.keys(item).reduce((acc, key) => {
+      if (geral_campos.includes(key)) {
+        acc[key] = item[key];
+      }
+      return acc;
+    }, {});
+    filteredItem.authuser_id = authUserID;
+    return filteredItem;
+  });
+
+  const { error: indicadoresError } = await supabase
+    .from("aba_evolucao_rebanho_indicadores_tecnicos")
+    .upsert(indicadoresDataMapped, {
+      onConflict: ["descricao", "authuser_id"],
+    });
+
+  if (indicadoresError) {
+    console.error("Error saving Indicadores Tecnicos:", indicadoresError);
+    throw new Error(indicadoresError.message);
+  }
+
+  const { error: bovinoculturaError } = await supabase
+    .from("aba_evolucao_rebanho")
+    .upsert(bovinoculturaDataMapped, { onConflict: ["authuser_id"] });
+
+  if (bovinoculturaError) {
+    console.error("Error saving Bovinocultura:", bovinoculturaError);
+    throw new Error(bovinoculturaError.message);
+  }
+}
+
 /* FIM EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
 
 /* INICIO SIB -------------------------------------------------------------------------------------------- */
