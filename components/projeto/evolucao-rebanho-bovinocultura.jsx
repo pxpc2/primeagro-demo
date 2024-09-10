@@ -17,53 +17,65 @@ export default function EvolucaoRebanhoBovinocultura({
   data,
   formsDisabled,
   anoInicial,
+  onChange,
 }) {
-  const [B17, setB17] = useState(0); // REPRODUTORES A ADQUIRIR
-  const [E18, setE18] = useState(0); // MATRIZES POR REPRODUTOR
+  const handleDataChange = (updatedData) => {
+    onChange(updatedData);
+  };
+
+  console.log(data);
 
   return (
     <div className="flex flex-col gap-12">
       <AnimaisAAdquirirTable
         formsDisabled={formsDisabled}
-        onReprodutoresAdquirirChange={(value) => setB17(value)} // Update B17
-        onMatrizesAdquirirChange={(value) => console.log(value)} // Add handler if necessary
+        data={data}
+        onChange={handleDataChange}
       />
-      <ReprodutorMatrizTable formsDisabled={formsDisabled} />
+      <ReprodutorMatrizTable
+        formsDisabled={formsDisabled}
+        onChange={handleDataChange}
+        data={data}
+      />
       <EquivalenciaUATable formsDisabled={formsDisabled} />
       <div className="flex flex-col gap-4">
         <BovinoculturaTable
           data={data}
           anoInicial={anoInicial}
           formsDisabled={formsDisabled}
+          onChange={handleDataChange}
         />
         <VendasAnimaisTable
           anoInicial={anoInicial}
           data={data}
           formsDisabled={formsDisabled}
+          onChange={handleDataChange}
         />
       </div>
     </div>
   );
 }
 
-function AnimaisAAdquirirTable({
-  formsDisabled,
-  onReprodutoresAdquirirChange,
-  onMatrizesAdquirirChange,
-}) {
-  const [reprodutoresAdquirir, setReprodutoresAdquirir] = useState(0);
-  const [matrizesAdquirir, setMatrizesAdquirir] = useState(0);
+function AnimaisAAdquirirTable({ data, formsDisabled, onChange }) {
+  const [reprodutoresAdquirir, setReprodutoresAdquirir] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_reprodutores || 0
+  );
+  const [matrizesAdquirir, setMatrizesAdquirir] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0
+  );
 
   const handleReprodutoresAdquirirChange = (e) => {
     const value = e.target.value;
     setReprodutoresAdquirir(value);
-    onReprodutoresAdquirirChange(value);
+    const updatedData = { ...data, reprodutoresAdquirir: value };
+    onChange(updatedData);
   };
 
   const handleMatrizesAdquirirChange = (e) => {
     const value = e.target.value;
     setMatrizesAdquirir(value);
-    onMatrizesAdquirirChange(value);
+    const updatedData = { ...data, matrizesAdquirir: value };
+    onChange(updatedData);
   };
 
   return (
@@ -106,21 +118,35 @@ function AnimaisAAdquirirTable({
   );
 }
 
-function ReprodutorMatrizTable({ formsDisabled }) {
-  const [reprodutor, setReprodutor] = useState(1);
-  const [matrizes, setMatrizes] = useState(0);
-  const [estabilizacao, setEstabilizacao] = useState("");
+function ReprodutorMatrizTable({ formsDisabled, onChange, data }) {
+  const [matrizes, setMatrizes] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.relacao_matrizes || 0
+  );
+  const [estabilizacao, setEstabilizacao] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.estabilizacao_plantel || 0
+  );
+
+  const handleMatrizesChange = (e) => {
+    const value = e.target.value;
+    setMatrizes(value);
+    onChange({ ...data, relacao_matrizes: value });
+  };
+
+  const handleEstabilizacaoChange = (e) => {
+    const value = e.target.value;
+    setEstabilizacao(value);
+    onChange({ ...data, estabilizacao_plantel: value });
+  };
 
   return (
     <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
       <div className="bg-gray-800 p-4">
-        <h3 className="text-md font-bold leading-6 text-white ">
+        <h3 className="text-md font-bold leading-6 text-white">
           Relação reprodutor/matriz:
         </h3>
       </div>
       <div className="bg-white p-4 text-gray-800">
         <div className="grid grid-cols-2 gap-4">
-          {/* Reprodutor Row */}
           <div className="bg-gray-100 p-2">
             <p className="font-semibold">Reprodutor</p>
           </div>
@@ -128,12 +154,11 @@ function ReprodutorMatrizTable({ formsDisabled }) {
             <Input
               type="number"
               value={1}
-              onChange={(e) => setReprodutor(e.target.value)}
               disabled={true}
               className="text-center font-bold"
             />
           </div>
-          {/* Matrizes Row */}
+
           <div className="bg-gray-100 p-2">
             <p className="font-semibold">Matrizes</p>
           </div>
@@ -141,13 +166,12 @@ function ReprodutorMatrizTable({ formsDisabled }) {
             <Input
               type="number"
               value={matrizes}
-              onChange={(e) => setMatrizes(e.target.value)}
+              onChange={handleMatrizesChange}
               disabled={formsDisabled}
               className="text-center font-bold"
             />
           </div>
 
-          {/* Estabilização Row */}
           <div className="col-span-2 p-2">
             <p className="font-semibold">
               Estabilização do Plantel (matrizes):
@@ -157,7 +181,7 @@ function ReprodutorMatrizTable({ formsDisabled }) {
             <Input
               type="number"
               value={estabilizacao}
-              onChange={(e) => setEstabilizacao(e.target.value)}
+              onChange={handleEstabilizacaoChange}
               disabled={formsDisabled}
               className="w-full"
             />
@@ -184,7 +208,6 @@ function EquivalenciaUATable({ formsDisabled }) {
       </div>
       <div className="bg-white p-4 text-gray-800">
         <div className="grid grid-cols-2 gap-4">
-          {/* Touro Row */}
           <div className="bg-gray-100 p-2 flex items-center">
             <p className="font-semibold">Touro</p>
           </div>
@@ -198,7 +221,6 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          {/* Matrizes Row */}
           <div className="bg-gray-100 p-2 flex items-center">
             <p className="font-semibold">Matrizes</p>
           </div>
@@ -212,7 +234,6 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          {/* Novilhos(as) Row */}
           <div className="bg-gray-100 p-2 flex items-center">
             <p className="font-semibold">Novilhos(as)</p>
           </div>
@@ -226,7 +247,6 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          {/* Garrotes(as) Row */}
           <div className="bg-gray-100 p-2 flex items-center">
             <p className="font-semibold">Garrotes(as)</p>
           </div>
@@ -240,7 +260,6 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          {/* Bezerros(as) Row */}
           <div className="bg-gray-100 p-2 flex items-center">
             <p className="font-semibold">Bezerros(as)</p>
           </div>
@@ -282,22 +301,29 @@ function mapDescricaoToField(descricao) {
   }
 }
 
-function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
+function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const DESCRICOES = BOVINOCULTURA_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
-  const inventario = Array.isArray(data.dadosInventario)
-    ? data.dadosInventario[0]
+  const inventario = Array.isArray(data?.dadosInventario)
+    ? data?.dadosInventario[0]
     : {};
 
   const handleInputChange = (descricao, ano, value) => {
-    if (onChange) {
-      onChange(descricao, ano, value);
-    }
+    const updatedInventario = {
+      ...inventario,
+      [descricao.toLowerCase()]: {
+        ...inventario[descricao.toLowerCase()],
+        [`ano${ano}`]: value,
+      },
+    };
+
+    const updatedData = { ...data, dadosInventario: [updatedInventario] };
+    onChange(updatedData);
   };
 
   const findDataForDescricao = (descricao) => {
-    return inventario ? inventario[descricao?.toLowerCase()] : {};
+    return inventario[descricao?.toLowerCase()] || {};
   };
 
   const calculateTotals = () => {
@@ -342,16 +368,12 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
                   <TableCell key={i}>
                     <Input
                       type="text"
-                      value={i === 0 ? dataItem2024 || "" : ""}
+                      value={i === 0 ? dataItem2024[`ano${i + 1}`] || "" : ""}
                       onChange={(e) =>
-                        handleInputChange(
-                          descricao,
-                          `ano${i + 1}`,
-                          e.target.value
-                        )
+                        handleInputChange(descricao, i + 1, e.target.value)
                       }
                       className="w-full text-center"
-                      disabled={true}
+                      disabled={formsDisabled}
                     />
                   </TableCell>
                 ))}
@@ -359,7 +381,6 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
             );
           })}
 
-          {/* Row for the Total do Rebanho */}
           <TableRow className="bg-gray-400 text-black hover:text-white">
             <TableCell className="font-bold">TOTAL DO REBANHO</TableCell>
             {anos.map((ano, i) => (
@@ -378,23 +399,24 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled }) {
     </div>
   );
 }
-function VendasAnimaisTable({ data, anoInicial, formsDisabled }) {
-  const equivalenciaUAData = data.equivalencia_ua || {};
+
+function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
+  const equivalenciaUAData = data?.equivalencia_ua || {};
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
   const handleInputChange = (descricao, ano, value) => {
-    if (onChange) {
-      onChange(descricao, ano, value);
-    }
+    const updatedVendasAnimais = data?.aba_vendas_animais?.map((item) =>
+      item.descricao === descricao ? { ...item, [`ano${ano}`]: value } : item
+    );
+    const updatedData = { ...data, aba_vendas_animais: updatedVendasAnimais };
+    onChange(updatedData);
   };
 
-  const vendasAnimaisData = Array.isArray(data.aba_vendas_animais)
-    ? data.aba_vendas_animais
-    : [];
-
   const findDataForDescricao = (descricao) => {
-    return vendasAnimaisData.find((item) => item.descricao === descricao);
+    return data?.aba_vendas_animais?.find(
+      (item) => item.descricao === descricao
+    );
   };
 
   return (
@@ -423,11 +445,7 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled }) {
                       type="text"
                       value={dataItem ? dataItem[`ano${i + 1}`] || "" : ""}
                       onChange={(e) =>
-                        handleInputChange(
-                          descricao,
-                          `ano${i + 1}`,
-                          e.target.value
-                        )
+                        handleInputChange(descricao, i + 1, e.target.value)
                       }
                       className="w-full text-center"
                       disabled={formsDisabled}
@@ -444,9 +462,6 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled }) {
                 <Input
                   type="text"
                   value={equivalenciaUAData[`ano${i + 1}`] || ""}
-                  onChange={(e) =>
-                    handleInputChange(`ano${i + 1}`, e.target.value)
-                  }
                   className="w-full text-center"
                   disabled={true}
                 />
