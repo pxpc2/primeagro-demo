@@ -50,7 +50,7 @@ export default function ProjetoPage() {
     switch (tabName) {
       case "Menu":
         return (
-          <div className="w-full h-screen bg-pncf bg-no-repeat bg-cover bg-top over "></div>
+          <div className="w-full h-full  bg-logoGrande bg-no-repeat bg-contain bg-top over "></div>
         );
       case "Pré-análise":
         return (
@@ -126,7 +126,7 @@ export default function ProjetoPage() {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg shadow h-full flex flex-col justify-center">
+    <div className="overflow-hidden rounded-lg shadow h-screen flex flex-col justify-center">
       <div className="px-4 py-5 sm:px-6 bg-gray-200">
         <div>
           <div className="sm:hidden">
@@ -218,7 +218,7 @@ export default function ProjetoPage() {
           </div>
         </div>
       </div>
-      <div className="bg-gray-200 w-full h-full p-5 overflow-hidden">
+      <div className="bg-gray-900/80 w-full h-full p-5 overflow-hidden">
         {renderContent(currentTab)}
       </div>
     </div>
