@@ -305,43 +305,88 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const DESCRICOES = BOVINOCULTURA_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
-  const inventario = Array.isArray(data?.dadosInventario)
-    ? data?.dadosInventario[0]
-    : {};
+  const reprodutoresAdquirir =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_reprodutores || 0;
+  const relacaoMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.relacao_matrizes || 0;
+  const estabilizacaoPlantel =
+    data?.dadosEvolucaoRebanho?.[0]?.estabilizacao_plantel || 0;
+  const animaisAdquirirMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
-  const handleInputChange = (descricao, ano, value) => {
+  // Temporarily store D8 as 0 POR ENQUANTO
+  const [D8, setD8] = useState(0);
+
+  const inventario = data?.dadosInventario?.[0] || {};
+
+  // Get the initial value from inventario (2024)
+  const getStartingValue = (descricao) => {
+    const field = mapDescricaoToField(descricao);
+    return parseFloat(inventario[field] || 0);
+  };
+
+  const handleInputChange = (descricao, value) => {
+    const field = mapDescricaoToField(descricao);
     const updatedInventario = {
       ...inventario,
-      [descricao.toLowerCase()]: {
-        ...inventario[descricao.toLowerCase()],
-        [`ano${ano}`]: value,
-      },
+      [field]: value,
     };
-
     const updatedData = { ...data, dadosInventario: [updatedInventario] };
     onChange(updatedData);
   };
 
-  const findDataForDescricao = (descricao) => {
-    return inventario[descricao?.toLowerCase()] || {};
+  const calculateMatrizesForYear = (
+    yearIndex,
+    prevYearValue,
+    novilhasValue
+  ) => {
+    const adjustmentFactor = prevYearValue * D8; // D24 * D8
+    const calculatedNovilhas = novilhasValue * 0.9; // E30 * 0.9
+
+    const sum = prevYearValue - adjustmentFactor + calculatedNovilhas;
+
+    return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
   };
 
-  const calculateTotals = () => {
-    const totals = Array(anos.length).fill(0);
+  const calculateMatrizesFor2025 = () => {
+    const matrizes2024 = getStartingValue("Matrizes");
+    const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)");
+    const sum = animaisAdquirirMatrizes + matrizes2024 + novilhas2024;
 
-    DESCRICOES.forEach((descricao) => {
-      const dataItem = findDataForDescricao(mapDescricaoToField(descricao));
-
-      anos.forEach((ano, i) => {
-        const value = i === 0 ? parseFloat(dataItem || 0) : 0;
-        totals[i] += value;
-      });
-    });
-
-    return totals;
+    return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
   };
 
-  const totals = calculateTotals();
+  const calculateMatrizesFor2026 = () => {
+    const matrizes2025 = calculateMatrizesFor2025();
+    const novilhas2026 = getStartingValue("Novilhas (24 a 36 meses)") * 0.9;
+
+    return Math.round(
+      matrizes2025 + novilhas2026 < estabilizacaoPlantel
+        ? matrizes2025 + novilhas2026
+        : estabilizacaoPlantel
+    );
+  };
+
+  // Calculate values for 2027 onwards
+  const calculateMatrizesForLaterYears = (yearIndex) => {
+    const prevYearValue =
+      yearIndex === 1 ? calculateMatrizesFor2025() : calculateMatrizesFor2026();
+    const novilhasValue = getStartingValue("Novilhas (24 a 36 meses)");
+
+    return calculateMatrizesForYear(yearIndex, prevYearValue, novilhasValue);
+  };
+
+  const calculateTourosForYear = (yearIndex) => {
+    const matrizes2024 = getStartingValue("Matrizes");
+
+    if (matrizes2024 < 1) {
+      return 0;
+    } else if (matrizes2024 / relacaoMatrizes <= reprodutoresAdquirir) {
+      return reprodutoresAdquirir;
+    } else {
+      return Math.round(matrizes2024 / relacaoMatrizes);
+    }
+  };
 
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
@@ -356,44 +401,36 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DESCRICOES.map((descricao, index) => {
-            const dataItem2024 = findDataForDescricao(
-              mapDescricaoToField(descricao)
-            );
-
-            return (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{descricao}</TableCell>
-                {anos.map((ano, i) => (
-                  <TableCell key={i}>
-                    <Input
-                      type="text"
-                      value={i === 0 ? dataItem2024[`ano${i + 1}`] || "" : ""}
-                      onChange={(e) =>
-                        handleInputChange(descricao, i + 1, e.target.value)
-                      }
-                      className="w-full text-center"
-                      disabled={formsDisabled}
-                    />
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-
-          <TableRow className="bg-gray-400 text-black hover:text-white">
-            <TableCell className="font-bold">TOTAL DO REBANHO</TableCell>
-            {anos.map((ano, i) => (
-              <TableCell key={i}>
-                <Input
-                  type="text"
-                  value={totals[i] || ""}
-                  className="w-full text-center font-bold"
-                  disabled={true}
-                />
-              </TableCell>
-            ))}
-          </TableRow>
+          {DESCRICOES.map((descricao, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium">{descricao}</TableCell>
+              {anos.map((_, i) => (
+                <TableCell key={i}>
+                  <Input
+                    type="text"
+                    value={
+                      descricao === "Touro" && i > 0
+                        ? calculateTourosForYear(i)
+                        : descricao === "Matrizes" && i === 1
+                        ? calculateMatrizesFor2025()
+                        : descricao === "Matrizes" && i === 2
+                        ? calculateMatrizesFor2026()
+                        : descricao === "Matrizes" && i > 2
+                        ? calculateMatrizesForLaterYears(i) // Handle years 2027 onwards
+                        : i === 0
+                        ? getStartingValue(descricao)
+                        : ""
+                    }
+                    onChange={(e) =>
+                      handleInputChange(descricao, e.target.value)
+                    }
+                    className="w-full text-center"
+                    disabled={true}
+                  />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
