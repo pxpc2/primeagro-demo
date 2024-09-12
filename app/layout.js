@@ -30,7 +30,9 @@ export default function RootLayout({ children }) {
         />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={"h-full w-full antialiased"}>{children}</body>
+      <body className={"h-full bg-gray-900 w-full antialiased"}>
+        {children}
+      </body>
       <GoogleAnalytics gaID="AW-16657425488" />
     </html>
   );

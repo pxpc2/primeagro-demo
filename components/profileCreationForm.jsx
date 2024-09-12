@@ -80,13 +80,15 @@ export default function ProfileCreationForm() {
   };
 
   return (
-    <div className="px-4 py-5 sm:p-6">
+    <div className="px-4 py-5 sm:p-6 bg-gray-950">
       <div className="divide-y divide-gray-900/10">
-        <h1 className="font-semibold">COMPLETE O SEU PERFIL</h1>
+        <h1 className="font-bold text-center">
+          Por favor, complete as informações de seu perfil ConfidensAgro abaixo.
+        </h1>
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="divide-y divide-gray-200 p-4 sm:p-32">
-              <div className="grid gap-4">
+            <div className="divide-y divide-gray-200 p-4 sm:p-26 sm:mt-8">
+              <div className="grid gap-4 bg-gray-900 p-8 rounded-lg">
                 <div className="grid grid-cols-1 gap-4 pt-4">
                   <FormField
                     control={form.control}
