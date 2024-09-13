@@ -42,8 +42,10 @@ export default function IndicadoresTecnicos({
   };
 
   return (
-    <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
-      <h1 className="text-lg font-bold">Indicadores Técnicos</h1>
+    <div className="w-full border-gray-200 shadow sm:rounded-sm px-4 mt-4">
+      <h1 className="text-lg font-bold p-3 bg-gray-800 rounded-sm">
+        Indicadores Técnicos
+      </h1>
       <Table className="mt-4 w-full">
         <TableHeader>
           <TableRow>

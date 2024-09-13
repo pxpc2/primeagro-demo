@@ -27,16 +27,19 @@ export default function EvolucaoRebanhoBovinocultura({
 
   return (
     <div className="flex flex-col gap-12">
-      <AnimaisAAdquirirTable
-        formsDisabled={formsDisabled}
-        data={data}
-        onChange={handleDataChange}
-      />
-      <ReprodutorMatrizTable
-        formsDisabled={formsDisabled}
-        onChange={handleDataChange}
-        data={data}
-      />
+      <div className="flex sm:flex-row gap-4 sm:gap-8">
+        <AnimaisAAdquirirTable
+          formsDisabled={formsDisabled}
+          data={data}
+          onChange={handleDataChange}
+        />
+        <ReprodutorMatrizTable
+          formsDisabled={formsDisabled}
+          onChange={handleDataChange}
+          data={data}
+        />
+      </div>
+
       <EquivalenciaUATable formsDisabled={formsDisabled} />
       <div className="flex flex-col gap-4">
         <BovinoculturaTable
@@ -79,16 +82,16 @@ function AnimaisAAdquirirTable({ data, formsDisabled, onChange }) {
   };
 
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden bg-gray-950/80  shadow sm:rounded-sm text-sm mx-4">
       <div className="bg-gray-800 p-4">
-        <h3 className="text-md font-bold leading-6 text-white">
+        <h3 className="text-lg font-bold leading-6 text-white">
           Animais a adquirir:
         </h3>
       </div>
-      <div className="bg-white p-4 text-gray-800">
+      <div className="p-4 text-gray-100">
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-100 p-2">
-            <p className="font-semibold">Reprodutores</p>
+          <div className=" p-2">
+            <p className="font-semibold text-gray-100">Reprodutores</p>
           </div>
           <div className="p-2">
             <Input
@@ -100,8 +103,8 @@ function AnimaisAAdquirirTable({ data, formsDisabled, onChange }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2">
-            <p className="font-semibold">Matrizes</p>
+          <div className=" p-2">
+            <p className="font-semibold text-gray-100">Matrizes</p>
           </div>
           <div className="p-2">
             <Input
@@ -139,15 +142,15 @@ function ReprodutorMatrizTable({ formsDisabled, onChange, data }) {
   };
 
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden  shadow sm:rounded-sm text-sm mx-4">
       <div className="bg-gray-800 p-4">
-        <h3 className="text-md font-bold leading-6 text-white">
+        <h3 className="text-lg font-bold leading-6 text-white">
           Relação reprodutor/matriz:
         </h3>
       </div>
-      <div className="bg-white p-4 text-gray-800">
+      <div className="bg-gray-950/80 p-4 text-gray-100">
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-100 p-2">
+          <div className=" p-2">
             <p className="font-semibold">Reprodutor</p>
           </div>
           <div className="p-2">
@@ -159,7 +162,7 @@ function ReprodutorMatrizTable({ formsDisabled, onChange, data }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2">
+          <div className="p-2">
             <p className="font-semibold">Matrizes</p>
           </div>
           <div className="p-2">
@@ -200,15 +203,15 @@ function EquivalenciaUATable({ formsDisabled }) {
   const [bezerros, setBezerros] = useState(0.25);
 
   return (
-    <div className="overflow-hidden border border-gray-200 shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden bg-gray-950/80 sm:rounded-sm text-sm mx-4">
       <div className="bg-gray-800 p-4">
-        <h3 className="text-md font-bold leading-6 text-white">
+        <h3 className="text-lg font-bold leading-6 text-white">
           Equivalência em UA
         </h3>
       </div>
-      <div className="bg-white p-4 text-gray-800">
+      <div className=" p-4 text-gray-100">
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-gray-100 p-2 flex items-center">
+          <div className=" p-2 flex items-center">
             <p className="font-semibold">Touro</p>
           </div>
           <div className="p-2 ">
@@ -221,7 +224,7 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2 flex items-center">
+          <div className="p-2 flex items-center">
             <p className="font-semibold">Matrizes</p>
           </div>
           <div className="p-2">
@@ -234,7 +237,7 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2 flex items-center">
+          <div className=" p-2 flex items-center">
             <p className="font-semibold">Novilhos(as)</p>
           </div>
           <div className="p-2">
@@ -247,7 +250,7 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2 flex items-center">
+          <div className=" p-2 flex items-center">
             <p className="font-semibold">Garrotes(as)</p>
           </div>
           <div className="p-2">
@@ -260,7 +263,7 @@ function EquivalenciaUATable({ formsDisabled }) {
             />
           </div>
 
-          <div className="bg-gray-100 p-2 flex items-center">
+          <div className=" p-2 flex items-center">
             <p className="font-semibold">Bezerros(as)</p>
           </div>
           <div className="p-2">
@@ -567,8 +570,10 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   };
 
   return (
-    <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
-      <h2 className="text-lg font-bold">Tabela de evolução</h2>
+    <div className="w-full border-gray-200 shadow sm:rounded-lg px-4">
+      <h2 className="text-lg font-bold bg-gray-800 p-3 rounded-sm">
+        Tabela de evolução
+      </h2>
       <Table className="mt-4 w-full">
         <TableHeader>
           <TableRow>
@@ -652,10 +657,10 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
 
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
-      <h2 className="text-lg font-bold">
+      <h2 className="text-lg font-bold bg-gray-800 p-3 rounded-sm">
         Tabela de vendas de animais e produtos
       </h2>
-      <Table className="mt-4 w-full">
+      <Table className="mt-1 w-full">
         <TableHeader>
           <TableRow>
             <TableHead className="w-1/4">Descrição</TableHead>
@@ -686,7 +691,7 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
               </TableRow>
             );
           })}
-          <TableRow className="bg-gray-400 text-black hover:text-white">
+          <TableRow className="bg-gray-950  ">
             <TableCell className="font-bold text-md">Equivalência UA</TableCell>
             {anos.map((ano, i) => (
               <TableCell key={i}>

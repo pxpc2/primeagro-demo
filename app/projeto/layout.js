@@ -23,7 +23,9 @@ export default async function Layout({ children }) {
   }
   return (
     <>
-      <main className="w-full  h-auto overflow-hidden ">{children}</main>
+      <main className="w-full bg-gray-900  h-auto overflow-hidden ">
+        {children}
+      </main>
       <Toaster />
     </>
   );

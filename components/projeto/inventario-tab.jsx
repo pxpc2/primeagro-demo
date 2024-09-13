@@ -398,8 +398,8 @@ export default function InventarioTab({ isAdmin }) {
   if (loadingData) {
     return (
       <div className="flex justify-center items-center h-full flex-col gap-4 ">
-        <p className="text-black font-medium">Carregando inventário...</p>
-        <Loader2 className="animate-spin  w-5 h-5 text-black" />
+        <p className="text-gray-100 font-medium">Carregando inventário...</p>
+        <Loader2 className="animate-spin  w-5 h-5 text-gray-100" />
       </div>
     );
   }
