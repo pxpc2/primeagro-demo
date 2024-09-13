@@ -340,6 +340,15 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const [K5, setK5] = useState(0.06);
   const [L4, setL4] = useState(0.8);
   const [L5, setL5] = useState(0.06);
+  const [D6, setD6] = useState(0.03);
+  const [E6, setE6] = useState(0.03);
+  const [F6, setF6] = useState(0.03);
+  const [G6, setG6] = useState(0.03);
+  const [H6, setH6] = useState(0.03);
+  const [I6, setI6] = useState(0.03);
+  const [J6, setJ6] = useState(0.03);
+  const [K6, setK6] = useState(0.03);
+  const [L6, setL6] = useState(0.03);
 
   const inventario = data?.dadosInventario?.[0] || {};
 
@@ -569,6 +578,77 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     return Math.round(result);
   };
 
+  const calculateNovilhosFor2025 = (descricao) => {
+    if (descricao === "Novilhos (24 a 36 meses)") {
+      const garrotes2024 = getStartingValue("Garrotes (12 a 24 meses)");
+      const result = garrotes2024 - garrotes2024 * C6;
+      return Math.round(result);
+    } else if (descricao === "Novilhas (24 a 36 meses)") {
+      return getStartingValue("Novilhas (24 a 36 meses)");
+    }
+    return 0;
+  };
+
+  const calculateNovilhosForLaterYears = (yearIndex, descricao) => {
+    let baseValue;
+
+    if (descricao === "Novilhos (24 a 36 meses)") {
+      baseValue =
+        yearIndex === 2
+          ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex - 1,
+              "Garrotes (12 a 24 meses)"
+            );
+    } else if (descricao === "Novilhas (24 a 36 meses)") {
+      baseValue =
+        yearIndex === 2
+          ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex - 1,
+              "Garrotas (12 a 24 meses)"
+            );
+    }
+
+    let X6;
+    switch (yearIndex) {
+      case 2:
+        X6 = D6;
+        break;
+      case 3:
+        X6 = E6;
+        break;
+      case 4:
+        X6 = F6;
+        break;
+      case 5:
+        X6 = G6;
+        break;
+      case 6:
+        X6 = H6;
+        break;
+      case 7:
+        X6 = I6;
+        break;
+      case 8:
+        X6 = J6;
+        break;
+      case 9:
+        X6 = K6;
+        break;
+      case 10:
+        X6 = L6;
+        break;
+      default:
+        X6 = C6;
+        break;
+    }
+
+    // Formula: baseValue - (baseValue * X6)
+    const result = baseValue - baseValue * X6;
+    return Math.round(result); // Proper rounding
+  };
+
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg px-4">
       <h2 className="text-lg font-bold bg-gray-800 p-3 rounded-sm">
@@ -616,9 +696,21 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
                             descricao === "Garrotas (12 a 24 meses)") &&
                           i > 1
                         ? calculateGarrotesForLaterYears(i, descricao)
-                        : i === 0
+                        : // For Novilhos and Novilhas in 2025
+                        descricao === "Novilhos (24 a 36 meses)" && i === 1
+                        ? calculateNovilhosFor2025(descricao)
+                        : descricao === "Novilhas (24 a 36 meses)" && i === 1
+                        ? calculateNovilhosFor2025(descricao)
+                        : // For Novilhos and Novilhas in later years (2026 and forward)
+                        (descricao === "Novilhos (24 a 36 meses)" ||
+                            descricao === "Novilhas (24 a 36 meses)") &&
+                          i > 1
+                        ? calculateNovilhosForLaterYears(i, descricao)
+                        : // Starting values for the first year (2024)
+                        i === 0
                         ? getStartingValue(descricao) || " "
-                        : ""
+                        : // Default empty case
+                          ""
                     }
                     onChange={(e) =>
                       handleInputChange(descricao, e.target.value)
