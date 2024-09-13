@@ -491,26 +491,42 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     return Math.round(result);
   };
 
-  const calculateGarrotesFor2025 = () => {
-    const garrotes2024 = getStartingValue("Garrotes (12 a 24 meses)");
-
-    // B27 - B27 * C6
-    const result = garrotes2024 - garrotes2024 * C6;
-
+  const calculateGarrotesFor2025 = (descricao) => {
+    const value2024 = getStartingValue(descricao);
+    const result = value2024 - value2024 * C6;
     return Math.round(result);
   };
 
-  const calculateGarrotesForLaterYears = (yearIndex) => {
+  const calculateGarrotesForLaterYears = (yearIndex, descricao) => {
     const bezerrosValue =
       yearIndex === 2
-        ? calculateBezerrosFor2025("Bezerros (0 a 12 meses)") // For 2026, use Bezerros from 2025
+        ? calculateBezerrosFor2025(
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
         : yearIndex === 3
-        ? calculateBezerrosForLaterYears(3, "Bezerros (0 a 12 meses)") // For 2027, use Bezerros from 2026
+        ? calculateBezerrosForLaterYears(
+            3,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
         : yearIndex === 4
-        ? calculateBezerrosForLaterYears(4, "Bezerros (0 a 12 meses)")
-        : calculateBezerrosForLaterYears(yearIndex, "Bezerros (0 a 12 meses)");
+        ? calculateBezerrosForLaterYears(
+            4,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
+        : calculateBezerrosForLaterYears(
+            yearIndex,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          );
 
-    let X5; // Dynamic value for each year
+    let X5;
     switch (yearIndex) {
       case 2:
         X5 = D5;
@@ -587,10 +603,14 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
                             descricao === "Bezerras (0 a 12 meses)") &&
                           i > 1
                         ? calculateBezerrosForLaterYears(i, descricao)
-                        : descricao === "Garrotes (12 a 24 meses)" && i === 1
-                        ? calculateGarrotesFor2025()
-                        : descricao === "Garrotes (12 a 24 meses)" && i > 1
-                        ? calculateGarrotesForLaterYears(i)
+                        : (descricao === "Garrotes (12 a 24 meses)" ||
+                            descricao === "Garrotas (12 a 24 meses)") &&
+                          i === 1
+                        ? calculateGarrotesFor2025(descricao)
+                        : (descricao === "Garrotes (12 a 24 meses)" ||
+                            descricao === "Garrotas (12 a 24 meses)") &&
+                          i > 1
+                        ? calculateGarrotesForLaterYears(i, descricao)
                         : i === 0
                         ? getStartingValue(descricao) || " "
                         : ""
