@@ -314,12 +314,31 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const animaisAdquirirMatrizes =
     data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
-  // Temporarily store D8 as 0 POR ENQUANTO
+  // Temporario, vem dos indicatroes tecnicos
   const [D8, setD8] = useState(0);
+  const [C5, setC5] = useState(0.06);
+  const [C4, setC4] = useState(0.8);
+  const [D4, setD4] = useState(0.8);
+  const [D5, setD5] = useState(0.06);
+  const [E4, setE4] = useState(0.8);
+  const [E5, setE5] = useState(0.06);
+  const [F4, setF4] = useState(0.8);
+  const [F5, setF5] = useState(0.06);
+  const [G4, setG4] = useState(0.8);
+  const [G5, setG5] = useState(0.06);
+  const [H4, setH4] = useState(0.8);
+  const [H5, setH5] = useState(0.06);
+  const [I4, setI4] = useState(0.8);
+  const [I5, setI5] = useState(0.06);
+  const [J4, setJ4] = useState(0.8);
+  const [J5, setJ5] = useState(0.06);
+  const [K4, setK4] = useState(0.8);
+  const [K5, setK5] = useState(0.06);
+  const [L4, setL4] = useState(0.8);
+  const [L5, setL5] = useState(0.06);
 
   const inventario = data?.dadosInventario?.[0] || {};
 
-  // Get the initial value from inventario (2024)
   const getStartingValue = (descricao) => {
     const field = mapDescricaoToField(descricao);
     return parseFloat(inventario[field] || 0);
@@ -348,6 +367,8 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
   };
 
+  /* INICIO MATRIZES */
+  //ANO 2
   const calculateMatrizesFor2025 = () => {
     const matrizes2024 = getStartingValue("Matrizes");
     const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)");
@@ -356,6 +377,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
   };
 
+  //ANO 3
   const calculateMatrizesFor2026 = () => {
     const matrizes2025 = calculateMatrizesFor2025();
     const novilhas2026 = getStartingValue("Novilhas (24 a 36 meses)") * 0.9;
@@ -367,7 +389,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     );
   };
 
-  // Calculate values for 2027 onwards
+  // ANOS 4 EM FRENTE
   const calculateMatrizesForLaterYears = (yearIndex) => {
     const prevYearValue =
       yearIndex === 1 ? calculateMatrizesFor2025() : calculateMatrizesFor2026();
@@ -375,6 +397,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
 
     return calculateMatrizesForYear(yearIndex, prevYearValue, novilhasValue);
   };
+  /* FIM MATRIZES */
 
   const calculateTourosForYear = (yearIndex) => {
     const matrizes2024 = getStartingValue("Matrizes");
@@ -386,6 +409,81 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     } else {
       return Math.round(matrizes2024 / relacaoMatrizes);
     }
+  };
+
+  const calculateBezerrosFor2025 = () => {
+    const bezerros2024 = getStartingValue("Bezerros (0 a 12 meses)");
+    const matrizes2025 = calculateMatrizesFor2025();
+
+    const reductionTerm = bezerros2024 - bezerros2024 * C5;
+    const contributionTerm = (matrizes2025 * C4) / 2;
+    const subtractionTerm = contributionTerm * C5;
+
+    const result = reductionTerm + contributionTerm - subtractionTerm;
+
+    return Math.round(result);
+  };
+
+  const calculateBezerrosForLaterYears = (yearIndex) => {
+    const matrizesValue =
+      yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : yearIndex === 3
+        ? calculateMatrizesForLaterYears(3)
+        : yearIndex === 4
+        ? calculateMatrizesForLaterYears(4)
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    let X4, X5;
+    switch (yearIndex) {
+      case 2:
+        X4 = D4;
+        X5 = D5;
+        break;
+      case 3:
+        X4 = E4;
+        X5 = E5;
+        break;
+      case 4:
+        X4 = F4;
+        X5 = F5;
+        break;
+      case 5:
+        X4 = G4;
+        X5 = G5;
+        break;
+      case 6:
+        X4 = H4;
+        X5 = H5;
+        break;
+      case 7:
+        X4 = I4;
+        X5 = I5;
+        break;
+      case 8:
+        X4 = J4;
+        X5 = J5;
+        break;
+      case 9:
+        X4 = K4;
+        X5 = K5;
+        break;
+      case 10:
+        X4 = L4;
+        X5 = L5;
+        break;
+      default:
+        X4 = C4;
+        X5 = C5;
+        break;
+    }
+
+    const contributionTerm = (matrizesValue * X4) / 2;
+    const subtractionTerm = contributionTerm * X5;
+
+    const result = contributionTerm - subtractionTerm;
+
+    return Math.round(result);
   };
 
   return (
@@ -416,9 +514,13 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
                         : descricao === "Matrizes" && i === 2
                         ? calculateMatrizesFor2026()
                         : descricao === "Matrizes" && i > 2
-                        ? calculateMatrizesForLaterYears(i) // Handle years 2027 onwards
+                        ? calculateMatrizesForLaterYears(i)
+                        : descricao === "Bezerros (0 a 12 meses)" && i === 1
+                        ? calculateBezerrosFor2025()
+                        : descricao === "Bezerros (0 a 12 meses)" && i > 1
+                        ? calculateBezerrosForLaterYears(i)
                         : i === 0
-                        ? getStartingValue(descricao)
+                        ? getStartingValue(descricao) || " "
                         : ""
                     }
                     onChange={(e) =>
