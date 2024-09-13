@@ -88,7 +88,7 @@ export default function EnquadramentoForm({ authID, onClose, msg }) {
   return (
     <div className="fixed inset-x-0 inset-y-0 w-full bg-gray-50 bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
       <div className="w-full h-full flex items-center justify-center">
-        <div className="w-full max-w-5xl divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-2xl p-4 sm:p-8 h-full overflow-y-auto">
+        <div className="w-full max-w-5xl divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-900 shadow-2xl p-4 sm:p-8 h-full overflow-y-auto">
           <div className="px-4 py-5 sm:px-6 gap-4 flex flex-col">
             <h1 className="text-2xl font-bold text-orange-700 uppercase">
               Formulário de Enquadramento <a className="text-green-700">PNCF</a>

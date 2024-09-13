@@ -29,15 +29,15 @@ export default function ProfileCreationPage({ authID }) {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white  shadow-2xl p-8 sm:p-16 sm:w-[80%] gap-16 justify-center overflow-y-auto">
+    <div className="w-full h-full flex items-center bg-gray-900 justify-center">
+      <div className="divide-y divide-gray-200 overflow-hidden rounded-lg  shadow-2xl p-8 sm:p-16 sm:w-[80%] gap-16 justify-center overflow-y-auto">
         <Link href={"/login"}>
           <button
             type="button"
-            className="rounded-full  bg-white text-black shadow-sm hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="rounded-full  text-black shadow-sm hover:text-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             <HomeIcon
-              className="-ml-0.5 h-8 w-8 text-black hover:shadow-md p-2 rounded-xl"
+              className="-ml-0.5 h-8 w-8 text-gray-100 hover:shadow-gray-700 hover:shadow-md p-2 rounded-xl"
               aria-hidden="true"
             />
           </button>
