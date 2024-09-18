@@ -25,8 +25,6 @@ export default function EvolucaoRebanhoBovinocultura({
     onChange(updatedData);
   };
 
-  console.log(data);
-
   return (
     <div className="flex flex-col gap-12">
       <div className="flex sm:flex-row gap-4 sm:gap-8">
@@ -535,15 +533,27 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   /* FIM MATRIZES */
 
   const calculateTourosForYear = (yearIndex) => {
-    const matrizes2024 = getStartingValue("Matrizes");
-
-    if (matrizes2024 < 1) {
-      return 0;
-    } else if (matrizes2024 / relacaoMatrizes <= reprodutoresAdquirir) {
-      return reprodutoresAdquirir;
-    } else {
-      return Math.round(matrizes2024 / relacaoMatrizes);
+    if (yearIndex === 0) {
+      const touros2024 = getStartingValue("Touro");
+      return touros2024;
     }
+
+    const matrizesValue =
+      yearIndex === 1
+        ? calculateMatrizesFor2025()
+        : yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    if (matrizesValue < 1) {
+      return 0;
+    }
+
+    const calculatedTouros = Math.round(matrizesValue / relacaoMatrizes);
+
+    return calculatedTouros <= reprodutoresAdquirir
+      ? reprodutoresAdquirir
+      : calculatedTouros;
   };
 
   const calculateBezerrosFor2025 = (descricao) => {
@@ -768,7 +778,67 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
 
     // Formula: baseValue - (baseValue * X6)
     const result = baseValue - baseValue * X6;
-    return Math.round(result); // Proper rounding
+    return Math.round(result);
+  };
+
+  const calculateTotaisEvolucao = (yearIndex) => {
+    let total = 0;
+
+    DESCRICOES.forEach((descricao) => {
+      let value;
+
+      if (descricao === "Touro") {
+        value = calculateTourosForYear(yearIndex);
+      } else if (descricao === "Matrizes" && yearIndex === 1) {
+        value = calculateMatrizesFor2025();
+      } else if (descricao === "Matrizes" && yearIndex === 2) {
+        value = calculateMatrizesFor2026();
+      } else if (descricao === "Matrizes" && yearIndex > 2) {
+        value = calculateMatrizesForLaterYears(yearIndex);
+      } else if (
+        (descricao === "Bezerros (0 a 12 meses)" ||
+          descricao === "Bezerras (0 a 12 meses)") &&
+        yearIndex === 1
+      ) {
+        value = calculateBezerrosFor2025(descricao);
+      } else if (
+        (descricao === "Bezerros (0 a 12 meses)" ||
+          descricao === "Bezerras (0 a 12 meses)") &&
+        yearIndex > 1
+      ) {
+        value = calculateBezerrosForLaterYears(yearIndex, descricao);
+      } else if (
+        (descricao === "Garrotes (12 a 24 meses)" ||
+          descricao === "Garrotas (12 a 24 meses)") &&
+        yearIndex === 1
+      ) {
+        value = calculateGarrotesFor2025(descricao);
+      } else if (
+        (descricao === "Garrotes (12 a 24 meses)" ||
+          descricao === "Garrotas (12 a 24 meses)") &&
+        yearIndex > 1
+      ) {
+        value = calculateGarrotesForLaterYears(yearIndex, descricao);
+      } else if (
+        (descricao === "Novilhos (24 a 36 meses)" ||
+          descricao === "Novilhas (24 a 36 meses)") &&
+        yearIndex === 1
+      ) {
+        value = calculateNovilhosFor2025(descricao);
+      } else if (
+        (descricao === "Novilhos (24 a 36 meses)" ||
+          descricao === "Novilhas (24 a 36 meses)") &&
+        yearIndex > 1
+      ) {
+        value = calculateNovilhosForLaterYears(yearIndex, descricao);
+      } else {
+        value = getStartingValue(descricao) || 0;
+      }
+
+      total += value;
+    });
+
+    return total;
   };
 
   return (
@@ -844,6 +914,20 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
               ))}
             </TableRow>
           ))}
+          {/* TOTAL DO REBANHO FOOTER */}
+          <TableRow className="bg-gray-950 hover:bg-gray-950 font-bold text-white">
+            <TableCell>Total do Rebanho</TableCell>
+            {anos.map((_, i) => (
+              <TableCell key={i}>
+                <Input
+                  type="text"
+                  value={calculateTotaisEvolucao(i)}
+                  className="w-full text-center"
+                  disabled={true}
+                />
+              </TableCell>
+            ))}
+          </TableRow>
         </TableBody>
       </Table>
     </div>
@@ -905,7 +989,7 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
               </TableRow>
             );
           })}
-          <TableRow className="bg-gray-950  ">
+          <TableRow className="bg-gray-950 hover:bg-gray-950  ">
             <TableCell className="font-bold text-md">Equivalência UA</TableCell>
             {anos.map((ano, i) => (
               <TableCell key={i}>
