@@ -455,10 +455,6 @@ export const BOVINOCULTURA_DESCRICOES = [
 
 export const VENDA_ANIMAIS_PRODUTOS_DESCRICOES = [
   "Matrizes Descartadas",
-  "Bezerros Vendidos",
-  "Bezerras Vendidas",
-  "Garrotes Vendidos",
-  "Garrotas Vendidas",
   "Novilhos Vendidos",
   "Novilhas Vendidas",
   "Queijo (kg)",
