@@ -9,9 +9,11 @@ import {
   TableRow,
 } from "../ui/table";
 import {
+  ANO_INICIAL,
   BOVINOCULTURA_DESCRICOES,
   VENDA_ANIMAIS_PRODUTOS_DESCRICOES,
 } from "@/utils/constants";
+import { get } from "react-hook-form";
 
 export default function EvolucaoRebanhoBovinocultura({
   data,
@@ -304,6 +306,51 @@ function mapDescricaoToField(descricao) {
   }
 }
 
+function mapExcelToBanco({ letra, numero }) {
+  const anoIndex = letra.charCodeAt(0) - "B".charCodeAt(0) + 1;
+  let descricao;
+  switch (numero) {
+    case 4:
+      descricao = "Parição";
+      break;
+    case 5:
+      descricao = "Mortalidade de bezerros(as)";
+      break;
+    case 6:
+      descricao = "Mortalidade de garrotes(as)";
+      break;
+    case 7:
+      descricao = "Mortalidade de adultos";
+      break;
+    case 8:
+      descricao = "Descarte matriz existente";
+      break;
+    case 9:
+      descricao = "Descarte adquiridos";
+      break;
+    case 10:
+      descricao = "Período de ordenha";
+      break;
+    case 11:
+      descricao = "Produção leite/dia";
+      break;
+    default:
+      descricao = "Unknown description";
+  }
+
+  return { descricao, anoIndex };
+}
+
+function getConstanteFromData({ arr, letra, numero }) {
+  const { descricao, anoIndex } = mapExcelToBanco({ letra, numero });
+  const foundItem = arr.find((item) => item.descricao === descricao);
+  if (foundItem) {
+    const ano = `ano${anoIndex}`;
+    return foundItem[ano] / 100; // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM!!!
+  }
+  return undefined;
+}
+
 function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const DESCRICOES = BOVINOCULTURA_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
@@ -317,38 +364,113 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   const animaisAdquirirMatrizes =
     data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
-  // Temporario, vem dos indicatroes tecnicos
-  const [D8, setD8] = useState(0);
-  const [C5, setC5] = useState(0.06);
-  const [C6, setC6] = useState(0.03);
-  const [C4, setC4] = useState(0.8);
-  const [D4, setD4] = useState(0.8);
-  const [D5, setD5] = useState(0.06);
-  const [E4, setE4] = useState(0.8);
-  const [E5, setE5] = useState(0.06);
-  const [F4, setF4] = useState(0.8);
-  const [F5, setF5] = useState(0.06);
-  const [G4, setG4] = useState(0.8);
-  const [G5, setG5] = useState(0.06);
-  const [H4, setH4] = useState(0.8);
-  const [H5, setH5] = useState(0.06);
-  const [I4, setI4] = useState(0.8);
-  const [I5, setI5] = useState(0.06);
-  const [J4, setJ4] = useState(0.8);
-  const [J5, setJ5] = useState(0.06);
-  const [K4, setK4] = useState(0.8);
-  const [K5, setK5] = useState(0.06);
-  const [L4, setL4] = useState(0.8);
-  const [L5, setL5] = useState(0.06);
-  const [D6, setD6] = useState(0.03);
-  const [E6, setE6] = useState(0.03);
-  const [F6, setF6] = useState(0.03);
-  const [G6, setG6] = useState(0.03);
-  const [H6, setH6] = useState(0.03);
-  const [I6, setI6] = useState(0.03);
-  const [J6, setJ6] = useState(0.03);
-  const [K6, setK6] = useState(0.03);
-  const [L6, setL6] = useState(0.03);
+  const arr =
+    data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
+
+  /* DESCRIÇÕES ------------------
+    Parição
+    Mortalidade de bezerros(as)
+    Mortalidade de garrotes(as)
+    Mortalidade de adultos
+    Descarte matriz existente
+    Descarte adquiridos
+    Período de ordenha
+    Produção leite/dia
+   --------------------------- */
+
+  const [D8, setD8] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 8 })
+  );
+  const [C5, setC5] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 5 })
+  );
+  const [C6, setC6] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 6 })
+  );
+  const [C4, setC4] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 4 })
+  );
+  const [D4, setD4] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 4 })
+  );
+  const [D5, setD5] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 5 })
+  );
+  const [E4, setE4] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 4 })
+  );
+  const [E5, setE5] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 5 })
+  );
+  const [F4, setF4] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 4 })
+  );
+  const [F5, setF5] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 5 })
+  );
+  const [G4, setG4] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 4 })
+  );
+  const [G5, setG5] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 5 })
+  );
+  const [H4, setH4] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 4 })
+  );
+  const [H5, setH5] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 5 })
+  );
+  const [I4, setI4] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 4 })
+  );
+  const [I5, setI5] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 5 })
+  );
+  const [J4, setJ4] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 4 })
+  );
+  const [J5, setJ5] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 5 })
+  );
+  const [K4, setK4] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 4 })
+  );
+  const [K5, setK5] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 5 })
+  );
+  const [L4, setL4] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 4 })
+  );
+  const [L5, setL5] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 5 })
+  );
+  const [D6, setD6] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 6 })
+  );
+  const [E6, setE6] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 6 })
+  );
+  const [F6, setF6] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 6 })
+  );
+  const [G6, setG6] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 6 })
+  );
+  const [H6, setH6] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 6 })
+  );
+  const [I6, setI6] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 6 })
+  );
+  const [J6, setJ6] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 6 })
+  );
+  const [K6, setK6] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 6 })
+  );
+  const [L6, setL6] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 6 })
+  );
 
   const inventario = data?.dadosInventario?.[0] || {};
 
