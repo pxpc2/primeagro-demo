@@ -22,12 +22,19 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
     try {
       setLoading(true);
 
+      console.log(bovinoculturaData);
+
       const updatedBovinoculturaData = {
         ...bovinoculturaData[0],
         animaisAdquirir_reprodutores: bovinoculturaData.reprodutoresAdquirir,
         animaisAdquirir_matrizes: bovinoculturaData.matrizesAdquirir,
         estabilizacao_plantel: bovinoculturaData.estabilizacao_plantel,
         relacao_matrizes: bovinoculturaData.relacao_matrizes,
+        equivalenciaUA_bezerros: bovinoculturaData.equivalenciaUA_bezerros,
+        equivalenciaUA_novilhos: bovinoculturaData.equivalenciaUA_novilhos,
+        equivalenciaUA_matrizes: bovinoculturaData.equivalenciaUA_matrizes,
+        equivalenciaUA_touro: bovinoculturaData.equivalenciaUA_touro,
+        equivalenciaUA_garrotes: bovinoculturaData.equivalenciaUA_garrotes,
       };
 
       const finalBovinoculturaData = [updatedBovinoculturaData];
