@@ -19,7 +19,9 @@ function getConstanteFromData({ arr, letra, numero }) {
   const foundItem = arr.find((item) => item.descricao === descricao);
   if (foundItem) {
     const ano = `ano${anoIndex}`;
-    return foundItem[ano] / 100; // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM!!!
+    // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM, menos as duas últimas fileiras
+    let porcentagem = numero === 10 || numero === 11 ? 1 : 100;
+    return foundItem[ano] / porcentagem;
   }
   return undefined;
 }
@@ -40,6 +42,9 @@ export default function EvolucaoRebanhoBovinocultura({
   const arr =
     data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
 
+  const [B4, setB4] = useState(
+    getConstanteFromData({ arr, letra: "B", numero: 4 })
+  );
   const [D8, setD8] = useState(
     getConstanteFromData({ arr, letra: "D", numero: 8 })
   );
@@ -160,6 +165,72 @@ export default function EvolucaoRebanhoBovinocultura({
   );
   const [L8, setL8] = useState(
     getConstanteFromData({ arr, letra: "L", numero: 8 })
+  );
+  const [B10, setB10] = useState(
+    getConstanteFromData({ arr, letra: "B", numero: 10 })
+  );
+  const [B11, setB11] = useState(
+    getConstanteFromData({ arr, letra: "B", numero: 11 })
+  );
+  const [C10, setC10] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 10 })
+  );
+  const [C11, setC11] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 11 })
+  );
+  const [D10, setD10] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 10 })
+  );
+  const [D11, setD11] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 11 })
+  );
+  const [E10, setE10] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 10 })
+  );
+  const [F10, setF10] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 10 })
+  );
+  const [G10, setG10] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 10 })
+  );
+  const [H10, setH10] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 10 })
+  );
+  const [I10, setI10] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 10 })
+  );
+  const [J10, setJ10] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 10 })
+  );
+  const [K10, setK10] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 10 })
+  );
+  const [L10, setL10] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 10 })
+  );
+  const [F11, setF11] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 11 })
+  );
+  const [G11, setG11] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 11 })
+  );
+  const [H11, setH11] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 11 })
+  );
+  const [I11, setI11] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 11 })
+  );
+  const [J11, setJ11] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 11 })
+  );
+  const [K11, setK11] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 11 })
+  );
+  const [L11, setL11] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 11 })
+  );
+  const [E11, setE11] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 11 })
   );
 
   const inventario = data?.dadosInventario?.[0] || {};
@@ -501,37 +572,6 @@ export default function EvolucaoRebanhoBovinocultura({
           anoInicial={anoInicial}
           formsDisabled={formsDisabled}
           onChange={handleDataChange}
-          D8={D8}
-          C5={C5}
-          C6={C6}
-          C4={C4}
-          D4={D4}
-          D5={D5}
-          E4={E4}
-          E5={E5}
-          F4={F4}
-          F5={F5}
-          G4={G4}
-          G5={G5}
-          H4={H4}
-          H5={H5}
-          I4={I4}
-          I5={I5}
-          J4={J4}
-          J5={J5}
-          K4={K4}
-          K5={K5}
-          L4={L4}
-          L5={L5}
-          D6={D6}
-          E6={E6}
-          F6={F6}
-          G6={G6}
-          H6={H6}
-          I6={I6}
-          J6={J6}
-          K6={K6}
-          L6={L6}
           calculateTourosForYear={calculateTourosForYear}
           calculateMatrizesFor2025={calculateMatrizesFor2025}
           calculateMatrizesFor2026={calculateMatrizesFor2026}
@@ -559,6 +599,39 @@ export default function EvolucaoRebanhoBovinocultura({
           K8={K8}
           L8={L8}
           D8={D8}
+          B10={B10}
+          B11={B11}
+          B4={B4}
+          C10={C10}
+          C11={C11}
+          C4={C4}
+          D10={D10}
+          D11={D11}
+          D4={D4}
+          F4={F4}
+          G4={G4}
+          H4={H4}
+          I4={I4}
+          J4={J4}
+          K4={K4}
+          L4={L4}
+          E10={E10}
+          E11={E11}
+          F10={F10}
+          G10={G10}
+          H10={H10}
+          I10={I10}
+          J10={J10}
+          K10={K10}
+          L10={L10}
+          F11={F11}
+          G11={G11}
+          H11={H11}
+          I11={I11}
+          J11={J11}
+          K11={K11}
+          L11={L11}
+          E4={E4}
           calculateTourosForYear={calculateTourosForYear}
           calculateMatrizesFor2025={calculateMatrizesFor2025}
           calculateMatrizesFor2026={calculateMatrizesFor2026}
@@ -861,37 +934,6 @@ function BovinoculturaTable({
   anoInicial,
   formsDisabled,
   onChange,
-  D8,
-  C5,
-  C6,
-  C4,
-  D4,
-  D5,
-  E4,
-  E5,
-  F4,
-  F5,
-  G4,
-  G5,
-  H4,
-  H5,
-  I4,
-  I5,
-  J4,
-  J5,
-  K4,
-  K5,
-  L4,
-  L5,
-  D6,
-  E6,
-  F6,
-  G6,
-  H6,
-  I6,
-  J6,
-  K6,
-  L6,
   calculateTourosForYear,
   calculateMatrizesFor2025,
   calculateMatrizesFor2026,
@@ -1098,6 +1140,39 @@ function VendasAnimaisTable({
   J8,
   K8,
   L8,
+  B10,
+  B11,
+  B4,
+  C4,
+  C10,
+  C11,
+  D10,
+  D11,
+  D4,
+  E4,
+  F4,
+  G4,
+  H4,
+  I4,
+  J4,
+  K4,
+  L4,
+  E10,
+  F10,
+  G10,
+  H10,
+  I10,
+  J10,
+  K10,
+  L10,
+  E11,
+  F11,
+  G11,
+  H11,
+  I11,
+  J11,
+  K11,
+  L11,
   calculateTourosForYear,
   calculateMatrizesFor2025,
   calculateMatrizesFor2026,
@@ -1293,6 +1368,136 @@ function VendasAnimaisTable({
     return result;
   };
 
+  const findDataForDescricao = (descricao) => {
+    return data?.aba_vendas_animais?.find(
+      (item) => item.descricao === descricao
+    );
+  };
+
+  const calculateLeiteParaVendaForYear = (yearIndex) => {
+    if (yearIndex === 0) {
+      const matrizes2024 = getStartingValue("Matrizes"); // B24
+      console.log(B4);
+      const leiteParaVenda2024 = Math.round(
+        ((B4 * B10) / 360) * matrizes2024 * B11 * 365
+      );
+      console.log("leite: " + leiteParaVenda2024);
+      return leiteParaVenda2024;
+    } else if (yearIndex === 1) {
+      const matrizes2025 = calculateMatrizesFor2025(); // C24
+      const bezerros2025 = calculateBezerrosFor2025("Bezerros (0 a 12 meses)"); // C25
+      const bezerras2025 = calculateBezerrosFor2025("Bezerras (0 a 12 meses)"); // C26
+
+      const queijo2025 = findDataForDescricao("Queijo (kg)")?.["ano2"] || 0; // C37
+
+      const baseLeite = Math.round(
+        ((C4 * C10) / 360) * matrizes2025 * C11 * 365
+      );
+
+      const deduction = 4 * 60 * (bezerros2025 + bezerras2025);
+      const queijoDeduction = queijo2025 * 10;
+
+      return baseLeite - deduction - queijoDeduction;
+    } else if (yearIndex >= 2) {
+      const matrizesForYear =
+        yearIndex === 2
+          ? calculateMatrizesFor2026()
+          : calculateMatrizesForLaterYears(yearIndex); // D24, E24, etc.
+
+      if (yearIndex === 3) {
+        console.log(matrizesForYear);
+      }
+      const bezerrosForYear = calculateBezerrosForLaterYears(
+        yearIndex,
+        "Bezerros (0 a 12 meses)"
+      ); // D25, E25, etc.
+      if (yearIndex === 3) {
+        console.log(bezerrosForYear);
+      }
+      const bezerrasForYear = calculateBezerrosForLaterYears(
+        yearIndex,
+        "Bezerras (0 a 12 meses)"
+      ); // D26, E26, etc.
+      if (yearIndex === 3) {
+        console.log(bezerrasForYear);
+      }
+      const queijoForYear =
+        findDataForDescricao("Queijo (kg)")?.[`ano${yearIndex + 1}`] || 0; // D37, E37, etc.
+      const current4 =
+        yearIndex === 2
+          ? D4
+          : yearIndex === 3
+          ? E4
+          : yearIndex === 4
+          ? F4
+          : yearIndex === 5
+          ? G4
+          : yearIndex === 6
+          ? H4
+          : yearIndex === 7
+          ? I4
+          : yearIndex === 8
+          ? J4
+          : yearIndex === 9
+          ? K4
+          : yearIndex === 10
+          ? L4
+          : 0;
+
+      const current10 =
+        yearIndex === 2
+          ? D10
+          : yearIndex === 3
+          ? E10
+          : yearIndex === 4
+          ? F10
+          : yearIndex === 5
+          ? G10
+          : yearIndex === 6
+          ? H10
+          : yearIndex === 7
+          ? I10
+          : yearIndex === 8
+          ? J10
+          : yearIndex === 9
+          ? K10
+          : yearIndex === 10
+          ? L10
+          : 0;
+
+      const current11 =
+        yearIndex === 2
+          ? D11
+          : yearIndex === 3
+          ? E11
+          : yearIndex === 4
+          ? F11
+          : yearIndex === 5
+          ? G11
+          : yearIndex === 6
+          ? H11
+          : yearIndex === 7
+          ? I11
+          : yearIndex === 8
+          ? J11
+          : yearIndex === 9
+          ? K11
+          : yearIndex === 10
+          ? L11
+          : 0;
+
+      const baseLeite = Math.round(
+        ((current4 * current10) / 360) * matrizesForYear * current11 * 365
+      );
+
+      const deduction = 4 * 60 * (bezerrosForYear + bezerrasForYear);
+      const queijoDeduction = queijoForYear * 10;
+
+      return baseLeite - deduction - queijoDeduction;
+    }
+    return "";
+  };
+
   const getCalculatedValue = (descricao, yearIndex) => {
     switch (descricao) {
       case "Matrizes Descartadas":
@@ -1305,7 +1510,8 @@ function VendasAnimaisTable({
           : yearIndex > 1
           ? calculateNovilhasVendidasForLaterYears(yearIndex)
           : "";
-      // proxs casos
+      case "Leite para venda (litros)":
+        return calculateLeiteParaVendaForYear(yearIndex);
       default:
         return "";
     }
