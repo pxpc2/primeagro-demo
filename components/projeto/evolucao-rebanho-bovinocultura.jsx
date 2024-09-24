@@ -13,8 +13,20 @@ import {
   BOVINOCULTURA_DESCRICOES,
   VENDA_ANIMAIS_PRODUTOS_DESCRICOES,
 } from "@/utils/constants";
-import { get } from "react-hook-form";
 
+function getConstanteFromData({ arr, letra, numero }) {
+  const { descricao, anoIndex } = mapExcelToBanco({ letra, numero });
+  const foundItem = arr.find((item) => item.descricao === descricao);
+  if (foundItem) {
+    const ano = `ano${anoIndex}`;
+    return foundItem[ano] / 100; // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM!!!
+  }
+  return undefined;
+}
+
+/**
+ * @TODO preciso centralizar os states usados e passar como prop p/ cada component
+ */
 export default function EvolucaoRebanhoBovinocultura({
   data,
   formsDisabled,
@@ -23,6 +35,448 @@ export default function EvolucaoRebanhoBovinocultura({
 }) {
   const handleDataChange = (updatedData) => {
     onChange(updatedData);
+  };
+
+  const arr =
+    data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
+
+  const [D8, setD8] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 8 })
+  );
+  const [C5, setC5] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 5 })
+  );
+  const [C6, setC6] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 6 })
+  );
+  const [C4, setC4] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 4 })
+  );
+  const [D4, setD4] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 4 })
+  );
+  const [D5, setD5] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 5 })
+  );
+  const [E4, setE4] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 4 })
+  );
+  const [E5, setE5] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 5 })
+  );
+  const [F4, setF4] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 4 })
+  );
+  const [F5, setF5] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 5 })
+  );
+  const [G4, setG4] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 4 })
+  );
+  const [G5, setG5] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 5 })
+  );
+  const [H4, setH4] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 4 })
+  );
+  const [H5, setH5] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 5 })
+  );
+  const [I4, setI4] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 4 })
+  );
+  const [I5, setI5] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 5 })
+  );
+  const [J4, setJ4] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 4 })
+  );
+  const [J5, setJ5] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 5 })
+  );
+  const [K4, setK4] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 4 })
+  );
+  const [K5, setK5] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 5 })
+  );
+  const [L4, setL4] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 4 })
+  );
+  const [L5, setL5] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 5 })
+  );
+  const [L6, setL6] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 5 })
+  );
+  const [D6, setD6] = useState(
+    getConstanteFromData({ arr, letra: "D", numero: 6 })
+  );
+  const [E6, setE6] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 6 })
+  );
+  const [F6, setF6] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 6 })
+  );
+  const [G6, setG6] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 6 })
+  );
+  const [H6, setH6] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 6 })
+  );
+  const [I6, setI6] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 6 })
+  );
+  const [J6, setJ6] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 6 })
+  );
+  const [K6, setK6] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 6 })
+  );
+  // OS X8 SÃO P/ ANIMAIS VENDAS TABLE
+  const [C8, setC8] = useState(
+    getConstanteFromData({ arr, letra: "C", numero: 8 })
+  );
+  const [E8, setE8] = useState(
+    getConstanteFromData({ arr, letra: "E", numero: 8 })
+  );
+  const [F8, setF8] = useState(
+    getConstanteFromData({ arr, letra: "F", numero: 8 })
+  );
+  const [G8, setG8] = useState(
+    getConstanteFromData({ arr, letra: "G", numero: 8 })
+  );
+  const [H8, setH8] = useState(
+    getConstanteFromData({ arr, letra: "H", numero: 8 })
+  );
+  const [I8, setI8] = useState(
+    getConstanteFromData({ arr, letra: "I", numero: 8 })
+  );
+  const [J8, setJ8] = useState(
+    getConstanteFromData({ arr, letra: "J", numero: 8 })
+  );
+  const [K8, setK8] = useState(
+    getConstanteFromData({ arr, letra: "K", numero: 8 })
+  );
+  const [L8, setL8] = useState(
+    getConstanteFromData({ arr, letra: "L", numero: 8 })
+  );
+
+  const inventario = data?.dadosInventario?.[0] || {};
+  const reprodutoresAdquirir =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_reprodutores || 0;
+  const relacaoMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.relacao_matrizes || 0;
+  const estabilizacaoPlantel =
+    data?.dadosEvolucaoRebanho?.[0]?.estabilizacao_plantel || 0;
+  const animaisAdquirirMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
+
+  const getStartingValue = (descricao) => {
+    const field = mapDescricaoToField(descricao);
+    return parseFloat(inventario[field] || 0);
+  };
+
+  const calculateMatrizesForYear = (
+    yearIndex,
+    prevYearValue,
+    novilhasValue
+  ) => {
+    const adjustmentFactor = prevYearValue * D8; // D24 * D8
+    const calculatedNovilhas = novilhasValue * 0.9; // E30 * 0.9
+    let sum = prevYearValue - adjustmentFactor + calculatedNovilhas;
+    if (sum < estabilizacaoPlantel) {
+      sum = estabilizacaoPlantel;
+    }
+
+    return Math.round(sum);
+  };
+
+  /* INICIO MATRIZES */
+  //ANO 2
+  const calculateMatrizesFor2025 = () => {
+    const matrizes2024 = getStartingValue("Matrizes");
+    const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)");
+    const sum = animaisAdquirirMatrizes + matrizes2024 + novilhas2024;
+
+    return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
+  };
+
+  //ANO 3
+  const calculateMatrizesFor2026 = () => {
+    const matrizes2025 = calculateMatrizesFor2025();
+    const novilhas2026 = getStartingValue("Novilhas (24 a 36 meses)") * 0.9;
+
+    return Math.round(
+      matrizes2025 + novilhas2026 < estabilizacaoPlantel
+        ? matrizes2025 + novilhas2026
+        : estabilizacaoPlantel
+    );
+  };
+
+  // ANOS 4 EM FRENTE
+  const calculateMatrizesForLaterYears = (yearIndex) => {
+    const prevYearValue =
+      yearIndex === 2 ? calculateMatrizesFor2025() : calculateMatrizesFor2026();
+    const novilhasValue = getStartingValue("Novilhas (24 a 36 meses)");
+
+    let result = calculateMatrizesForYear(
+      yearIndex,
+      prevYearValue,
+      novilhasValue
+    );
+
+    if (result < estabilizacaoPlantel) {
+      result = estabilizacaoPlantel;
+    }
+
+    return result;
+  };
+  /* FIM MATRIZES */
+
+  const calculateTourosForYear = (yearIndex) => {
+    if (yearIndex === 0) {
+      const touros2024 = getStartingValue("Touro");
+      return touros2024;
+    }
+
+    const matrizesValue =
+      yearIndex === 1
+        ? calculateMatrizesFor2025()
+        : yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    if (matrizesValue < 1) {
+      return 0;
+    }
+
+    const calculatedTouros = Math.round(matrizesValue / relacaoMatrizes);
+
+    return calculatedTouros <= reprodutoresAdquirir
+      ? reprodutoresAdquirir
+      : calculatedTouros;
+  };
+
+  const calculateBezerrosFor2025 = (descricao) => {
+    const value2024 = getStartingValue(descricao);
+    const matrizes2025 = calculateMatrizesFor2025();
+
+    const reductionTerm = value2024 - value2024 * C5;
+    const contributionTerm = (matrizes2025 * C4) / 2;
+    const subtractionTerm = contributionTerm * C5;
+
+    if (descricao === "Bezerros (0 a 12 meses)") {
+      return Math.round(reductionTerm + contributionTerm - subtractionTerm);
+    } else if (descricao === "Bezerras (0 a 12 meses)") {
+      return Math.round(reductionTerm + contributionTerm - subtractionTerm);
+    }
+
+    return 0;
+  };
+
+  const calculateBezerrosForLaterYears = (yearIndex) => {
+    const matrizesValue =
+      yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    let X4, X5;
+    switch (yearIndex) {
+      case 2:
+        X4 = D4;
+        X5 = D5;
+        break;
+      case 3:
+        X4 = E4;
+        X5 = E5;
+        break;
+      case 4:
+        X4 = F4;
+        X5 = F5;
+        break;
+      case 5:
+        X4 = G4;
+        X5 = G5;
+        break;
+      case 6:
+        X4 = H4;
+        X5 = H5;
+        break;
+      case 7:
+        X4 = I4;
+        X5 = I5;
+        break;
+      case 8:
+        X4 = J4;
+        X5 = J5;
+        break;
+      case 9:
+        X4 = K4;
+        X5 = K5;
+        break;
+      case 10:
+        X4 = L4;
+        X5 = L5;
+        break;
+      default:
+        X4 = C4;
+        X5 = C5;
+        break;
+    }
+
+    const contributionTerm = (matrizesValue * X4) / 2;
+    const subtractionTerm = contributionTerm * X5;
+
+    const result = contributionTerm - subtractionTerm;
+
+    return Math.round(result);
+  };
+
+  const calculateGarrotesFor2025 = (descricao) => {
+    const value2024 = getStartingValue(descricao);
+    const result = value2024 - value2024 * C6;
+    return Math.round(result);
+  };
+
+  const calculateGarrotesForLaterYears = (yearIndex, descricao) => {
+    const bezerrosValue =
+      yearIndex === 2
+        ? calculateBezerrosFor2025(
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
+        : yearIndex === 3
+        ? calculateBezerrosForLaterYears(
+            3,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
+        : yearIndex === 4
+        ? calculateBezerrosForLaterYears(
+            4,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          )
+        : calculateBezerrosForLaterYears(
+            yearIndex,
+            descricao === "Garrotes (12 a 24 meses)"
+              ? "Bezerros (0 a 12 meses)"
+              : "Bezerras (0 a 12 meses)"
+          );
+
+    let X5;
+    switch (yearIndex) {
+      case 2:
+        X5 = D5;
+        break;
+      case 3:
+        X5 = E5;
+        break;
+      case 4:
+        X5 = F5;
+        break;
+      case 5:
+        X5 = G5;
+        break;
+      case 6:
+        X5 = H5;
+        break;
+      case 7:
+        X5 = I5;
+        break;
+      case 8:
+        X5 = J5;
+        break;
+      case 9:
+        X5 = K5;
+        break;
+      case 10:
+        X5 = L5;
+        break;
+      default:
+        X5 = C5;
+        break;
+    }
+
+    // Formula: bezerrosValue - bezerrosValue * X5
+    const result = bezerrosValue - bezerrosValue * X5;
+
+    return Math.round(result);
+  };
+
+  const calculateNovilhosFor2025 = (descricao) => {
+    if (descricao === "Novilhos (24 a 36 meses)") {
+      const garrotes2024 = getStartingValue("Garrotes (12 a 24 meses)");
+      const result = garrotes2024 - garrotes2024 * C6;
+      return Math.round(result);
+    } else if (descricao === "Novilhas (24 a 36 meses)") {
+      return getStartingValue("Novilhas (24 a 36 meses)");
+    }
+    return 0;
+  };
+
+  const calculateNovilhosForLaterYears = (yearIndex, descricao) => {
+    let baseValue;
+
+    if (descricao === "Novilhos (24 a 36 meses)") {
+      baseValue =
+        yearIndex === 2
+          ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex - 1,
+              "Garrotes (12 a 24 meses)"
+            );
+    } else if (descricao === "Novilhas (24 a 36 meses)") {
+      baseValue =
+        yearIndex === 2
+          ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex - 1,
+              "Garrotas (12 a 24 meses)"
+            );
+    }
+
+    let X6;
+    switch (yearIndex) {
+      case 2:
+        X6 = D6;
+        break;
+      case 3:
+        X6 = E6;
+        break;
+      case 4:
+        X6 = F6;
+        break;
+      case 5:
+        X6 = G6;
+        break;
+      case 6:
+        X6 = H6;
+        break;
+      case 7:
+        X6 = I6;
+        break;
+      case 8:
+        X6 = J6;
+        break;
+      case 9:
+        X6 = K6;
+        break;
+      case 10:
+        X6 = L6;
+        break;
+      default:
+        X6 = C6;
+        break;
+    }
+
+    // Formula: baseValue - (baseValue * X6)
+    const result = baseValue - baseValue * X6;
+    return Math.round(result);
   };
 
   return (
@@ -47,12 +501,75 @@ export default function EvolucaoRebanhoBovinocultura({
           anoInicial={anoInicial}
           formsDisabled={formsDisabled}
           onChange={handleDataChange}
+          D8={D8}
+          C5={C5}
+          C6={C6}
+          C4={C4}
+          D4={D4}
+          D5={D5}
+          E4={E4}
+          E5={E5}
+          F4={F4}
+          F5={F5}
+          G4={G4}
+          G5={G5}
+          H4={H4}
+          H5={H5}
+          I4={I4}
+          I5={I5}
+          J4={J4}
+          J5={J5}
+          K4={K4}
+          K5={K5}
+          L4={L4}
+          L5={L5}
+          D6={D6}
+          E6={E6}
+          F6={F6}
+          G6={G6}
+          H6={H6}
+          I6={I6}
+          J6={J6}
+          K6={K6}
+          L6={L6}
+          calculateTourosForYear={calculateTourosForYear}
+          calculateMatrizesFor2025={calculateMatrizesFor2025}
+          calculateMatrizesFor2026={calculateMatrizesFor2026}
+          calculateMatrizesForLaterYears={calculateMatrizesForLaterYears}
+          calculateBezerrosFor2025={calculateBezerrosFor2025}
+          calculateBezerrosForLaterYears={calculateBezerrosForLaterYears}
+          calculateGarrotesFor2025={calculateGarrotesFor2025}
+          calculateGarrotesForLaterYears={calculateGarrotesForLaterYears}
+          calculateNovilhosFor2025={calculateNovilhosFor2025}
+          calculateNovilhosForLaterYears={calculateNovilhosForLaterYears}
+          getStartingValue={getStartingValue}
         />
         <VendasAnimaisTable
           anoInicial={anoInicial}
           data={data}
           formsDisabled={formsDisabled}
           onChange={handleDataChange}
+          C8={C8}
+          E8={E8}
+          F8={F8}
+          G8={G8}
+          H8={H8}
+          I8={I8}
+          J8={J8}
+          K8={K8}
+          L8={L8}
+          D8={D8}
+          calculateTourosForYear={calculateTourosForYear}
+          calculateMatrizesFor2025={calculateMatrizesFor2025}
+          calculateMatrizesFor2026={calculateMatrizesFor2026}
+          calculateMatrizesForLaterYears={calculateMatrizesForLaterYears}
+          calculateBezerrosFor2025={calculateBezerrosFor2025}
+          calculateBezerrosForLaterYears={calculateBezerrosForLaterYears}
+          calculateGarrotesFor2025={calculateGarrotesFor2025}
+          calculateGarrotesForLaterYears={calculateGarrotesForLaterYears}
+          calculateNovilhosFor2025={calculateNovilhosFor2025}
+          calculateNovilhosForLaterYears={calculateNovilhosForLaterYears}
+          getStartingValue={getStartingValue}
         />
       </div>
     </div>
@@ -339,31 +856,56 @@ function mapExcelToBanco({ letra, numero }) {
   return { descricao, anoIndex };
 }
 
-function getConstanteFromData({ arr, letra, numero }) {
-  const { descricao, anoIndex } = mapExcelToBanco({ letra, numero });
-  const foundItem = arr.find((item) => item.descricao === descricao);
-  if (foundItem) {
-    const ano = `ano${anoIndex}`;
-    return foundItem[ano] / 100; // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM!!!
-  }
-  return undefined;
-}
-
-function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
+function BovinoculturaTable({
+  data,
+  anoInicial,
+  formsDisabled,
+  onChange,
+  D8,
+  C5,
+  C6,
+  C4,
+  D4,
+  D5,
+  E4,
+  E5,
+  F4,
+  F5,
+  G4,
+  G5,
+  H4,
+  H5,
+  I4,
+  I5,
+  J4,
+  J5,
+  K4,
+  K5,
+  L4,
+  L5,
+  D6,
+  E6,
+  F6,
+  G6,
+  H6,
+  I6,
+  J6,
+  K6,
+  L6,
+  calculateTourosForYear,
+  calculateMatrizesFor2025,
+  calculateMatrizesFor2026,
+  calculateMatrizesForLaterYears,
+  calculateBezerrosFor2025,
+  calculateBezerrosForLaterYears,
+  calculateGarrotesFor2025,
+  calculateGarrotesForLaterYears,
+  calculateNovilhosFor2025,
+  calculateNovilhosForLaterYears,
+  getStartingValue,
+}) {
   const DESCRICOES = BOVINOCULTURA_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
-
-  const reprodutoresAdquirir =
-    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_reprodutores || 0;
-  const relacaoMatrizes =
-    data?.dadosEvolucaoRebanho?.[0]?.relacao_matrizes || 0;
-  const estabilizacaoPlantel =
-    data?.dadosEvolucaoRebanho?.[0]?.estabilizacao_plantel || 0;
-  const animaisAdquirirMatrizes =
-    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
-
-  const arr =
-    data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
 
   /* DESCRIÇÕES ------------------
     Parição
@@ -376,106 +918,7 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     Produção leite/dia
    --------------------------- */
 
-  const [D8, setD8] = useState(
-    getConstanteFromData({ arr, letra: "D", numero: 8 })
-  );
-  const [C5, setC5] = useState(
-    getConstanteFromData({ arr, letra: "C", numero: 5 })
-  );
-  const [C6, setC6] = useState(
-    getConstanteFromData({ arr, letra: "C", numero: 6 })
-  );
-  const [C4, setC4] = useState(
-    getConstanteFromData({ arr, letra: "C", numero: 4 })
-  );
-  const [D4, setD4] = useState(
-    getConstanteFromData({ arr, letra: "D", numero: 4 })
-  );
-  const [D5, setD5] = useState(
-    getConstanteFromData({ arr, letra: "D", numero: 5 })
-  );
-  const [E4, setE4] = useState(
-    getConstanteFromData({ arr, letra: "E", numero: 4 })
-  );
-  const [E5, setE5] = useState(
-    getConstanteFromData({ arr, letra: "E", numero: 5 })
-  );
-  const [F4, setF4] = useState(
-    getConstanteFromData({ arr, letra: "F", numero: 4 })
-  );
-  const [F5, setF5] = useState(
-    getConstanteFromData({ arr, letra: "F", numero: 5 })
-  );
-  const [G4, setG4] = useState(
-    getConstanteFromData({ arr, letra: "G", numero: 4 })
-  );
-  const [G5, setG5] = useState(
-    getConstanteFromData({ arr, letra: "G", numero: 5 })
-  );
-  const [H4, setH4] = useState(
-    getConstanteFromData({ arr, letra: "H", numero: 4 })
-  );
-  const [H5, setH5] = useState(
-    getConstanteFromData({ arr, letra: "H", numero: 5 })
-  );
-  const [I4, setI4] = useState(
-    getConstanteFromData({ arr, letra: "I", numero: 4 })
-  );
-  const [I5, setI5] = useState(
-    getConstanteFromData({ arr, letra: "I", numero: 5 })
-  );
-  const [J4, setJ4] = useState(
-    getConstanteFromData({ arr, letra: "J", numero: 4 })
-  );
-  const [J5, setJ5] = useState(
-    getConstanteFromData({ arr, letra: "J", numero: 5 })
-  );
-  const [K4, setK4] = useState(
-    getConstanteFromData({ arr, letra: "K", numero: 4 })
-  );
-  const [K5, setK5] = useState(
-    getConstanteFromData({ arr, letra: "K", numero: 5 })
-  );
-  const [L4, setL4] = useState(
-    getConstanteFromData({ arr, letra: "L", numero: 4 })
-  );
-  const [L5, setL5] = useState(
-    getConstanteFromData({ arr, letra: "L", numero: 5 })
-  );
-  const [D6, setD6] = useState(
-    getConstanteFromData({ arr, letra: "D", numero: 6 })
-  );
-  const [E6, setE6] = useState(
-    getConstanteFromData({ arr, letra: "E", numero: 6 })
-  );
-  const [F6, setF6] = useState(
-    getConstanteFromData({ arr, letra: "F", numero: 6 })
-  );
-  const [G6, setG6] = useState(
-    getConstanteFromData({ arr, letra: "G", numero: 6 })
-  );
-  const [H6, setH6] = useState(
-    getConstanteFromData({ arr, letra: "H", numero: 6 })
-  );
-  const [I6, setI6] = useState(
-    getConstanteFromData({ arr, letra: "I", numero: 6 })
-  );
-  const [J6, setJ6] = useState(
-    getConstanteFromData({ arr, letra: "J", numero: 6 })
-  );
-  const [K6, setK6] = useState(
-    getConstanteFromData({ arr, letra: "K", numero: 6 })
-  );
-  const [L6, setL6] = useState(
-    getConstanteFromData({ arr, letra: "L", numero: 6 })
-  );
-
   const inventario = data?.dadosInventario?.[0] || {};
-
-  const getStartingValue = (descricao) => {
-    const field = mapDescricaoToField(descricao);
-    return parseFloat(inventario[field] || 0);
-  };
 
   const handleInputChange = (descricao, value) => {
     const field = mapDescricaoToField(descricao);
@@ -485,300 +928,6 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
     };
     const updatedData = { ...data, dadosInventario: [updatedInventario] };
     onChange(updatedData);
-  };
-
-  const calculateMatrizesForYear = (
-    yearIndex,
-    prevYearValue,
-    novilhasValue
-  ) => {
-    const adjustmentFactor = prevYearValue * D8; // D24 * D8
-    const calculatedNovilhas = novilhasValue * 0.9; // E30 * 0.9
-
-    const sum = prevYearValue - adjustmentFactor + calculatedNovilhas;
-
-    return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
-  };
-
-  /* INICIO MATRIZES */
-  //ANO 2
-  const calculateMatrizesFor2025 = () => {
-    const matrizes2024 = getStartingValue("Matrizes");
-    const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)");
-    const sum = animaisAdquirirMatrizes + matrizes2024 + novilhas2024;
-
-    return Math.round(sum < estabilizacaoPlantel ? sum : estabilizacaoPlantel);
-  };
-
-  //ANO 3
-  const calculateMatrizesFor2026 = () => {
-    const matrizes2025 = calculateMatrizesFor2025();
-    const novilhas2026 = getStartingValue("Novilhas (24 a 36 meses)") * 0.9;
-
-    return Math.round(
-      matrizes2025 + novilhas2026 < estabilizacaoPlantel
-        ? matrizes2025 + novilhas2026
-        : estabilizacaoPlantel
-    );
-  };
-
-  // ANOS 4 EM FRENTE
-  const calculateMatrizesForLaterYears = (yearIndex) => {
-    const prevYearValue =
-      yearIndex === 1 ? calculateMatrizesFor2025() : calculateMatrizesFor2026();
-    const novilhasValue = getStartingValue("Novilhas (24 a 36 meses)");
-
-    return calculateMatrizesForYear(yearIndex, prevYearValue, novilhasValue);
-  };
-  /* FIM MATRIZES */
-
-  const calculateTourosForYear = (yearIndex) => {
-    if (yearIndex === 0) {
-      const touros2024 = getStartingValue("Touro");
-      return touros2024;
-    }
-
-    const matrizesValue =
-      yearIndex === 1
-        ? calculateMatrizesFor2025()
-        : yearIndex === 2
-        ? calculateMatrizesFor2026()
-        : calculateMatrizesForLaterYears(yearIndex);
-
-    if (matrizesValue < 1) {
-      return 0;
-    }
-
-    const calculatedTouros = Math.round(matrizesValue / relacaoMatrizes);
-
-    return calculatedTouros <= reprodutoresAdquirir
-      ? reprodutoresAdquirir
-      : calculatedTouros;
-  };
-
-  const calculateBezerrosFor2025 = (descricao) => {
-    const value2024 = getStartingValue(descricao);
-    const matrizes2025 = calculateMatrizesFor2025();
-
-    const reductionTerm = value2024 - value2024 * C5;
-    const contributionTerm = (matrizes2025 * C4) / 2;
-    const subtractionTerm = contributionTerm * C5;
-
-    if (descricao === "Bezerros (0 a 12 meses)") {
-      return Math.round(reductionTerm + contributionTerm - subtractionTerm);
-    } else if (descricao === "Bezerras (0 a 12 meses)") {
-      return Math.round(reductionTerm + contributionTerm - subtractionTerm);
-    }
-
-    return 0;
-  };
-
-  const calculateBezerrosForLaterYears = (yearIndex) => {
-    const matrizesValue =
-      yearIndex === 2
-        ? calculateMatrizesFor2026()
-        : yearIndex === 3
-        ? calculateMatrizesForLaterYears(3)
-        : yearIndex === 4
-        ? calculateMatrizesForLaterYears(4)
-        : calculateMatrizesForLaterYears(yearIndex);
-
-    let X4, X5;
-    switch (yearIndex) {
-      case 2:
-        X4 = D4;
-        X5 = D5;
-        break;
-      case 3:
-        X4 = E4;
-        X5 = E5;
-        break;
-      case 4:
-        X4 = F4;
-        X5 = F5;
-        break;
-      case 5:
-        X4 = G4;
-        X5 = G5;
-        break;
-      case 6:
-        X4 = H4;
-        X5 = H5;
-        break;
-      case 7:
-        X4 = I4;
-        X5 = I5;
-        break;
-      case 8:
-        X4 = J4;
-        X5 = J5;
-        break;
-      case 9:
-        X4 = K4;
-        X5 = K5;
-        break;
-      case 10:
-        X4 = L4;
-        X5 = L5;
-        break;
-      default:
-        X4 = C4;
-        X5 = C5;
-        break;
-    }
-
-    const contributionTerm = (matrizesValue * X4) / 2;
-    const subtractionTerm = contributionTerm * X5;
-
-    const result = contributionTerm - subtractionTerm;
-
-    return Math.round(result);
-  };
-
-  const calculateGarrotesFor2025 = (descricao) => {
-    const value2024 = getStartingValue(descricao);
-    const result = value2024 - value2024 * C6;
-    return Math.round(result);
-  };
-
-  const calculateGarrotesForLaterYears = (yearIndex, descricao) => {
-    const bezerrosValue =
-      yearIndex === 2
-        ? calculateBezerrosFor2025(
-            descricao === "Garrotes (12 a 24 meses)"
-              ? "Bezerros (0 a 12 meses)"
-              : "Bezerras (0 a 12 meses)"
-          )
-        : yearIndex === 3
-        ? calculateBezerrosForLaterYears(
-            3,
-            descricao === "Garrotes (12 a 24 meses)"
-              ? "Bezerros (0 a 12 meses)"
-              : "Bezerras (0 a 12 meses)"
-          )
-        : yearIndex === 4
-        ? calculateBezerrosForLaterYears(
-            4,
-            descricao === "Garrotes (12 a 24 meses)"
-              ? "Bezerros (0 a 12 meses)"
-              : "Bezerras (0 a 12 meses)"
-          )
-        : calculateBezerrosForLaterYears(
-            yearIndex,
-            descricao === "Garrotes (12 a 24 meses)"
-              ? "Bezerros (0 a 12 meses)"
-              : "Bezerras (0 a 12 meses)"
-          );
-
-    let X5;
-    switch (yearIndex) {
-      case 2:
-        X5 = D5;
-        break;
-      case 3:
-        X5 = E5;
-        break;
-      case 4:
-        X5 = F5;
-        break;
-      case 5:
-        X5 = G5;
-        break;
-      case 6:
-        X5 = H5;
-        break;
-      case 7:
-        X5 = I5;
-        break;
-      case 8:
-        X5 = J5;
-        break;
-      case 9:
-        X5 = K5;
-        break;
-      case 10:
-        X5 = L5;
-        break;
-      default:
-        X5 = C5;
-        break;
-    }
-
-    // Formula: bezerrosValue - bezerrosValue * X5
-    const result = bezerrosValue - bezerrosValue * X5;
-
-    return Math.round(result);
-  };
-
-  const calculateNovilhosFor2025 = (descricao) => {
-    if (descricao === "Novilhos (24 a 36 meses)") {
-      const garrotes2024 = getStartingValue("Garrotes (12 a 24 meses)");
-      const result = garrotes2024 - garrotes2024 * C6;
-      return Math.round(result);
-    } else if (descricao === "Novilhas (24 a 36 meses)") {
-      return getStartingValue("Novilhas (24 a 36 meses)");
-    }
-    return 0;
-  };
-
-  const calculateNovilhosForLaterYears = (yearIndex, descricao) => {
-    let baseValue;
-
-    if (descricao === "Novilhos (24 a 36 meses)") {
-      baseValue =
-        yearIndex === 2
-          ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
-          : calculateGarrotesForLaterYears(
-              yearIndex - 1,
-              "Garrotes (12 a 24 meses)"
-            );
-    } else if (descricao === "Novilhas (24 a 36 meses)") {
-      baseValue =
-        yearIndex === 2
-          ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
-          : calculateGarrotesForLaterYears(
-              yearIndex - 1,
-              "Garrotas (12 a 24 meses)"
-            );
-    }
-
-    let X6;
-    switch (yearIndex) {
-      case 2:
-        X6 = D6;
-        break;
-      case 3:
-        X6 = E6;
-        break;
-      case 4:
-        X6 = F6;
-        break;
-      case 5:
-        X6 = G6;
-        break;
-      case 6:
-        X6 = H6;
-        break;
-      case 7:
-        X6 = I6;
-        break;
-      case 8:
-        X6 = J6;
-        break;
-      case 9:
-        X6 = K6;
-        break;
-      case 10:
-        X6 = L6;
-        break;
-      default:
-        X6 = C6;
-        break;
-    }
-
-    // Formula: baseValue - (baseValue * X6)
-    const result = baseValue - baseValue * X6;
-    return Math.round(result);
   };
 
   const calculateTotaisEvolucao = (yearIndex) => {
@@ -934,23 +1083,159 @@ function BovinoculturaTable({ data, anoInicial, formsDisabled, onChange }) {
   );
 }
 
-function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
+function VendasAnimaisTable({
+  data,
+  anoInicial,
+  formsDisabled,
+  onChange,
+  C8,
+  D8,
+  E8,
+  F8,
+  G8,
+  H8,
+  I8,
+  J8,
+  K8,
+  L8,
+  calculateTourosForYear,
+  calculateMatrizesFor2025,
+  calculateMatrizesFor2026,
+  calculateMatrizesForLaterYears,
+  calculateBezerrosFor2025,
+  calculateBezerrosForLaterYears,
+  calculateGarrotesFor2025,
+  calculateGarrotesForLaterYears,
+  calculateNovilhosFor2025,
+  calculateNovilhosForLaterYears,
+  getStartingValue,
+}) {
   const equivalenciaUAData = data?.equivalencia_ua || {};
-  const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
-  const handleInputChange = (descricao, ano, value) => {
-    const updatedVendasAnimais = data?.aba_vendas_animais?.map((item) =>
-      item.descricao === descricao ? { ...item, [`ano${ano}`]: value } : item
-    );
-    const updatedData = { ...data, aba_vendas_animais: updatedVendasAnimais };
-    onChange(updatedData);
+  const calculateMatrizesDescartadasForYear = (yearIndex) => {
+    if (yearIndex === 0) {
+      return "";
+    }
+
+    const matrizesValue =
+      yearIndex === 1
+        ? calculateMatrizesFor2025()
+        : yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    const discardRate =
+      yearIndex === 1
+        ? C8
+        : yearIndex === 2
+        ? D8
+        : yearIndex === 3
+        ? E8
+        : yearIndex === 4
+        ? F8
+        : yearIndex === 5
+        ? G8
+        : yearIndex === 6
+        ? H8
+        : yearIndex === 7
+        ? I8
+        : yearIndex === 8
+        ? J8
+        : yearIndex === 9
+        ? K8
+        : yearIndex === 10
+        ? L8
+        : 0;
+
+    let res =
+      matrizesValue && discardRate
+        ? Math.round(matrizesValue * discardRate)
+        : "";
+    return res;
   };
 
-  const findDataForDescricao = (descricao) => {
-    return data?.aba_vendas_animais?.find(
-      (item) => item.descricao === descricao
-    );
+  const calculateNovilhoVendidoForYear = (yearIndex) => {
+    if (yearIndex === 0) {
+      return "";
+    }
+
+    let novilhosValue;
+    switch (yearIndex) {
+      case 1: // 2025
+        novilhosValue = calculateNovilhosFor2025("Novilhos (24 a 36 meses)");
+        break;
+      case 2: // 2026
+        novilhosValue = calculateNovilhosForLaterYears(
+          2,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 3: // 2027
+        novilhosValue = calculateNovilhosForLaterYears(
+          3,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 4: // 2028
+        novilhosValue = calculateNovilhosForLaterYears(
+          4,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 5: // 2029
+        novilhosValue = calculateNovilhosForLaterYears(
+          5,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 6: // 2030
+        novilhosValue = calculateNovilhosForLaterYears(
+          6,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 7: // 2031
+        novilhosValue = calculateNovilhosForLaterYears(
+          7,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 8: // 2032
+        novilhosValue = calculateNovilhosForLaterYears(
+          8,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 9: // 2033
+        novilhosValue = calculateNovilhosForLaterYears(
+          9,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      case 10: // 2034
+        novilhosValue = calculateNovilhosForLaterYears(
+          10,
+          "Novilhos (24 a 36 meses)"
+        );
+        break;
+      default:
+        novilhosValue = "";
+    }
+
+    return novilhosValue;
+  };
+
+  const getCalculatedValue = (descricao, yearIndex) => {
+    switch (descricao) {
+      case "Matrizes Descartadas":
+        return calculateMatrizesDescartadasForYear(yearIndex);
+      case "Novilhos Vendidos":
+        return calculateNovilhoVendidoForYear(yearIndex);
+      // proximos casos
+      default:
+        return "";
+    }
   };
 
   return (
@@ -968,28 +1253,24 @@ function VendasAnimaisTable({ data, anoInicial, formsDisabled, onChange }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {DESCRICOES.map((descricao, index) => {
-            const dataItem = findDataForDescricao(descricao);
-            return (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{descricao}</TableCell>
-                {anos.map((ano, i) => (
-                  <TableCell key={i}>
-                    <Input
-                      type="text"
-                      value={dataItem ? dataItem[`ano${i + 1}`] || "" : ""}
-                      onChange={(e) =>
-                        handleInputChange(descricao, i + 1, e.target.value)
-                      }
-                      className="w-full text-center"
-                      disabled={formsDisabled}
-                    />
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-          <TableRow className="bg-gray-950 hover:bg-gray-950  ">
+          {VENDA_ANIMAIS_PRODUTOS_DESCRICOES.map((descricao, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium">{descricao}</TableCell>
+              {anos.map((_, i) => (
+                <TableCell key={i}>
+                  <Input
+                    type="text"
+                    value={getCalculatedValue(descricao, i)}
+                    className="w-full text-center"
+                    disabled={formsDisabled}
+                  />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+
+          {/* Equivalência UA Row */}
+          <TableRow className="bg-gray-950 hover:bg-gray-950">
             <TableCell className="font-bold text-md">Equivalência UA</TableCell>
             {anos.map((ano, i) => (
               <TableCell key={i}>
