@@ -12,7 +12,7 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
     data?.dadosEvolucaoRebanho[0]?.aba_evolucao_rebanho_indicadores_tecnicos ||
       []
   );
-  const [bovinoculturaData, setBovinoculturaData] = useState(data || []);
+  const [bovinoculturaData, setBovinoculturaData] = useState(data || [{}]);
   const anoInicial = 2024; // vai vir como dado do SimuladorPNCF
 
   const onEdit = () => {
@@ -26,20 +26,40 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
 
       const updatedBovinoculturaData = {
         ...bovinoculturaData[0],
-        animaisAdquirir_reprodutores: bovinoculturaData.reprodutoresAdquirir,
-        animaisAdquirir_matrizes: bovinoculturaData.matrizesAdquirir,
-        estabilizacao_plantel: bovinoculturaData.estabilizacao_plantel,
-        relacao_matrizes: bovinoculturaData.relacao_matrizes,
-        equivalenciaUA_bezerros: bovinoculturaData.equivalenciaUA_bezerros,
-        equivalenciaUA_novilhos: bovinoculturaData.equivalenciaUA_novilhos,
-        equivalenciaUA_matrizes: bovinoculturaData.equivalenciaUA_matrizes,
-        equivalenciaUA_touro: bovinoculturaData.equivalenciaUA_touro,
-        equivalenciaUA_garrotes: bovinoculturaData.equivalenciaUA_garrotes,
+        animaisAdquirir_reprodutores:
+          bovinoculturaData?.reprodutoresAdquirir || 0,
+        animaisAdquirir_matrizes: bovinoculturaData?.matrizesAdquirir || 0,
+        estabilizacao_plantel: bovinoculturaData?.estabilizacao_plantel || 0,
+        relacao_matrizes: bovinoculturaData?.relacao_matrizes || 0,
+        equivalenciaUA_bezerros:
+          bovinoculturaData?.equivalenciaUA_bezerros || 0,
+        equivalenciaUA_novilhos:
+          bovinoculturaData?.equivalenciaUA_novilhos || 0,
+        equivalenciaUA_matrizes:
+          bovinoculturaData?.equivalenciaUA_matrizes || 0,
+        equivalenciaUA_touro: bovinoculturaData?.equivalenciaUA_touro || 0,
+        equivalenciaUA_garrotes:
+          bovinoculturaData?.equivalenciaUA_garrotes || 0,
+        matrizesDescartadas_ano0:
+          bovinoculturaData?.matrizesDescartadas_ano0 || 0,
+        novilhaVendida_ano0: bovinoculturaData?.novilhaVendida_ano0 || 0,
+        novilhoVendido_ano0: bovinoculturaData?.novilhoVendido_ano0 || 0,
+        queijo_ano0: bovinoculturaData?.queijoValues?.[0] || 0,
+        queijo_ano1: bovinoculturaData?.queijoValues?.[1] || 0,
+        queijo_ano2: bovinoculturaData?.queijoValues?.[2] || 0,
+        queijo_ano3: bovinoculturaData?.queijoValues?.[3] || 0,
+        queijo_ano4: bovinoculturaData?.queijoValues?.[4] || 0,
+        queijo_ano5: bovinoculturaData?.queijoValues?.[5] || 0,
+        queijo_ano6: bovinoculturaData?.queijoValues?.[6] || 0,
+        queijo_ano7: bovinoculturaData?.queijoValues?.[7] || 0,
+        queijo_ano8: bovinoculturaData?.queijoValues?.[8] || 0,
+        queijo_ano9: bovinoculturaData?.queijoValues?.[9] || 0,
+        queijo_ano10: bovinoculturaData?.queijoValues?.[10] || 0,
       };
 
       const finalBovinoculturaData = [updatedBovinoculturaData];
 
-      const updatedIndicadoresTecnicosData = indicadoresTecnicosData.map(
+      const updatedIndicadoresTecnicosData = indicadoresTecnicosData?.map(
         (item) => {
           const updatedItem = { ...item };
           Object.keys(updatedItem).forEach((key) => {

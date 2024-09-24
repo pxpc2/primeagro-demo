@@ -16,7 +16,7 @@ import {
 
 function getConstanteFromData({ arr, letra, numero }) {
   const { descricao, anoIndex } = mapExcelToBanco({ letra, numero });
-  const foundItem = arr.find((item) => item.descricao === descricao);
+  const foundItem = arr?.find((item) => item.descricao === descricao);
   if (foundItem) {
     const ano = `ano${anoIndex}`;
     // OS DADOS DE INDICADORES TÉCNICOS SÃO EM PORCENTAGEM, menos as duas últimas fileiras
@@ -1234,7 +1234,6 @@ function VendasAnimaisTable({
   calculateNovilhosForLaterYears,
   getStartingValue,
 }) {
-  const equivalenciaUAData = data?.equivalencia_ua || {};
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
   const reprodutoresAdquirir =
@@ -1246,9 +1245,55 @@ function VendasAnimaisTable({
   const animaisAdquirirMatrizes =
     data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
-  const permiteInput = (descricao, yearIndex) => {
+  const [matrizesDescartadas_ano0, setMatrizesDescartadas_ano0] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.matrizesDescartadas_ano0 || 1
+  );
+  const handleMatrizesDescartadasAno0Change = (e) => {
+    console.log("oi matriz");
+    const value = e.target.value;
+    setMatrizesDescartadas_ano0(value);
+    onChange({ ...data, matrizesDescartadas_ano0: value });
+  };
+
+  const [novilhoVendido_ano0, setNovilhoVendido_ano0] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.novilhoVendido_ano0 || 1
+  );
+  const handleNovilhoVendidoAno0Change = (e) => {
+    const value = e.target.value;
+    setNovilhoVendido_ano0(value);
+    onChange({ ...data, novilhoVendido_ano0: value });
+  };
+
+  const [novilhaVendida_ano0, setNovilhaVendida_ano0] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.novilhaVendida_ano0 || 1
+  );
+  const handleNovilhaVendidaAno0Change = (e) => {
+    const value = e.target.value;
+    setNovilhaVendida_ano0(value);
+    onChange({ ...data, novilhaVendida_ano0: value });
+  };
+
+  const [queijoValues, setQueijoValues] = useState(() =>
+    Array.from(
+      { length: 11 },
+      (_, i) => data?.dadosEvolucaoRebanho?.[0]?.[`queijo_ano${i}`] || 0
+    )
+  );
+
+  const handleQueijoChange = (yearIndex, value) => {
+    const updatedQueijoValues = [...queijoValues];
+    console.log(yearIndex);
+    updatedQueijoValues[yearIndex] = value;
+    setQueijoValues(updatedQueijoValues);
+    onChange({ ...data, queijoValues: updatedQueijoValues });
+  };
+
+  const permiteInput = (descricao, i) => {
     if (formsDisabled) return false;
-    return yearIndex === 0 || descricao === "Queijo (kg)";
+    return (
+      (i === 0 && descricao !== "Leite para venda (litros)") ||
+      descricao === "Queijo (kg)"
+    );
   };
 
   const calculateMatrizesDescartadasForYear = (yearIndex) => {
@@ -1562,6 +1607,78 @@ function VendasAnimaisTable({
     }
   };
 
+  const calculateEquivalenciaUAForYear = (yearIndex) => {
+    const touroValue = calculateTourosForYear(yearIndex);
+    const matrizesValue =
+      yearIndex === 0
+        ? getStartingValue("Matrizes")
+        : yearIndex === 1
+        ? calculateMatrizesFor2025()
+        : yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : calculateMatrizesForLaterYears(yearIndex);
+
+    const bezerrosValue =
+      yearIndex === 0
+        ? getStartingValue("Bezerros (0 a 12 meses)")
+        : yearIndex === 1
+        ? calculateBezerrosFor2025("Bezerros (0 a 12 meses)")
+        : calculateBezerrosForLaterYears(yearIndex);
+
+    const bezerrasValue =
+      yearIndex === 0
+        ? getStartingValue("Bezerras (0 a 12 meses)")
+        : yearIndex === 1
+        ? calculateBezerrosFor2025("Bezerras (0 a 12 meses)")
+        : calculateBezerrosForLaterYears(yearIndex);
+
+    const garrotesValue =
+      yearIndex === 0
+        ? getStartingValue("Garrotes (12 a 24 meses)")
+        : yearIndex === 1
+        ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
+        : calculateGarrotesForLaterYears(yearIndex, "Garrotes (12 a 24 meses)");
+
+    const garrotasValue =
+      yearIndex === 0
+        ? getStartingValue("Garrotas (12 a 24 meses)")
+        : yearIndex === 1
+        ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
+        : calculateGarrotesForLaterYears(yearIndex, "Garrotas (12 a 24 meses)");
+
+    const novilhosValue =
+      yearIndex === 0
+        ? getStartingValue("Novilhos (24 a 36 meses)")
+        : yearIndex === 1
+        ? calculateNovilhosFor2025("Novilhos (24 a 36 meses)")
+        : calculateNovilhosForLaterYears(yearIndex, "Novilhos (24 a 36 meses)");
+
+    const novilhasValue =
+      yearIndex === 0
+        ? getStartingValue("Novilhas (24 a 36 meses)")
+        : yearIndex === 1
+        ? calculateNovilhosFor2025("Novilhas (24 a 36 meses)")
+        : calculateNovilhosForLaterYears(yearIndex, "Novilhas (24 a 36 meses)");
+
+    const H16 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro || 1;
+    const H17 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes || 1;
+    const H18 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos || 1;
+    const H19 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes || 1;
+    const H20 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros || 1;
+
+    const equivalenciaUA =
+      touroValue * H16 +
+      matrizesValue * H17 +
+      bezerrosValue * H20 +
+      bezerrasValue * H20 +
+      garrotesValue * H19 +
+      garrotasValue * H19 +
+      novilhosValue * H18 +
+      novilhasValue * H18;
+
+    return equivalenciaUA.toFixed(2);
+  };
+
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
       <h2 className="text-lg font-bold bg-gray-800 p-3 rounded-sm">
@@ -1580,11 +1697,40 @@ function VendasAnimaisTable({
           {VENDA_ANIMAIS_PRODUTOS_DESCRICOES.map((descricao, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">{descricao}</TableCell>
-              {anos.map((_, i) => (
+              {anos.map((yearIndex, i) => (
                 <TableCell key={i}>
                   <Input
                     type="text"
-                    value={getCalculatedValue(descricao, i)}
+                    value={
+                      i === 0 && descricao === "Matrizes Descartadas"
+                        ? matrizesDescartadas_ano0
+                        : i === 0 && descricao === "Novilhos Vendidos"
+                        ? novilhoVendido_ano0
+                        : i === 0 && descricao === "Novilhas Vendidas"
+                        ? novilhaVendida_ano0
+                        : descricao === "Queijo (kg)"
+                        ? queijoValues[i]
+                        : getCalculatedValue(descricao, i)
+                    }
+                    onChange={(e) => {
+                      switch (descricao) {
+                        case "Matrizes Descartadas":
+                          if (i === 0) handleMatrizesDescartadasAno0Change(e);
+                          break;
+                        case "Novilhos Vendidos":
+                          if (i === 0) handleNovilhoVendidoAno0Change(e);
+                          break;
+                        case "Novilhas Vendidas":
+                          if (i === 0) handleNovilhaVendidaAno0Change(e);
+                          break;
+                        case "Queijo (kg)":
+                          handleQueijoChange(i, parseFloat(e.target.value));
+                          break;
+                        default:
+                          console.log(yearIndex);
+                          break;
+                      }
+                    }}
                     className="w-full text-center"
                     disabled={!permiteInput(descricao, i)}
                   />
@@ -1596,11 +1742,11 @@ function VendasAnimaisTable({
           {/* Equivalência UA Row */}
           <TableRow className="bg-gray-950 hover:bg-gray-950">
             <TableCell className="font-bold text-md">Equivalência UA</TableCell>
-            {anos.map((ano, i) => (
+            {anos.map((_, i) => (
               <TableCell key={i}>
                 <Input
                   type="text"
-                  value={equivalenciaUAData[`ano${i + 1}`] || ""}
+                  value={calculateEquivalenciaUAForYear(i)}
                   className="w-full text-center"
                   disabled={true}
                 />
