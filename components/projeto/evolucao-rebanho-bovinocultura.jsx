@@ -1113,6 +1113,15 @@ function VendasAnimaisTable({
   const equivalenciaUAData = data?.equivalencia_ua || {};
   const anos = Array.from({ length: 11 }, (_, i) => anoInicial + i);
 
+  const reprodutoresAdquirir =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_reprodutores || 0;
+  const relacaoMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.relacao_matrizes || 0;
+  const estabilizacaoPlantel =
+    data?.dadosEvolucaoRebanho?.[0]?.estabilizacao_plantel || 0;
+  const animaisAdquirirMatrizes =
+    data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
+
   const calculateMatrizesDescartadasForYear = (yearIndex) => {
     if (yearIndex === 0) {
       return "";
@@ -1226,13 +1235,77 @@ function VendasAnimaisTable({
     return novilhosValue;
   };
 
+  const calculateNovilhasVendidasFor2025 = () => {
+    const matrizes2024 = getStartingValue("Matrizes"); // B24
+    const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)"); // B30
+
+    const formula = animaisAdquirirMatrizes + matrizes2024 + novilhas2024;
+    const result =
+      formula < estabilizacaoPlantel
+        ? Math.round(novilhas2024 * 0.1)
+        : Math.round(
+            animaisAdquirirMatrizes +
+              matrizes2024 +
+              novilhas2024 * 0.7 -
+              estabilizacaoPlantel
+          );
+
+    return result;
+  };
+
+  const calculateNovilhasVendidasForLaterYears = (yearIndex) => {
+    const matrizesValue =
+      yearIndex === 2
+        ? calculateMatrizesFor2026()
+        : yearIndex > 2
+        ? calculateMatrizesForLaterYears(yearIndex)
+        : 0;
+
+    const novilhasValue = calculateNovilhosForLaterYears(
+      yearIndex,
+      "Novilhas (24 a 36 meses)"
+    );
+
+    const discardRate =
+      yearIndex === 2
+        ? D8
+        : yearIndex === 3
+        ? E8
+        : yearIndex === 4
+        ? F8
+        : yearIndex === 5
+        ? G8
+        : yearIndex === 6
+        ? H8
+        : yearIndex === 7
+        ? I8
+        : yearIndex === 8
+        ? J8
+        : yearIndex === 9
+        ? K8
+        : L8;
+
+    const result =
+      matrizesValue < estabilizacaoPlantel
+        ? Math.round(novilhasValue * 0.1)
+        : Math.round(novilhasValue - matrizesValue * discardRate);
+
+    return result;
+  };
+
   const getCalculatedValue = (descricao, yearIndex) => {
     switch (descricao) {
       case "Matrizes Descartadas":
         return calculateMatrizesDescartadasForYear(yearIndex);
       case "Novilhos Vendidos":
         return calculateNovilhoVendidoForYear(yearIndex);
-      // proximos casos
+      case "Novilhas Vendidas":
+        return yearIndex === 1
+          ? calculateNovilhasVendidasFor2025()
+          : yearIndex > 1
+          ? calculateNovilhasVendidasForLaterYears(yearIndex)
+          : "";
+      // proxs casos
       default:
         return "";
     }
