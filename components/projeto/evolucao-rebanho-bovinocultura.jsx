@@ -565,7 +565,11 @@ export default function EvolucaoRebanhoBovinocultura({
         />
       </div>
 
-      <EquivalenciaUATable formsDisabled={formsDisabled} />
+      <EquivalenciaUATable
+        formsDisabled={formsDisabled}
+        data={data}
+        onChange={handleDataChange}
+      />
       <div className="flex flex-col gap-4">
         <BovinoculturaTable
           data={data}
@@ -785,12 +789,52 @@ function ReprodutorMatrizTable({ formsDisabled, onChange, data }) {
   );
 }
 
-function EquivalenciaUATable({ formsDisabled }) {
-  const [touro, setTouro] = useState(1.5);
-  const [matrizes, setMatrizes] = useState(1);
-  const [novilhos, setNovilhos] = useState(1);
-  const [garrotes, setGarrotes] = useState(0.5);
-  const [bezerros, setBezerros] = useState(0.25);
+function EquivalenciaUATable({ data, onChange, formsDisabled }) {
+  const [touro, setTouro] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro || 1
+  );
+  const [matrizes, setMatrizes] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes || 1
+  );
+  const [novilhos, setNovilhos] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos || 1
+  );
+  const [garrotes, setGarrotes] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes || 1
+  );
+  const [bezerros, setBezerros] = useState(
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros || 1
+  );
+
+  const handleTouroChange = (e) => {
+    const value = e.target.value;
+    setTouro(value);
+    onChange({ ...data, equivalenciaUA_touro: value });
+  };
+
+  const handleMatrizesChange = (e) => {
+    const value = e.target.value;
+    setMatrizes(value);
+    onChange({ ...data, equivalenciaUA_matrizes: value });
+  };
+
+  const handleNovilhosChange = (e) => {
+    const value = e.target.value;
+    setNovilhos(value);
+    onChange({ ...data, equivalenciaUA_novilhos: value });
+  };
+
+  const handleGarrotesChange = (e) => {
+    const value = e.target.value;
+    setGarrotes(value);
+    onChange({ ...data, equivalenciaUA_garrotes: value });
+  };
+
+  const handleBezerrosChange = (e) => {
+    const value = e.target.value;
+    setBezerros(value);
+    onChange({ ...data, equivalenciaUA_bezerros: value });
+  };
 
   return (
     <div className="overflow-hidden bg-gray-950/80 sm:rounded-sm text-sm mx-4">
@@ -808,7 +852,8 @@ function EquivalenciaUATable({ formsDisabled }) {
             <Input
               type="number"
               value={touro}
-              onChange={(e) => setTouro(e.target.value)}
+              step="0.05"
+              onChange={handleTouroChange}
               disabled={formsDisabled}
               className="text-center"
             />
@@ -820,8 +865,9 @@ function EquivalenciaUATable({ formsDisabled }) {
           <div className="p-2">
             <Input
               type="number"
+              step="0.05"
               value={matrizes}
-              onChange={(e) => setMatrizes(e.target.value)}
+              onChange={handleMatrizesChange}
               disabled={formsDisabled}
               className="text-center"
             />
@@ -834,7 +880,8 @@ function EquivalenciaUATable({ formsDisabled }) {
             <Input
               type="number"
               value={novilhos}
-              onChange={(e) => setNovilhos(e.target.value)}
+              step="0.05"
+              onChange={handleNovilhosChange}
               disabled={formsDisabled}
               className="text-center"
             />
@@ -847,7 +894,8 @@ function EquivalenciaUATable({ formsDisabled }) {
             <Input
               type="number"
               value={garrotes}
-              onChange={(e) => setGarrotes(e.target.value)}
+              step="0.05"
+              onChange={handleGarrotesChange}
               disabled={formsDisabled}
               className="text-center"
             />
@@ -860,7 +908,8 @@ function EquivalenciaUATable({ formsDisabled }) {
             <Input
               type="number"
               value={bezerros}
-              onChange={(e) => setBezerros(e.target.value)}
+              step="0.05"
+              onChange={handleBezerrosChange}
               disabled={formsDisabled}
               className="text-center"
             />
@@ -1197,6 +1246,11 @@ function VendasAnimaisTable({
   const animaisAdquirirMatrizes =
     data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
+  const permiteInput = (descricao, yearIndex) => {
+    if (formsDisabled) return false;
+    return yearIndex === 0 || descricao === "Queijo (kg)";
+  };
+
   const calculateMatrizesDescartadasForYear = (yearIndex) => {
     if (yearIndex === 0) {
       return "";
@@ -1377,11 +1431,9 @@ function VendasAnimaisTable({
   const calculateLeiteParaVendaForYear = (yearIndex) => {
     if (yearIndex === 0) {
       const matrizes2024 = getStartingValue("Matrizes"); // B24
-      console.log(B4);
       const leiteParaVenda2024 = Math.round(
         ((B4 * B10) / 360) * matrizes2024 * B11 * 365
       );
-      console.log("leite: " + leiteParaVenda2024);
       return leiteParaVenda2024;
     } else if (yearIndex === 1) {
       const matrizes2025 = calculateMatrizesFor2025(); // C24
@@ -1404,23 +1456,16 @@ function VendasAnimaisTable({
           ? calculateMatrizesFor2026()
           : calculateMatrizesForLaterYears(yearIndex); // D24, E24, etc.
 
-      if (yearIndex === 3) {
-        console.log(matrizesForYear);
-      }
       const bezerrosForYear = calculateBezerrosForLaterYears(
         yearIndex,
         "Bezerros (0 a 12 meses)"
       ); // D25, E25, etc.
-      if (yearIndex === 3) {
-        console.log(bezerrosForYear);
-      }
+
       const bezerrasForYear = calculateBezerrosForLaterYears(
         yearIndex,
         "Bezerras (0 a 12 meses)"
       ); // D26, E26, etc.
-      if (yearIndex === 3) {
-        console.log(bezerrasForYear);
-      }
+
       const queijoForYear =
         findDataForDescricao("Queijo (kg)")?.[`ano${yearIndex + 1}`] || 0; // D37, E37, etc.
       const current4 =
@@ -1541,7 +1586,7 @@ function VendasAnimaisTable({
                     type="text"
                     value={getCalculatedValue(descricao, i)}
                     className="w-full text-center"
-                    disabled={formsDisabled}
+                    disabled={!permiteInput(descricao, i)}
                   />
                 </TableCell>
               ))}
