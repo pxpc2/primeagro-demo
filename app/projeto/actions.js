@@ -143,7 +143,6 @@ export async function submitEvolucaoRebanho({
   indicadoresData,
   bovinoculturaData,
 }) {
-  console.log(indicadoresData);
   console.log(bovinoculturaData);
 
   const supabase = createClient();
@@ -200,6 +199,20 @@ export async function submitEvolucaoRebanho({
     "equivalenciaUA_novilhos",
     "equivalenciaUA_garrotes",
     "equivalenciaUA_bezerros",
+    "matrizesDescartadas_ano0",
+    "novilhaVendida_ano0",
+    "novilhoVendido_ano0",
+    "queijo_ano0",
+    "queijo_ano1",
+    "queijo_ano2",
+    "queijo_ano3",
+    "queijo_ano4",
+    "queijo_ano5",
+    "queijo_ano6",
+    "queijo_ano7",
+    "queijo_ano8",
+    "queijo_ano9",
+    "queijo_ano10",
   ];
 
   const bovinoculturaDataMapped = bovinoculturaData.map((item) => {
