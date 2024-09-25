@@ -58,10 +58,7 @@ export default function ReceitasTab({ data, isAdmin }) {
       />
       <div className="mt-4 grid grid-cols-1 gap-6">
         {DESCRICOES.map((descricao, index) => (
-          <div
-            key={index}
-            className="border border-gray-300 p-4 rounded-lg bg-gray-800 shadow-md mb-6"
-          >
+          <div key={index} className="p-4 rounded-lg shadow-md mb-6">
             <h3 className="font-bold text-lg mb-4">{descricao}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {anos.map((ano, i) => (
@@ -72,40 +69,78 @@ export default function ReceitasTab({ data, isAdmin }) {
                   <div className="font-semibold text-center mb-4">
                     Ano {ano}
                   </div>
-                  <div className="flex gap-2">
-                    <div className="w-1/2">
-                      <label className="block text-sm mb-2"></label>
-                      <Input
-                        type="text"
-                        className="border-white"
-                        disabled={formsDisabled}
-                        placeholder="Qtd"
-                        onChange={(e) =>
-                          handleInputChange(
-                            descricao,
-                            ano,
-                            "qtd",
-                            e.target.value
-                          )
-                        }
-                      />
+                  <div className="flex flex-col">
+                    <div className="flex gap-2">
+                      <div className="w-1/2">
+                        <label className="block text-sm mb-2"></label>
+                        <Input
+                          type="text"
+                          className="border-gray-500"
+                          disabled={formsDisabled}
+                          placeholder="UNIDADE"
+                          onChange={(e) =>
+                            handleInputChange(
+                              descricao,
+                              ano,
+                              "qtd",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm mb-2"></label>
+                        <Input
+                          type="text"
+                          disabled={formsDisabled}
+                          placeholder="Valor unitário"
+                          className="border-gray-500"
+                          onChange={(e) =>
+                            handleInputChange(
+                              descricao,
+                              ano,
+                              "valor",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm mb-2"></label>
+                        <Input
+                          type="text"
+                          className="border-gray-500"
+                          disabled={formsDisabled}
+                          placeholder="Qtd"
+                          onChange={(e) =>
+                            handleInputChange(
+                              descricao,
+                              ano,
+                              "qtd",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
                     </div>
-                    <div className="w-1/2">
-                      <label className="block text-sm mb-2"></label>
-                      <Input
-                        type="text"
-                        disabled={formsDisabled}
-                        placeholder="Valor"
-                        className="border-white"
-                        onChange={(e) =>
-                          handleInputChange(
-                            descricao,
-                            ano,
-                            "valor",
-                            e.target.value
-                          )
-                        }
-                      />
+                    <div className="flex items-center justify-center mt-8">
+                      <div className="w-1/2">
+                        <label className="block text-sm mb-2"></label>
+                        <Input
+                          type="text"
+                          disabled={true}
+                          placeholder="Valor"
+                          className="border-black"
+                          onChange={(e) =>
+                            handleInputChange(
+                              descricao,
+                              ano,
+                              "valor",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
