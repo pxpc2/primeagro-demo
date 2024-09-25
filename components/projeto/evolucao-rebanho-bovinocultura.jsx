@@ -26,14 +26,12 @@ function getConstanteFromData({ arr, letra, numero }) {
   return undefined;
 }
 
-/**
- * @TODO preciso centralizar os states usados e passar como prop p/ cada component
- */
 export default function EvolucaoRebanhoBovinocultura({
   data,
   formsDisabled,
   anoInicial,
   onChange,
+  onVendasAnimaisChange,
 }) {
   const handleDataChange = (updatedData) => {
     onChange(updatedData);

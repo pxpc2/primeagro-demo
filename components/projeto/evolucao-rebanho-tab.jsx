@@ -4,7 +4,11 @@ import Heading from "./Header";
 import EvolucaoRebanhoBovinocultura from "./evolucao-rebanho-bovinocultura";
 import { submitEvolucaoRebanho } from "@/app/projeto/actions";
 
-export default function EvolucaoRebanhoTab({ data, isAdmin }) {
+export default function EvolucaoRebanhoTab({
+  data,
+  isAdmin,
+  onVendasAnimaisChange,
+}) {
   const [loading, setLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
 
@@ -115,6 +119,7 @@ export default function EvolucaoRebanhoTab({ data, isAdmin }) {
             formsDisabled={formsDisabled}
             anoInicial={anoInicial}
             onChange={setBovinoculturaData}
+            onVendasAnimaisChange={onVendasAnimaisChange}
           />
         </div>
       </div>

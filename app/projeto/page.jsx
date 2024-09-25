@@ -23,6 +23,10 @@ export default function ProjetoPage() {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [vendasAnimaisData, setVendasAnimaisData] = useState({}); // p/ usar em receitas
+  const handleVendasAnimaisUpdate = (newData) => {
+    setVendasAnimaisData(newData);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,12 +103,19 @@ export default function ProjetoPage() {
           <EvolucaoRebanhoTab
             data={formData?.aba_evolucao_rebanho}
             isAdmin={isAdmin}
+            onVendasAnimaisChange={handleVendasAnimaisUpdate}
           />
         );
       case "Total (UA)":
         return <TotalTab data={formData?.aba_total_ua} isAdmin={isAdmin} />;
       case "Receitas":
-        return <ReceitasTab data={formData?.aba_receitas} isAdmin={isAdmin} />;
+        return (
+          <ReceitasTab
+            data={formData?.aba_receitas}
+            isAdmin={isAdmin}
+            vendasAnimaisData={vendasAnimaisData}
+          />
+        );
       case "Orçamentos":
         return (
           <OrcamentosTab data={formData?.aba_orcamentos} isAdmin={isAdmin} />
