@@ -97,7 +97,30 @@ async function getOrcamentosData({ dadosInvestimentos }) {
 /* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
 
 /* INICIO RECEITAS ------------------------------------------------------------------------------------------- */
-async function getReceitasData({ dadosEvolucaoRebanho }) {
+
+export async function submitReceitas({ receitasData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  const upsertData = {
+    ...receitasData,
+    authuser_id: authUserID,
+  };
+
+  const { data, error } = await supabase
+    .from("aba_receitas")
+    .upsert(upsertData, { onConflict: ["authuser_id"] });
+
+  if (error) {
+    console.error("Error upserting Receitas data:", error);
+    throw new Error(error.message);
+  }
+}
+
+export async function getReceitasData({ dadosEvolucaoRebanho }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -111,8 +134,92 @@ async function getReceitasData({ dadosEvolucaoRebanho }) {
     console.log(error);
     return undefined;
   }
+  const receitasMapped = {
+    unidadeMatrizesDescartadas: dados[0]?.matrizesdescartadas_unidade || "",
+    valorUnitarioMatrizesDescartadas: parseFloat(
+      dados[0]?.matrizesdescartadas_valorunitario || 0
+    ),
+    valorMatrizesDescartadas: [
+      dados[0]?.matrizesdescartadas_ano0_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano1_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano2_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano3_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano4_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano5_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano6_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano7_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano8_valortotal || 0,
+      dados[0]?.matrizesdescartadas_ano9_valortotal || 0,
+    ],
 
-  return { dadosReceita: dados, dadosEvolucaoRebanho: dadosEvolucaoRebanho };
+    unidadeNovilhosVendidos: dados[0]?.novilhosvendidos_unidade || "",
+    valorUnitarioNovilhosVendidos: parseFloat(
+      dados[0]?.novilhosvendidos_valorunitario || 0
+    ),
+    valorNovilhosVendidos: [
+      dados[0]?.novilhosvendidos_ano0_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano1_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano2_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano3_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano4_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano5_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano6_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano7_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano8_valortotal || 0,
+      dados[0]?.novilhosvendidos_ano9_valortotal || 0,
+    ],
+
+    unidadeNovilhasVendidas: dados[0]?.novilhasvendidas_unidade || "",
+    valorUnitarioNovilhasVendidas: parseFloat(
+      dados[0]?.novilhasvendidas_valorunitario || 0
+    ),
+    valorNovilhasVendidas: [
+      dados[0]?.novilhasvendidas_ano0_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano1_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano2_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano3_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano4_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano5_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano6_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano7_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano8_valortotal || 0,
+      dados[0]?.novilhasvendidas_ano9_valortotal || 0,
+    ],
+
+    unidadeQueijo: dados[0]?.queijo_unidade || "",
+    valorUnitarioQueijo: parseFloat(dados[0]?.queijo_valorunitario || 0),
+    valorQueijo: [
+      dados[0]?.queijo_ano0_valortotal || 0,
+      dados[0]?.queijo_ano1_valortotal || 0,
+      dados[0]?.queijo_ano2_valortotal || 0,
+      dados[0]?.queijo_ano3_valortotal || 0,
+      dados[0]?.queijo_ano4_valortotal || 0,
+      dados[0]?.queijo_ano5_valortotal || 0,
+      dados[0]?.queijo_ano6_valortotal || 0,
+      dados[0]?.queijo_ano7_valortotal || 0,
+      dados[0]?.queijo_ano8_valortotal || 0,
+      dados[0]?.queijo_ano9_valortotal || 0,
+    ],
+
+    unidadeLeiteParaVenda: dados[0]?.leiteparavenda_unidade || "",
+    valorUnitarioLeiteParaVenda: parseFloat(
+      dados[0]?.leiteparavenda_valorunitario || 0
+    ),
+    valorLeiteParaVenda: [
+      dados[0]?.leiteparavenda_ano0_valortotal || 0,
+      dados[0]?.leiteparavenda_ano1_valortotal || 0,
+      dados[0]?.leiteparavenda_ano2_valortotal || 0,
+      dados[0]?.leiteparavenda_ano3_valortotal || 0,
+      dados[0]?.leiteparavenda_ano4_valortotal || 0,
+      dados[0]?.leiteparavenda_ano5_valortotal || 0,
+      dados[0]?.leiteparavenda_ano6_valortotal || 0,
+      dados[0]?.leiteparavenda_ano7_valortotal || 0,
+      dados[0]?.leiteparavenda_ano8_valortotal || 0,
+      dados[0]?.leiteparavenda_ano9_valortotal || 0,
+    ],
+  };
+
+  return { dadosReceita: receitasMapped, dadosEvolucaoRebanho };
 }
 /* fim RECEITAS ------------------------------------------------------------------------------------------- */
 

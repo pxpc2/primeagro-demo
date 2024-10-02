@@ -1,6 +1,6 @@
 import { set, useForm } from "react-hook-form";
 import Heading from "./Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -14,6 +14,7 @@ import {
   ANO_INICIAL,
   VENDA_ANIMAIS_PRODUTOS_DESCRICOES,
 } from "@/utils/constants";
+import { submitReceitas } from "@/app/projeto/actions";
 
 export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -21,47 +22,67 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
 
-  console.log(vendaAnimaisData);
-
   // vai ser o mesmo para todos os anos de cada descrição
-  const [unidadeMatrizesDescartadas, setUnidadeMatrizesDescartadas] =
-    useState("");
+  const [unidadeMatrizesDescartadas, setUnidadeMatrizesDescartadas] = useState(
+    data?.dadosReceita?.unidadeMatrizesDescartadas || ""
+  );
   const [
     valorUnitarioMatrizesDescartadas,
     setValorUnitarioMatrizesDescartadas,
-  ] = useState(0.0);
-  const [unidadeNovilhosVendidos, setUnidadeNovilhosVendidos] = useState("");
+  ] = useState(data?.dadosReceita?.valorUnitarioMatrizesDescartadas || 0.0);
+
+  const [unidadeNovilhosVendidos, setUnidadeNovilhosVendidos] = useState(
+    data?.dadosReceita?.unidadeNovilhosVendidos || ""
+  );
   const [valorUnitarioNovilhosVendidos, setValorUnitarioNovilhosVendidos] =
-    useState(0.0);
-  const [unidadeNovilhasVendidas, setUnidadeNovilhasVendidas] = useState("");
+    useState(data?.dadosReceita?.valorUnitarioNovilhosVendidos || 0.0);
+  const [unidadeNovilhasVendidas, setUnidadeNovilhasVendidas] = useState(
+    data?.dadosReceita?.unidadeNovilhasVendidas || ""
+  );
   const [valorUnitarioNovilhasVendidas, setValorUnitarioNovilhasVendidas] =
-    useState(0.0);
-  const [unidadeQueijo, setUnidadeQueijo] = useState("");
-  const [valorUnitarioQueijo, setValorUnitarioQueijo] = useState(0.0);
-  const [unidadeLeiteParaVenda, setUnidadeLeiteParaVenda] = useState("");
+    useState(data?.dadosReceita?.valorUnitarioNovilhasVendidas || 0.0);
+  const [unidadeQueijo, setUnidadeQueijo] = useState(
+    data?.dadosReceita?.unidadeQueijo || ""
+  );
+  const [valorUnitarioQueijo, setValorUnitarioQueijo] = useState(
+    data?.dadosReceita?.valorUnitarioQueijo || 0.0
+  );
+  const [unidadeLeiteParaVenda, setUnidadeLeiteParaVenda] = useState(
+    data?.dadosReceita?.unidadeLeiteParaVenda || ""
+  );
   const [valorUnitarioLeiteParaVenda, setValorUnitarioLeiteParaVenda] =
-    useState(0.0);
+    useState(data?.dadosReceita?.valorUnitarioLeiteParaVenda || 0.0);
 
   const [qtdMatrizesDescartadas, setQtdMatrizesDescartadas] = useState(
     vendaAnimaisData?.matrizesDescartadasValues || []
   );
-  const [valorMatrizesDescartadas, setValorMatrizesDescartadas] = useState([]);
+  const [valorMatrizesDescartadas, setValorMatrizesDescartadas] = useState(
+    data?.dadosReceita?.valorMatrizesDescartadas || []
+  );
   const [qtdNovilhosVendidos, setQtdNovilhosVendidos] = useState(
     vendaAnimaisData?.novilhosVendidosValues || []
   );
-  const [valorNovilhosVendidos, setValorNovilhosVendidos] = useState([]);
+  const [valorNovilhosVendidos, setValorNovilhosVendidos] = useState(
+    data?.dadosReceita?.valorNovilhosVendidos || []
+  );
   const [qtdNovilhasVendidas, setQtdNovilhasVendidas] = useState(
     vendaAnimaisData?.novilhasVendidasValues || []
   );
-  const [valorNovilhasVendidas, setValorNovilhasVendidas] = useState([]);
+  const [valorNovilhasVendidas, setValorNovilhasVendidas] = useState(
+    data?.dadosReceita?.valorNovilhasVendidas || []
+  );
   const [qtdQueijo, setQtdQueijo] = useState(
     vendaAnimaisData?.queijoValues || []
   );
-  const [valorQueijo, setValorQueijo] = useState([]);
+  const [valorQueijo, setValorQueijo] = useState(
+    data?.dadosReceita?.valorQueijo || []
+  );
   const [qtdLeiteParaVenda, setQtdLeiteParaVenda] = useState(
     vendaAnimaisData?.leiteParaVendaValues || []
   );
-  const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState([]);
+  const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState(
+    data?.dadosReceita?.valorLeiteParaVenda || []
+  );
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -75,17 +96,88 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
    * @TODO
    */
   const onSave = async () => {
-    console.log("enviando receitas");
+    try {
+      setLoading(true);
+      const receitasData = {
+        matrizesdescartadas_unidade: unidadeMatrizesDescartadas,
+        matrizesdescartadas_valorunitario: valorUnitarioMatrizesDescartadas,
+        matrizesdescartadas_ano0_valortotal: valorMatrizesDescartadas[0],
+        matrizesdescartadas_ano1_valortotal: valorMatrizesDescartadas[1],
+        matrizesdescartadas_ano2_valortotal: valorMatrizesDescartadas[2],
+        matrizesdescartadas_ano3_valortotal: valorMatrizesDescartadas[3],
+        matrizesdescartadas_ano4_valortotal: valorMatrizesDescartadas[4],
+        matrizesdescartadas_ano5_valortotal: valorMatrizesDescartadas[5],
+        matrizesdescartadas_ano6_valortotal: valorMatrizesDescartadas[6],
+        matrizesdescartadas_ano7_valortotal: valorMatrizesDescartadas[7],
+        matrizesdescartadas_ano8_valortotal: valorMatrizesDescartadas[8],
+        matrizesdescartadas_ano9_valortotal: valorMatrizesDescartadas[9],
+
+        novilhosvendidos_unidade: unidadeNovilhosVendidos,
+        novilhosvendidos_valorunitario: valorUnitarioNovilhosVendidos,
+        novilhosvendidos_ano0_valortotal: valorNovilhosVendidos[0],
+        novilhosvendidos_ano1_valortotal: valorNovilhosVendidos[1],
+        novilhosvendidos_ano2_valortotal: valorNovilhosVendidos[2],
+        novilhosvendidos_ano3_valortotal: valorNovilhosVendidos[3],
+        novilhosvendidos_ano4_valortotal: valorNovilhosVendidos[4],
+        novilhosvendidos_ano5_valortotal: valorNovilhosVendidos[5],
+        novilhosvendidos_ano6_valortotal: valorNovilhosVendidos[6],
+        novilhosvendidos_ano7_valortotal: valorNovilhosVendidos[7],
+        novilhosvendidos_ano8_valortotal: valorNovilhosVendidos[8],
+        novilhosvendidos_ano9_valortotal: valorNovilhosVendidos[9],
+
+        novilhasvendidas_unidade: unidadeNovilhasVendidas,
+        novilhasvendidas_valorunitario: valorUnitarioNovilhasVendidas,
+        novilhasvendidas_ano0_valortotal: valorNovilhasVendidas[0],
+        novilhasvendidas_ano1_valortotal: valorNovilhasVendidas[1],
+        novilhasvendidas_ano2_valortotal: valorNovilhasVendidas[2],
+        novilhasvendidas_ano3_valortotal: valorNovilhasVendidas[3],
+        novilhasvendidas_ano4_valortotal: valorNovilhasVendidas[4],
+        novilhasvendidas_ano5_valortotal: valorNovilhasVendidas[5],
+        novilhasvendidas_ano6_valortotal: valorNovilhasVendidas[6],
+        novilhasvendidas_ano7_valortotal: valorNovilhasVendidas[7],
+        novilhasvendidas_ano8_valortotal: valorNovilhasVendidas[8],
+        novilhasvendidas_ano9_valortotal: valorNovilhasVendidas[9],
+
+        queijo_unidade: unidadeQueijo,
+        queijo_valorunitario: valorUnitarioQueijo,
+        queijo_ano0_valortotal: valorQueijo[0],
+        queijo_ano1_valortotal: valorQueijo[1],
+        queijo_ano2_valortotal: valorQueijo[2],
+        queijo_ano3_valortotal: valorQueijo[3],
+        queijo_ano4_valortotal: valorQueijo[4],
+        queijo_ano5_valortotal: valorQueijo[5],
+        queijo_ano6_valortotal: valorQueijo[6],
+        queijo_ano7_valortotal: valorQueijo[7],
+        queijo_ano8_valortotal: valorQueijo[8],
+        queijo_ano9_valortotal: valorQueijo[9],
+
+        leiteparavenda_unidade: unidadeLeiteParaVenda,
+        leiteparavenda_valorunitario: valorUnitarioLeiteParaVenda,
+        leiteparavenda_ano0_valortotal: valorLeiteParaVenda[0],
+        leiteparavenda_ano1_valortotal: valorLeiteParaVenda[1],
+        leiteparavenda_ano2_valortotal: valorLeiteParaVenda[2],
+        leiteparavenda_ano3_valortotal: valorLeiteParaVenda[3],
+        leiteparavenda_ano4_valortotal: valorLeiteParaVenda[4],
+        leiteparavenda_ano5_valortotal: valorLeiteParaVenda[5],
+        leiteparavenda_ano6_valortotal: valorLeiteParaVenda[6],
+        leiteparavenda_ano7_valortotal: valorLeiteParaVenda[7],
+        leiteparavenda_ano8_valortotal: valorLeiteParaVenda[8],
+        leiteparavenda_ano9_valortotal: valorLeiteParaVenda[9],
+      };
+
+      await submitReceitas({ receitasData: receitasData });
+      setFormsDisabled(true);
+    } catch (error) {
+      console.error("Erro ao salvar os dados:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   /**
    * @TODO VALOR UNITARIO
    */
   const handleInputChange = (descricao, ano, field, value, anoIndex) => {
-    console.log(
-      `Trocando ${field} de ${descricao} do ano ${ano} de index ${anoIndex} pro valor:`,
-      value
-    );
     if (descricao === "Matrizes Descartadas") {
       if (field === "unidade") {
         setUnidadeMatrizesDescartadas(value);
@@ -140,6 +232,64 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
       }
     }
   };
+
+  useEffect(() => {
+    const checkAndUpdateValor = () => {
+      // MATRIZES DESCARTADAS
+      const newValorMatrizesDescartadas = qtdMatrizesDescartadas.map(
+        (qtd, i) => {
+          const expectedValor = qtd * valorUnitarioMatrizesDescartadas;
+          if (valorMatrizesDescartadas[i] !== expectedValor) {
+            return expectedValor;
+          }
+          return valorMatrizesDescartadas[i];
+        }
+      );
+      setValorMatrizesDescartadas(newValorMatrizesDescartadas);
+
+      // NOVILHOS VENDIDOS
+      const newValorNovilhosVendidos = qtdNovilhosVendidos.map((qtd, i) => {
+        const expectedValor = qtd * valorUnitarioNovilhosVendidos;
+        if (valorNovilhosVendidos[i] !== expectedValor) {
+          return expectedValor;
+        }
+        return valorNovilhosVendidos[i];
+      });
+      setValorNovilhosVendidos(newValorNovilhosVendidos);
+
+      // NOVILHAS VENDIDAS
+      const newValorNovilhasVendidas = qtdNovilhasVendidas.map((qtd, i) => {
+        const expectedValor = qtd * valorUnitarioNovilhasVendidas;
+        if (valorNovilhasVendidas[i] !== expectedValor) {
+          return expectedValor;
+        }
+        return valorNovilhasVendidas[i];
+      });
+      setValorNovilhasVendidas(newValorNovilhasVendidas);
+
+      // QUEIJO (kg)
+      const newValorQueijo = qtdQueijo.map((qtd, i) => {
+        const expectedValor = qtd * valorUnitarioQueijo;
+        if (valorQueijo[i] !== expectedValor) {
+          return expectedValor;
+        }
+        return valorQueijo[i];
+      });
+      setValorQueijo(newValorQueijo);
+
+      // LEITE PARA VENDA (litros)
+      const newValorLeiteParaVenda = qtdLeiteParaVenda.map((qtd, i) => {
+        const expectedValor = qtd * valorUnitarioLeiteParaVenda;
+        if (valorLeiteParaVenda[i] !== expectedValor) {
+          return expectedValor;
+        }
+        return valorLeiteParaVenda[i];
+      });
+      setValorLeiteParaVenda(newValorLeiteParaVenda);
+    };
+
+    checkAndUpdateValor();
+  }, []); // só quando carrega a aba primeira vez
 
   return (
     <div className="p-4 bg-gray-900/80">
@@ -201,7 +351,8 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                       <div className="w-1/2">
                         <label className="block text-sm mb-2"></label>
                         <Input
-                          type="text"
+                          type="number"
+                          step="0.01"
                           disabled={formsDisabled}
                           placeholder="Valor unitário"
                           className="border-gray-500"
