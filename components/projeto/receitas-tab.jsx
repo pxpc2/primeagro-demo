@@ -42,15 +42,25 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const [valorUnitarioLeiteParaVenda, setValorUnitarioLeiteParaVenda] =
     useState(0.0);
 
-  const [qtdMatrizesDescartadas, setQtdMatrizesDescartadas] = useState([]);
+  const [qtdMatrizesDescartadas, setQtdMatrizesDescartadas] = useState(
+    vendaAnimaisData?.matrizesDescartadasValues || []
+  );
   const [valorMatrizesDescartadas, setValorMatrizesDescartadas] = useState([]);
-  const [qtdNovilhosVendidos, setQtdNovilhosVendidos] = useState([]);
+  const [qtdNovilhosVendidos, setQtdNovilhosVendidos] = useState(
+    vendaAnimaisData?.novilhosVendidosValues || []
+  );
   const [valorNovilhosVendidos, setValorNovilhosVendidos] = useState([]);
-  const [qtdNovilhasVendidas, setQtdNovilhasVendidas] = useState([]);
+  const [qtdNovilhasVendidas, setQtdNovilhasVendidas] = useState(
+    vendaAnimaisData?.novilhasVendidasValues || []
+  );
   const [valorNovilhasVendidas, setValorNovilhasVendidas] = useState([]);
-  const [qtdQueijo, setQtdQueijo] = useState([]);
+  const [qtdQueijo, setQtdQueijo] = useState(
+    vendaAnimaisData?.queijoValues || []
+  );
   const [valorQueijo, setValorQueijo] = useState([]);
-  const [qtdLeiteParaVenda, setQtdLeiteParaVenda] = useState([]);
+  const [qtdLeiteParaVenda, setQtdLeiteParaVenda] = useState(
+    vendaAnimaisData?.leiteParaVendaValues || []
+  );
   const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState([]);
 
   const onEdit = () => {
@@ -69,7 +79,7 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   };
 
   /**
-   * @TODO
+   * @TODO VALOR UNITARIO
    */
   const handleInputChange = (descricao, ano, field, value, anoIndex) => {
     console.log(
@@ -81,65 +91,52 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
         setUnidadeMatrizesDescartadas(value);
       } else if (field === "valorUnitario") {
         setValorUnitarioMatrizesDescartadas(value);
-      } else if (field === "qtd") {
-        const old = [...qtdMatrizesDescartadas];
-        old[anoIndex] = value;
-        setQtdMatrizesDescartadas(old);
-        const old2 = [...valorMatrizesDescartadas];
-        old2[anoIndex] = value * valorUnitarioMatrizesDescartadas;
-        setValorMatrizesDescartadas(old2);
+        const newValorMatrizesDescartadas = qtdMatrizesDescartadas.map(
+          (qtd, i) => {
+            return value * qtd;
+          }
+        );
+        setValorMatrizesDescartadas(newValorMatrizesDescartadas);
       }
     } else if (descricao === "Novilhos Vendidos") {
       if (field === "unidade") {
         setUnidadeNovilhosVendidos(value);
       } else if (field === "valorUnitario") {
         setValorUnitarioNovilhosVendidos(value);
-      } else if (field === "qtd") {
-        const old = [...qtdNovilhosVendidos];
-        old[anoIndex] = value;
-        setQtdNovilhosVendidos(old);
-        const old2 = [...valorNovilhosVendidos];
-        old2[anoIndex] = value * valorUnitarioNovilhosVendidos;
-        setValorNovilhosVendidos(old2);
+        const newValorNovilhosVendidos = qtdNovilhosVendidos.map((qtd, i) => {
+          return value * qtd;
+        });
+        setValorNovilhosVendidos(newValorNovilhosVendidos);
       }
     } else if (descricao === "Novilhas Vendidas") {
       if (field === "unidade") {
         setUnidadeNovilhasVendidas(value);
       } else if (field === "valorUnitario") {
         setValorUnitarioNovilhasVendidas(value);
-      } else if (field === "qtd") {
-        const old = [...qtdNovilhasVendidas];
-        old[anoIndex] = value;
-        setQtdNovilhasVendidas(old);
-        const old2 = [...valorNovilhasVendidas];
-        old2[anoIndex] = value * valorUnitarioNovilhasVendidas;
-        setValorNovilhasVendidas(old2);
+        const newValorNovilhasVendidas = qtdNovilhasVendidas.map((qtd, i) => {
+          return value * qtd;
+        });
+        setValorNovilhasVendidas(newValorNovilhasVendidas);
       }
-    } else if (descricao === "Queijo") {
+    } else if (descricao === "Queijo (kg)") {
       if (field === "unidade") {
         setUnidadeQueijo(value);
       } else if (field === "valorUnitario") {
         setValorUnitarioQueijo(value);
-      } else if (field === "qtd") {
-        const old = [...qtdQueijo];
-        old[anoIndex] = value;
-        setQtdQueijo(old);
-        const old2 = [...valorQueijo];
-        old2[anoIndex] = value * valorUnitarioQueijo;
-        setValorQueijo(old2);
+        const newValorQueijo = qtdQueijo.map((qtd, i) => {
+          return value * qtd;
+        });
+        setValorQueijo(newValorQueijo);
       }
-    } else if (descricao === "Leite para Venda") {
+    } else if (descricao === "Leite para venda (litros)") {
       if (field === "unidade") {
         setUnidadeLeiteParaVenda(value);
       } else if (field === "valorUnitario") {
         setValorUnitarioLeiteParaVenda(value);
-      } else if (field == "qtd") {
-        const old = [...qtdLeiteParaVenda];
-        old[anoIndex] = value;
-        setQtdLeiteParaVenda(old);
-        const old2 = [...valorLeiteParaVenda];
-        old2[anoIndex] = value * valorUnitarioLeiteParaVenda;
-        setValorLeiteParaVenda(old2);
+        const newValorLeiteParaVenda = qtdLeiteParaVenda.map((qtd, i) => {
+          return value * qtd;
+        });
+        setValorLeiteParaVenda(newValorLeiteParaVenda);
       }
     }
   };
@@ -184,9 +181,9 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? unidadeNovilhosVendidos
                               : descricao === "Novilhas Vendidas"
                               ? unidadeNovilhasVendidas
-                              : descricao === "Queijo"
+                              : descricao === "Queijo (kg)"
                               ? unidadeQueijo
-                              : descricao === "Leite para Venda"
+                              : descricao === "Leite para venda (litros)"
                               ? unidadeLeiteParaVenda
                               : ""
                           }
@@ -215,9 +212,9 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? valorUnitarioNovilhosVendidos
                               : descricao === "Novilhas Vendidas"
                               ? valorUnitarioNovilhasVendidas
-                              : descricao === "Queijo"
+                              : descricao === "Queijo (kg)"
                               ? valorUnitarioQueijo
-                              : descricao === "Leite para Venda"
+                              : descricao === "Leite para venda (litros)"
                               ? valorUnitarioLeiteParaVenda
                               : ""
                           }
@@ -237,7 +234,7 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                         <Input
                           type="text"
                           className="border-gray-500"
-                          disabled={formsDisabled}
+                          disabled={true}
                           placeholder="Qtd"
                           value={
                             descricao === "Matrizes Descartadas"
@@ -246,9 +243,9 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? qtdNovilhosVendidos[i]
                               : descricao === "Novilhas Vendidas"
                               ? qtdNovilhasVendidas[i]
-                              : descricao === "Queijo"
+                              : descricao === "Queijo (kg)"
                               ? qtdQueijo[i]
-                              : descricao === "Leite para Venda"
+                              : descricao === "Leite para venda (litros)"
                               ? qtdLeiteParaVenda[i]
                               : ""
                           }
@@ -279,9 +276,9 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? valorNovilhosVendidos[i]
                               : descricao === "Novilhas Vendidas"
                               ? valorNovilhasVendidas[i]
-                              : descricao === "Queijo"
+                              : descricao === "Queijo (kg)"
                               ? valorQueijo[i]
-                              : descricao === "Leite para Venda"
+                              : descricao === "Leite para venda (litros)"
                               ? valorLeiteParaVenda[i]
                               : ""
                           }

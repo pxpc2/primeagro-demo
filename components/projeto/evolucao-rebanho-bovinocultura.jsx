@@ -1314,17 +1314,12 @@ function VendasAnimaisTable({
 
   const calculateMatrizesDescartadasForYear = useCallback(
     (yearIndex) => {
-      if (yearIndex === 0) {
-        return "";
-      }
-
       const matrizesValue =
         yearIndex === 1
           ? calculateMatrizesFor2025()
           : yearIndex === 2
           ? calculateMatrizesFor2026()
           : calculateMatrizesForLaterYears(yearIndex);
-
       const discardRate =
         yearIndex === 1
           ? C8
@@ -1825,16 +1820,19 @@ function VendasAnimaisTable({
   // FAZ OS CÁLCULOS NO CARREGAMENTO, SÓ UMA VEZ (OU duas kkkkkkkk)
   useEffect(() => {
     const matrizesDescartadas = anos.map((yearIndex, i) =>
-      calculateMatrizesDescartadasForYear(i)
+      i === 0
+        ? matrizesDescartadas_ano0
+        : calculateMatrizesDescartadasForYear(i)
     );
     setMatrizesDescartadasValues(matrizesDescartadas);
 
     const novilhosVendidos = anos.map((yearIndex, i) =>
-      calculateNovilhoVendidoForYear(i)
+      i === 0 ? novilhoVendido_ano0 : calculateNovilhoVendidoForYear(i)
     );
     setNovilhosVendidosValues(novilhosVendidos);
 
     const novilhasVendidas = anos.map((yearIndex, i) => {
+      if (i === 0) return novilhaVendida_ano0;
       if (i === 1) {
         return calculateNovilhasVendidasFor2025();
       }
@@ -1859,6 +1857,7 @@ function VendasAnimaisTable({
       novilhasVendidasValues: novilhasVendidas,
       leiteParaVendaValues: leiteParaVenda,
       equivalenciaUAValues: equivalenciaUA,
+      queijoValues: queijoValues,
     });
   }, []);
 
