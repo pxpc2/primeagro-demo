@@ -15,13 +15,13 @@ import {
   VENDA_ANIMAIS_PRODUTOS_DESCRICOES,
 } from "@/utils/constants";
 
-export default function ReceitasTab({ data, isAdmin, vendasAnimaisData }) {
+export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
 
-  console.log(data);
+  console.log(vendaAnimaisData);
 
   const onEdit = () => {
     setFormsDisabled(false);

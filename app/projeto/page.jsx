@@ -16,6 +16,7 @@ import EvolucaoRebanhoTab from "@/components/projeto/evolucao-rebanho-tab";
 import TotalTab from "@/components/projeto/totalUA-tab";
 import ReceitasTab from "@/components/projeto/receitas-tab";
 import OrcamentosTab from "@/components/projeto/orcamentos-tab";
+import { set } from "react-hook-form";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -103,7 +104,7 @@ export default function ProjetoPage() {
           <EvolucaoRebanhoTab
             data={formData?.aba_evolucao_rebanho}
             isAdmin={isAdmin}
-            onVendasAnimaisChange={handleVendasAnimaisUpdate}
+            setVendaAnimaisData={setVendasAnimaisData}
           />
         );
       case "Total (UA)":
@@ -113,7 +114,7 @@ export default function ProjetoPage() {
           <ReceitasTab
             data={formData?.aba_receitas}
             isAdmin={isAdmin}
-            vendasAnimaisData={vendasAnimaisData}
+            vendaAnimaisData={vendasAnimaisData}
           />
         );
       case "Orçamentos":
