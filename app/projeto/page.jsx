@@ -17,6 +17,7 @@ import TotalTab from "@/components/projeto/totalUA-tab";
 import ReceitasTab from "@/components/projeto/receitas-tab";
 import OrcamentosTab from "@/components/projeto/orcamentos-tab";
 import { set } from "react-hook-form";
+import DespesasTab from "@/components/projeto/despesas-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -115,6 +116,14 @@ export default function ProjetoPage() {
             data={formData?.aba_receitas}
             isAdmin={isAdmin}
             vendaAnimaisData={vendasAnimaisData}
+          />
+        );
+      case "Despesas":
+        return (
+          <DespesasTab
+            data={formData?.aba_despesas}
+            isAdmin={isAdmin}
+            receitasData={formData?.aba_receitas}
           />
         );
       case "Orçamentos":

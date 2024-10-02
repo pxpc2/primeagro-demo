@@ -83,11 +83,7 @@ export default function TotalTab({ data, isAdmin }) {
 }
 
 function AnimalTable({ title, ifValue, categories, data, formsDisabled }) {
-  const handleInputChange = (categoria, field, value) => {
-    if (onChange) {
-      onChange(categoria, field, value);
-    }
-  };
+  const handleInputChange = (categoria, field, value) => {};
 
   const findDataForCategoria = (categoria) => {
     return data ? data[categoria.toLowerCase()] : {};
