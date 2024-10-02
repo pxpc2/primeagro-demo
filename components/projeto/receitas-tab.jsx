@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import Heading from "./Header";
 import { useState } from "react";
 import {
@@ -23,6 +23,36 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
 
   console.log(vendaAnimaisData);
 
+  // vai ser o mesmo para todos os anos de cada descrição
+  const [unidadeMatrizesDescartadas, setUnidadeMatrizesDescartadas] =
+    useState("");
+  const [
+    valorUnitarioMatrizesDescartadas,
+    setValorUnitarioMatrizesDescartadas,
+  ] = useState(0.0);
+  const [unidadeNovilhosVendidos, setUnidadeNovilhosVendidos] = useState("");
+  const [valorUnitarioNovilhosVendidos, setValorUnitarioNovilhosVendidos] =
+    useState(0.0);
+  const [unidadeNovilhasVendidas, setUnidadeNovilhasVendidas] = useState("");
+  const [valorUnitarioNovilhasVendidas, setValorUnitarioNovilhasVendidas] =
+    useState(0.0);
+  const [unidadeQueijo, setUnidadeQueijo] = useState("");
+  const [valorUnitarioQueijo, setValorUnitarioQueijo] = useState(0.0);
+  const [unidadeLeiteParaVenda, setUnidadeLeiteParaVenda] = useState("");
+  const [valorUnitarioLeiteParaVenda, setValorUnitarioLeiteParaVenda] =
+    useState(0.0);
+
+  const [qtdMatrizesDescartadas, setQtdMatrizesDescartadas] = useState([]);
+  const [valorMatrizesDescartadas, setValorMatrizesDescartadas] = useState([]);
+  const [qtdNovilhosVendidos, setQtdNovilhosVendidos] = useState([]);
+  const [valorNovilhosVendidos, setValorNovilhosVendidos] = useState([]);
+  const [qtdNovilhasVendidas, setQtdNovilhasVendidas] = useState([]);
+  const [valorNovilhasVendidas, setValorNovilhasVendidas] = useState([]);
+  const [qtdQueijo, setQtdQueijo] = useState([]);
+  const [valorQueijo, setValorQueijo] = useState([]);
+  const [qtdLeiteParaVenda, setQtdLeiteParaVenda] = useState([]);
+  const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState([]);
+
   const onEdit = () => {
     setFormsDisabled(false);
   };
@@ -41,8 +71,77 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   /**
    * @TODO
    */
-  const handleInputChange = (descricao, ano, field, value) => {
-    console.log(`Trocando ${field} por ${descricao} do ano ${ano}:`, value);
+  const handleInputChange = (descricao, ano, field, value, anoIndex) => {
+    console.log(
+      `Trocando ${field} de ${descricao} do ano ${ano} de index ${anoIndex} pro valor:`,
+      value
+    );
+    if (descricao === "Matrizes Descartadas") {
+      if (field === "unidade") {
+        setUnidadeMatrizesDescartadas(value);
+      } else if (field === "valorUnitario") {
+        setValorUnitarioMatrizesDescartadas(value);
+      } else if (field === "qtd") {
+        const old = [...qtdMatrizesDescartadas];
+        old[anoIndex] = value;
+        setQtdMatrizesDescartadas(old);
+        const old2 = [...valorMatrizesDescartadas];
+        old2[anoIndex] = value * valorUnitarioMatrizesDescartadas;
+        setValorMatrizesDescartadas(old2);
+      }
+    } else if (descricao === "Novilhos Vendidos") {
+      if (field === "unidade") {
+        setUnidadeNovilhosVendidos(value);
+      } else if (field === "valorUnitario") {
+        setValorUnitarioNovilhosVendidos(value);
+      } else if (field === "qtd") {
+        const old = [...qtdNovilhosVendidos];
+        old[anoIndex] = value;
+        setQtdNovilhosVendidos(old);
+        const old2 = [...valorNovilhosVendidos];
+        old2[anoIndex] = value * valorUnitarioNovilhosVendidos;
+        setValorNovilhosVendidos(old2);
+      }
+    } else if (descricao === "Novilhas Vendidas") {
+      if (field === "unidade") {
+        setUnidadeNovilhasVendidas(value);
+      } else if (field === "valorUnitario") {
+        setValorUnitarioNovilhasVendidas(value);
+      } else if (field === "qtd") {
+        const old = [...qtdNovilhasVendidas];
+        old[anoIndex] = value;
+        setQtdNovilhasVendidas(old);
+        const old2 = [...valorNovilhasVendidas];
+        old2[anoIndex] = value * valorUnitarioNovilhasVendidas;
+        setValorNovilhasVendidas(old2);
+      }
+    } else if (descricao === "Queijo") {
+      if (field === "unidade") {
+        setUnidadeQueijo(value);
+      } else if (field === "valorUnitario") {
+        setValorUnitarioQueijo(value);
+      } else if (field === "qtd") {
+        const old = [...qtdQueijo];
+        old[anoIndex] = value;
+        setQtdQueijo(old);
+        const old2 = [...valorQueijo];
+        old2[anoIndex] = value * valorUnitarioQueijo;
+        setValorQueijo(old2);
+      }
+    } else if (descricao === "Leite para Venda") {
+      if (field === "unidade") {
+        setUnidadeLeiteParaVenda(value);
+      } else if (field === "valorUnitario") {
+        setValorUnitarioLeiteParaVenda(value);
+      } else if (field == "qtd") {
+        const old = [...qtdLeiteParaVenda];
+        old[anoIndex] = value;
+        setQtdLeiteParaVenda(old);
+        const old2 = [...valorLeiteParaVenda];
+        old2[anoIndex] = value * valorUnitarioLeiteParaVenda;
+        setValorLeiteParaVenda(old2);
+      }
+    }
   };
 
   return (
@@ -78,12 +177,26 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                           className="border-gray-500"
                           disabled={formsDisabled}
                           placeholder="UNIDADE"
+                          value={
+                            descricao === "Matrizes Descartadas"
+                              ? unidadeMatrizesDescartadas
+                              : descricao === "Novilhos Vendidos"
+                              ? unidadeNovilhosVendidos
+                              : descricao === "Novilhas Vendidas"
+                              ? unidadeNovilhasVendidas
+                              : descricao === "Queijo"
+                              ? unidadeQueijo
+                              : descricao === "Leite para Venda"
+                              ? unidadeLeiteParaVenda
+                              : ""
+                          }
                           onChange={(e) =>
                             handleInputChange(
                               descricao,
                               ano,
-                              "qtd",
-                              e.target.value
+                              "unidade",
+                              e.target.value,
+                              i
                             )
                           }
                         />
@@ -95,12 +208,26 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                           disabled={formsDisabled}
                           placeholder="Valor unitário"
                           className="border-gray-500"
+                          value={
+                            descricao === "Matrizes Descartadas"
+                              ? valorUnitarioMatrizesDescartadas
+                              : descricao === "Novilhos Vendidos"
+                              ? valorUnitarioNovilhosVendidos
+                              : descricao === "Novilhas Vendidas"
+                              ? valorUnitarioNovilhasVendidas
+                              : descricao === "Queijo"
+                              ? valorUnitarioQueijo
+                              : descricao === "Leite para Venda"
+                              ? valorUnitarioLeiteParaVenda
+                              : ""
+                          }
                           onChange={(e) =>
                             handleInputChange(
                               descricao,
                               ano,
-                              "valor",
-                              e.target.value
+                              "valorUnitario",
+                              e.target.value,
+                              i
                             )
                           }
                         />
@@ -109,15 +236,29 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                         <label className="block text-sm mb-2"></label>
                         <Input
                           type="text"
-                          className="border-black"
-                          disabled={true}
+                          className="border-gray-500"
+                          disabled={formsDisabled}
                           placeholder="Qtd"
+                          value={
+                            descricao === "Matrizes Descartadas"
+                              ? qtdMatrizesDescartadas[i]
+                              : descricao === "Novilhos Vendidos"
+                              ? qtdNovilhosVendidos[i]
+                              : descricao === "Novilhas Vendidas"
+                              ? qtdNovilhasVendidas[i]
+                              : descricao === "Queijo"
+                              ? qtdQueijo[i]
+                              : descricao === "Leite para Venda"
+                              ? qtdLeiteParaVenda[i]
+                              : ""
+                          }
                           onChange={(e) =>
                             handleInputChange(
                               descricao,
                               ano,
                               "qtd",
-                              e.target.value
+                              e.target.value,
+                              i
                             )
                           }
                         />
@@ -131,12 +272,26 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                           disabled={true}
                           placeholder="Valor"
                           className="border-black"
+                          value={
+                            descricao === "Matrizes Descartadas"
+                              ? valorMatrizesDescartadas[i]
+                              : descricao === "Novilhos Vendidos"
+                              ? valorNovilhosVendidos[i]
+                              : descricao === "Novilhas Vendidas"
+                              ? valorNovilhasVendidas[i]
+                              : descricao === "Queijo"
+                              ? valorQueijo[i]
+                              : descricao === "Leite para Venda"
+                              ? valorLeiteParaVenda[i]
+                              : ""
+                          }
                           onChange={(e) =>
                             handleInputChange(
                               descricao,
                               ano,
                               "valor",
-                              e.target.value
+                              e.target.value,
+                              i
                             )
                           }
                         />
