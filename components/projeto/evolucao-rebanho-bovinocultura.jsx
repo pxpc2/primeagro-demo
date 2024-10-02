@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import {
   Table,
@@ -36,6 +36,8 @@ export default function EvolucaoRebanhoBovinocultura({
   const handleDataChange = (updatedData) => {
     onChange(updatedData);
   };
+
+  console.log(data);
 
   const arr =
     data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
@@ -789,19 +791,19 @@ function ReprodutorMatrizTable({ formsDisabled, onChange, data }) {
 
 function EquivalenciaUATable({ data, onChange, formsDisabled }) {
   const [touro, setTouro] = useState(
-    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro || 1
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro
   );
   const [matrizes, setMatrizes] = useState(
-    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes || 1
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes
   );
   const [novilhos, setNovilhos] = useState(
-    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos || 1
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos
   );
   const [garrotes, setGarrotes] = useState(
-    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes || 1
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes
   );
   const [bezerros, setBezerros] = useState(
-    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros || 1
+    data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros
   );
 
   const handleTouroChange = (e) => {
@@ -1243,6 +1245,22 @@ function VendasAnimaisTable({
   const animaisAdquirirMatrizes =
     data?.dadosEvolucaoRebanho?.[0]?.animaisAdquirir_matrizes || 0;
 
+  const [matrizesDescartadasValues, setMatrizesDescartadasValues] = useState(
+    Array(11).fill("")
+  );
+  const [novilhosVendidosValues, setNovilhosVendidosValues] = useState(
+    Array(11).fill("")
+  );
+  const [novilhasVendidasValues, setNovilhasVendidasValues] = useState(
+    Array(11).fill("")
+  );
+  const [leiteParaVendaValues, setLeiteParaVendaValues] = useState(
+    Array(11).fill("")
+  );
+  const [equivalenciaUAValues, setEquivalenciaUAValues] = useState(
+    Array(11).fill("")
+  );
+
   const [matrizesDescartadas_ano0, setMatrizesDescartadas_ano0] = useState(
     data?.dadosEvolucaoRebanho?.[0]?.matrizesDescartadas_ano0 || 1
   );
@@ -1294,120 +1312,140 @@ function VendasAnimaisTable({
     );
   };
 
-  const calculateMatrizesDescartadasForYear = (yearIndex) => {
-    if (yearIndex === 0) {
-      return "";
-    }
+  const calculateMatrizesDescartadasForYear = useCallback(
+    (yearIndex) => {
+      if (yearIndex === 0) {
+        return "";
+      }
 
-    const matrizesValue =
-      yearIndex === 1
-        ? calculateMatrizesFor2025()
-        : yearIndex === 2
-        ? calculateMatrizesFor2026()
-        : calculateMatrizesForLaterYears(yearIndex);
+      const matrizesValue =
+        yearIndex === 1
+          ? calculateMatrizesFor2025()
+          : yearIndex === 2
+          ? calculateMatrizesFor2026()
+          : calculateMatrizesForLaterYears(yearIndex);
 
-    const discardRate =
-      yearIndex === 1
-        ? C8
-        : yearIndex === 2
-        ? D8
-        : yearIndex === 3
-        ? E8
-        : yearIndex === 4
-        ? F8
-        : yearIndex === 5
-        ? G8
-        : yearIndex === 6
-        ? H8
-        : yearIndex === 7
-        ? I8
-        : yearIndex === 8
-        ? J8
-        : yearIndex === 9
-        ? K8
-        : yearIndex === 10
-        ? L8
-        : 0;
+      const discardRate =
+        yearIndex === 1
+          ? C8
+          : yearIndex === 2
+          ? D8
+          : yearIndex === 3
+          ? E8
+          : yearIndex === 4
+          ? F8
+          : yearIndex === 5
+          ? G8
+          : yearIndex === 6
+          ? H8
+          : yearIndex === 7
+          ? I8
+          : yearIndex === 8
+          ? J8
+          : yearIndex === 9
+          ? K8
+          : yearIndex === 10
+          ? L8
+          : 0;
 
-    let res =
-      matrizesValue && discardRate
-        ? Math.round(matrizesValue * discardRate)
-        : "";
-    return res;
-  };
+      let res =
+        matrizesValue && discardRate
+          ? Math.round(matrizesValue * discardRate)
+          : "";
+      return res;
+    },
+    [
+      C8,
+      D8,
+      E8,
+      F8,
+      G8,
+      H8,
+      I8,
+      J8,
+      K8,
+      L8,
+      calculateMatrizesFor2025,
+      calculateMatrizesFor2026,
+      calculateMatrizesForLaterYears,
+    ]
+  );
 
-  const calculateNovilhoVendidoForYear = (yearIndex) => {
-    if (yearIndex === 0) {
-      return "";
-    }
+  const calculateNovilhoVendidoForYear = useCallback(
+    (yearIndex) => {
+      if (yearIndex === 0) {
+        return "";
+      }
 
-    let novilhosValue;
-    switch (yearIndex) {
-      case 1: // 2025
-        novilhosValue = calculateNovilhosFor2025("Novilhos (24 a 36 meses)");
-        break;
-      case 2: // 2026
-        novilhosValue = calculateNovilhosForLaterYears(
-          2,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 3: // 2027
-        novilhosValue = calculateNovilhosForLaterYears(
-          3,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 4: // 2028
-        novilhosValue = calculateNovilhosForLaterYears(
-          4,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 5: // 2029
-        novilhosValue = calculateNovilhosForLaterYears(
-          5,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 6: // 2030
-        novilhosValue = calculateNovilhosForLaterYears(
-          6,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 7: // 2031
-        novilhosValue = calculateNovilhosForLaterYears(
-          7,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 8: // 2032
-        novilhosValue = calculateNovilhosForLaterYears(
-          8,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 9: // 2033
-        novilhosValue = calculateNovilhosForLaterYears(
-          9,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      case 10: // 2034
-        novilhosValue = calculateNovilhosForLaterYears(
-          10,
-          "Novilhos (24 a 36 meses)"
-        );
-        break;
-      default:
-        novilhosValue = "";
-    }
+      let novilhosValue;
+      switch (yearIndex) {
+        case 1: // 2025
+          novilhosValue = calculateNovilhosFor2025("Novilhos (24 a 36 meses)");
+          break;
+        case 2: // 2026
+          novilhosValue = calculateNovilhosForLaterYears(
+            2,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 3: // 2027
+          novilhosValue = calculateNovilhosForLaterYears(
+            3,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 4: // 2028
+          novilhosValue = calculateNovilhosForLaterYears(
+            4,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 5: // 2029
+          novilhosValue = calculateNovilhosForLaterYears(
+            5,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 6: // 2030
+          novilhosValue = calculateNovilhosForLaterYears(
+            6,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 7: // 2031
+          novilhosValue = calculateNovilhosForLaterYears(
+            7,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 8: // 2032
+          novilhosValue = calculateNovilhosForLaterYears(
+            8,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 9: // 2033
+          novilhosValue = calculateNovilhosForLaterYears(
+            9,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        case 10: // 2034
+          novilhosValue = calculateNovilhosForLaterYears(
+            10,
+            "Novilhos (24 a 36 meses)"
+          );
+          break;
+        default:
+          novilhosValue = "";
+      }
 
-    return novilhosValue;
-  };
+      return novilhosValue;
+    },
+    [calculateNovilhosFor2025, calculateNovilhosForLaterYears]
+  );
 
-  const calculateNovilhasVendidasFor2025 = () => {
+  const calculateNovilhasVendidasFor2025 = useCallback(() => {
     const matrizes2024 = getStartingValue("Matrizes"); // B24
     const novilhas2024 = getStartingValue("Novilhas (24 a 36 meses)"); // B30
 
@@ -1423,169 +1461,248 @@ function VendasAnimaisTable({
           );
 
     return result;
-  };
+  }, [animaisAdquirirMatrizes, estabilizacaoPlantel, getStartingValue]);
 
-  const calculateNovilhasVendidasForLaterYears = (yearIndex) => {
-    const matrizesValue =
-      yearIndex === 2
-        ? calculateMatrizesFor2026()
-        : yearIndex > 2
-        ? calculateMatrizesForLaterYears(yearIndex)
-        : 0;
-
-    const novilhasValue = calculateNovilhosForLaterYears(
-      yearIndex,
-      "Novilhas (24 a 36 meses)"
-    );
-
-    const discardRate =
-      yearIndex === 2
-        ? D8
-        : yearIndex === 3
-        ? E8
-        : yearIndex === 4
-        ? F8
-        : yearIndex === 5
-        ? G8
-        : yearIndex === 6
-        ? H8
-        : yearIndex === 7
-        ? I8
-        : yearIndex === 8
-        ? J8
-        : yearIndex === 9
-        ? K8
-        : L8;
-
-    const result =
-      matrizesValue < estabilizacaoPlantel
-        ? Math.round(novilhasValue * 0.1)
-        : Math.round(novilhasValue - matrizesValue * discardRate);
-
-    return result;
-  };
-
-  const findDataForDescricao = (descricao) => {
-    return data?.aba_vendas_animais?.find(
-      (item) => item.descricao === descricao
-    );
-  };
-
-  const calculateLeiteParaVendaForYear = (yearIndex) => {
-    if (yearIndex === 0) {
-      const matrizes2024 = getStartingValue("Matrizes"); // B24
-      const leiteParaVenda2024 = Math.round(
-        ((B4 * B10) / 360) * matrizes2024 * B11 * 365
-      );
-      return leiteParaVenda2024;
-    } else if (yearIndex === 1) {
-      const matrizes2025 = calculateMatrizesFor2025(); // C24
-      const bezerros2025 = calculateBezerrosFor2025("Bezerros (0 a 12 meses)"); // C25
-      const bezerras2025 = calculateBezerrosFor2025("Bezerras (0 a 12 meses)"); // C26
-
-      const queijo2025 = findDataForDescricao("Queijo (kg)")?.["ano2"] || 0; // C37
-
-      const baseLeite = Math.round(
-        ((C4 * C10) / 360) * matrizes2025 * C11 * 365
-      );
-
-      const deduction = 4 * 60 * (bezerros2025 + bezerras2025);
-      const queijoDeduction = queijo2025 * 10;
-
-      return baseLeite - deduction - queijoDeduction;
-    } else if (yearIndex >= 2) {
-      const matrizesForYear =
+  const calculateNovilhasVendidasForLaterYears = useCallback(
+    (yearIndex) => {
+      if (yearIndex === 0) {
+        return "";
+      }
+      const matrizesValue =
         yearIndex === 2
           ? calculateMatrizesFor2026()
-          : calculateMatrizesForLaterYears(yearIndex); // D24, E24, etc.
+          : yearIndex > 2
+          ? calculateMatrizesForLaterYears(yearIndex)
+          : 0;
 
-      const bezerrosForYear = calculateBezerrosForLaterYears(
+      const novilhasValue = calculateNovilhosForLaterYears(
         yearIndex,
-        "Bezerros (0 a 12 meses)"
-      ); // D25, E25, etc.
-
-      const bezerrasForYear = calculateBezerrosForLaterYears(
-        yearIndex,
-        "Bezerras (0 a 12 meses)"
-      ); // D26, E26, etc.
-
-      const queijoForYear =
-        findDataForDescricao("Queijo (kg)")?.[`ano${yearIndex + 1}`] || 0; // D37, E37, etc.
-      const current4 =
-        yearIndex === 2
-          ? D4
-          : yearIndex === 3
-          ? E4
-          : yearIndex === 4
-          ? F4
-          : yearIndex === 5
-          ? G4
-          : yearIndex === 6
-          ? H4
-          : yearIndex === 7
-          ? I4
-          : yearIndex === 8
-          ? J4
-          : yearIndex === 9
-          ? K4
-          : yearIndex === 10
-          ? L4
-          : 0;
-
-      const current10 =
-        yearIndex === 2
-          ? D10
-          : yearIndex === 3
-          ? E10
-          : yearIndex === 4
-          ? F10
-          : yearIndex === 5
-          ? G10
-          : yearIndex === 6
-          ? H10
-          : yearIndex === 7
-          ? I10
-          : yearIndex === 8
-          ? J10
-          : yearIndex === 9
-          ? K10
-          : yearIndex === 10
-          ? L10
-          : 0;
-
-      const current11 =
-        yearIndex === 2
-          ? D11
-          : yearIndex === 3
-          ? E11
-          : yearIndex === 4
-          ? F11
-          : yearIndex === 5
-          ? G11
-          : yearIndex === 6
-          ? H11
-          : yearIndex === 7
-          ? I11
-          : yearIndex === 8
-          ? J11
-          : yearIndex === 9
-          ? K11
-          : yearIndex === 10
-          ? L11
-          : 0;
-
-      const baseLeite = Math.round(
-        ((current4 * current10) / 360) * matrizesForYear * current11 * 365
+        "Novilhas (24 a 36 meses)"
       );
 
-      const deduction = 4 * 60 * (bezerrosForYear + bezerrasForYear);
-      const queijoDeduction = queijoForYear * 10;
+      const discardRate =
+        yearIndex === 2
+          ? D8
+          : yearIndex === 3
+          ? E8
+          : yearIndex === 4
+          ? F8
+          : yearIndex === 5
+          ? G8
+          : yearIndex === 6
+          ? H8
+          : yearIndex === 7
+          ? I8
+          : yearIndex === 8
+          ? J8
+          : yearIndex === 9
+          ? K8
+          : L8;
 
-      return baseLeite - deduction - queijoDeduction;
-    }
-    return "";
-  };
+      const result =
+        matrizesValue < estabilizacaoPlantel
+          ? Math.round(novilhasValue * 0.1)
+          : Math.round(novilhasValue - matrizesValue * discardRate);
 
+      return result;
+    },
+    [
+      D8,
+      E8,
+      F8,
+      G8,
+      H8,
+      I8,
+      J8,
+      K8,
+      L8,
+      calculateMatrizesFor2026,
+      calculateMatrizesForLaterYears,
+      calculateNovilhosForLaterYears,
+      estabilizacaoPlantel,
+    ]
+  );
+
+  const findDataForDescricao = useCallback(
+    (descricao) => {
+      return data?.aba_vendas_animais?.find(
+        (item) => item.descricao === descricao
+      );
+    },
+    [data?.aba_vendas_animais]
+  );
+
+  const calculateLeiteParaVendaForYear = useCallback(
+    (yearIndex) => {
+      if (yearIndex === 0) {
+        const matrizes2024 = getStartingValue("Matrizes"); // B24
+        const leiteParaVenda2024 = Math.round(
+          ((B4 * B10) / 360) * matrizes2024 * B11 * 365
+        );
+        return leiteParaVenda2024;
+      } else if (yearIndex === 1) {
+        const matrizes2025 = calculateMatrizesFor2025(); // C24
+        const bezerros2025 = calculateBezerrosFor2025(
+          "Bezerros (0 a 12 meses)"
+        ); // C25
+        const bezerras2025 = calculateBezerrosFor2025(
+          "Bezerras (0 a 12 meses)"
+        ); // C26
+
+        const queijo2025 = findDataForDescricao("Queijo (kg)")?.["ano2"] || 0; // C37
+
+        const baseLeite = Math.round(
+          ((C4 * C10) / 360) * matrizes2025 * C11 * 365
+        );
+
+        const deduction = 4 * 60 * (bezerros2025 + bezerras2025);
+        const queijoDeduction = queijo2025 * 10;
+
+        return baseLeite - deduction - queijoDeduction;
+      } else if (yearIndex >= 2) {
+        const matrizesForYear =
+          yearIndex === 2
+            ? calculateMatrizesFor2026()
+            : calculateMatrizesForLaterYears(yearIndex); // D24, E24, etc.
+
+        const bezerrosForYear = calculateBezerrosForLaterYears(
+          yearIndex,
+          "Bezerros (0 a 12 meses)"
+        ); // D25, E25, etc.
+
+        const bezerrasForYear = calculateBezerrosForLaterYears(
+          yearIndex,
+          "Bezerras (0 a 12 meses)"
+        ); // D26, E26, etc.
+
+        const queijoForYear =
+          findDataForDescricao("Queijo (kg)")?.[`ano${yearIndex + 1}`] || 0; // D37, E37, etc.
+        const current4 =
+          yearIndex === 2
+            ? D4
+            : yearIndex === 3
+            ? E4
+            : yearIndex === 4
+            ? F4
+            : yearIndex === 5
+            ? G4
+            : yearIndex === 6
+            ? H4
+            : yearIndex === 7
+            ? I4
+            : yearIndex === 8
+            ? J4
+            : yearIndex === 9
+            ? K4
+            : yearIndex === 10
+            ? L4
+            : 0;
+
+        const current10 =
+          yearIndex === 2
+            ? D10
+            : yearIndex === 3
+            ? E10
+            : yearIndex === 4
+            ? F10
+            : yearIndex === 5
+            ? G10
+            : yearIndex === 6
+            ? H10
+            : yearIndex === 7
+            ? I10
+            : yearIndex === 8
+            ? J10
+            : yearIndex === 9
+            ? K10
+            : yearIndex === 10
+            ? L10
+            : 0;
+
+        const current11 =
+          yearIndex === 2
+            ? D11
+            : yearIndex === 3
+            ? E11
+            : yearIndex === 4
+            ? F11
+            : yearIndex === 5
+            ? G11
+            : yearIndex === 6
+            ? H11
+            : yearIndex === 7
+            ? I11
+            : yearIndex === 8
+            ? J11
+            : yearIndex === 9
+            ? K11
+            : yearIndex === 10
+            ? L11
+            : 0;
+
+        const baseLeite = Math.round(
+          ((current4 * current10) / 360) * matrizesForYear * current11 * 365
+        );
+
+        const deduction = 4 * 60 * (bezerrosForYear + bezerrasForYear);
+        const queijoDeduction = queijoForYear * 10;
+
+        return baseLeite - deduction - queijoDeduction;
+      }
+      return "";
+    },
+    [
+      B10,
+      B11,
+      B4,
+      C10,
+      C11,
+      C4,
+      D10,
+      D11,
+      D4,
+      E10,
+      E11,
+      E4,
+      F10,
+      F11,
+      F4,
+      G10,
+      G11,
+      G4,
+      H10,
+      H11,
+      H4,
+      I10,
+      I11,
+      I4,
+      J10,
+      J11,
+      J4,
+      K10,
+      K11,
+      K4,
+      L10,
+      L11,
+      L4,
+      calculateBezerrosFor2025,
+      calculateBezerrosForLaterYears,
+      calculateMatrizesFor2025,
+      calculateMatrizesFor2026,
+      calculateMatrizesForLaterYears,
+      findDataForDescricao,
+      getStartingValue,
+    ]
+  );
+
+  /**
+   *
+   * é a funçao principal dos cálculos.
+   *
+   * @param {*} descricao
+   * @param {*} yearIndex
+   * @returns
+   */
   const getCalculatedValue = (descricao, yearIndex) => {
     switch (descricao) {
       case "Matrizes Descartadas":
@@ -1605,77 +1722,145 @@ function VendasAnimaisTable({
     }
   };
 
-  const calculateEquivalenciaUAForYear = (yearIndex) => {
-    const touroValue = calculateTourosForYear(yearIndex);
-    const matrizesValue =
-      yearIndex === 0
-        ? getStartingValue("Matrizes")
-        : yearIndex === 1
-        ? calculateMatrizesFor2025()
-        : yearIndex === 2
-        ? calculateMatrizesFor2026()
-        : calculateMatrizesForLaterYears(yearIndex);
+  const calculateEquivalenciaUAForYear = useCallback(
+    (yearIndex) => {
+      const touroValue = calculateTourosForYear(yearIndex);
+      const matrizesValue =
+        yearIndex === 0
+          ? getStartingValue("Matrizes")
+          : yearIndex === 1
+          ? calculateMatrizesFor2025()
+          : yearIndex === 2
+          ? calculateMatrizesFor2026()
+          : calculateMatrizesForLaterYears(yearIndex);
 
-    const bezerrosValue =
-      yearIndex === 0
-        ? getStartingValue("Bezerros (0 a 12 meses)")
-        : yearIndex === 1
-        ? calculateBezerrosFor2025("Bezerros (0 a 12 meses)")
-        : calculateBezerrosForLaterYears(yearIndex);
+      const bezerrosValue =
+        yearIndex === 0
+          ? getStartingValue("Bezerros (0 a 12 meses)")
+          : yearIndex === 1
+          ? calculateBezerrosFor2025("Bezerros (0 a 12 meses)")
+          : calculateBezerrosForLaterYears(yearIndex);
 
-    const bezerrasValue =
-      yearIndex === 0
-        ? getStartingValue("Bezerras (0 a 12 meses)")
-        : yearIndex === 1
-        ? calculateBezerrosFor2025("Bezerras (0 a 12 meses)")
-        : calculateBezerrosForLaterYears(yearIndex);
+      const bezerrasValue =
+        yearIndex === 0
+          ? getStartingValue("Bezerras (0 a 12 meses)")
+          : yearIndex === 1
+          ? calculateBezerrosFor2025("Bezerras (0 a 12 meses)")
+          : calculateBezerrosForLaterYears(yearIndex);
 
-    const garrotesValue =
-      yearIndex === 0
-        ? getStartingValue("Garrotes (12 a 24 meses)")
-        : yearIndex === 1
-        ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
-        : calculateGarrotesForLaterYears(yearIndex, "Garrotes (12 a 24 meses)");
+      const garrotesValue =
+        yearIndex === 0
+          ? getStartingValue("Garrotes (12 a 24 meses)")
+          : yearIndex === 1
+          ? calculateGarrotesFor2025("Garrotes (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex,
+              "Garrotes (12 a 24 meses)"
+            );
 
-    const garrotasValue =
-      yearIndex === 0
-        ? getStartingValue("Garrotas (12 a 24 meses)")
-        : yearIndex === 1
-        ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
-        : calculateGarrotesForLaterYears(yearIndex, "Garrotas (12 a 24 meses)");
+      const garrotasValue =
+        yearIndex === 0
+          ? getStartingValue("Garrotas (12 a 24 meses)")
+          : yearIndex === 1
+          ? calculateGarrotesFor2025("Garrotas (12 a 24 meses)")
+          : calculateGarrotesForLaterYears(
+              yearIndex,
+              "Garrotas (12 a 24 meses)"
+            );
 
-    const novilhosValue =
-      yearIndex === 0
-        ? getStartingValue("Novilhos (24 a 36 meses)")
-        : yearIndex === 1
-        ? calculateNovilhosFor2025("Novilhos (24 a 36 meses)")
-        : calculateNovilhosForLaterYears(yearIndex, "Novilhos (24 a 36 meses)");
+      const novilhosValue =
+        yearIndex === 0
+          ? getStartingValue("Novilhos (24 a 36 meses)")
+          : yearIndex === 1
+          ? calculateNovilhosFor2025("Novilhos (24 a 36 meses)")
+          : calculateNovilhosForLaterYears(
+              yearIndex,
+              "Novilhos (24 a 36 meses)"
+            );
 
-    const novilhasValue =
-      yearIndex === 0
-        ? getStartingValue("Novilhas (24 a 36 meses)")
-        : yearIndex === 1
-        ? calculateNovilhosFor2025("Novilhas (24 a 36 meses)")
-        : calculateNovilhosForLaterYears(yearIndex, "Novilhas (24 a 36 meses)");
+      const novilhasValue =
+        yearIndex === 0
+          ? getStartingValue("Novilhas (24 a 36 meses)")
+          : yearIndex === 1
+          ? calculateNovilhosFor2025("Novilhas (24 a 36 meses)")
+          : calculateNovilhosForLaterYears(
+              yearIndex,
+              "Novilhas (24 a 36 meses)"
+            );
 
-    const H16 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro || 1;
-    const H17 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes || 1;
-    const H18 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos || 1;
-    const H19 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes || 1;
-    const H20 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros || 1;
+      const H16 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_touro || 1;
+      const H17 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_matrizes || 1;
+      const H18 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_novilhos || 1;
+      const H19 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_garrotes || 1;
+      const H20 = data?.dadosEvolucaoRebanho?.[0]?.equivalenciaUA_bezerros || 1;
 
-    const equivalenciaUA =
-      touroValue * H16 +
-      matrizesValue * H17 +
-      bezerrosValue * H20 +
-      bezerrasValue * H20 +
-      garrotesValue * H19 +
-      garrotasValue * H19 +
-      novilhosValue * H18 +
-      novilhasValue * H18;
+      const equivalenciaUA =
+        touroValue * H16 +
+        matrizesValue * H17 +
+        bezerrosValue * H20 +
+        bezerrasValue * H20 +
+        garrotesValue * H19 +
+        garrotasValue * H19 +
+        novilhosValue * H18 +
+        novilhasValue * H18;
 
-    return equivalenciaUA.toFixed(2);
-  };
+      return equivalenciaUA.toFixed(2);
+    },
+    [
+      calculateBezerrosFor2025,
+      calculateBezerrosForLaterYears,
+      calculateGarrotesFor2025,
+      calculateGarrotesForLaterYears,
+      calculateMatrizesFor2025,
+      calculateMatrizesFor2026,
+      calculateMatrizesForLaterYears,
+      calculateNovilhosFor2025,
+      calculateNovilhosForLaterYears,
+      calculateTourosForYear,
+      data?.dadosEvolucaoRebanho,
+      getStartingValue,
+    ]
+  );
+
+  // FAZ OS CÁLCULOS NO CARREGAMENTO, SÓ UMA VEZ (OU duas kkkkkkkk)
+  useEffect(() => {
+    const matrizesDescartadas = anos.map((yearIndex, i) =>
+      calculateMatrizesDescartadasForYear(i)
+    );
+    setMatrizesDescartadasValues(matrizesDescartadas);
+
+    const novilhosVendidos = anos.map((yearIndex, i) =>
+      calculateNovilhoVendidoForYear(i)
+    );
+    setNovilhosVendidosValues(novilhosVendidos);
+
+    const novilhasVendidas = anos.map((yearIndex, i) => {
+      if (i === 1) {
+        return calculateNovilhasVendidasFor2025();
+      }
+      return calculateNovilhasVendidasForLaterYears(i);
+    });
+    setNovilhasVendidasValues(novilhasVendidas);
+
+    const leiteParaVenda = anos.map((yearIndex, i) =>
+      calculateLeiteParaVendaForYear(i)
+    );
+    setLeiteParaVendaValues(leiteParaVenda);
+
+    const equivalenciaUA = anos.map((yearIndex, i) =>
+      calculateEquivalenciaUAForYear(i)
+    );
+    setEquivalenciaUAValues(equivalenciaUA);
+
+    onChange({
+      ...data,
+      matrizesDescartadasValues: matrizesDescartadas,
+      novilhosVendidosValues: novilhosVendidos,
+      novilhasVendidasValues: novilhasVendidas,
+      leiteParaVendaValues: leiteParaVenda,
+      equivalenciaUAValues: equivalenciaUA,
+    });
+  }, []);
 
   return (
     <div className="w-full border-gray-200 shadow sm:rounded-lg p-4">
@@ -1700,15 +1885,25 @@ function VendasAnimaisTable({
                   <Input
                     type="text"
                     value={
-                      i === 0 && descricao === "Matrizes Descartadas"
-                        ? matrizesDescartadas_ano0
-                        : i === 0 && descricao === "Novilhos Vendidos"
-                        ? novilhoVendido_ano0
-                        : i === 0 && descricao === "Novilhas Vendidas"
-                        ? novilhaVendida_ano0
+                      descricao === "Matrizes Descartadas"
+                        ? i === 0
+                          ? matrizesDescartadas_ano0
+                          : matrizesDescartadasValues[i]
+                        : descricao === "Novilhos Vendidos"
+                        ? i === 0
+                          ? novilhoVendido_ano0
+                          : novilhosVendidosValues[i]
+                        : descricao === "Novilhas Vendidas"
+                        ? i === 0
+                          ? novilhaVendida_ano0
+                          : novilhasVendidasValues[i]
+                        : descricao === "Leite para venda (litros)"
+                        ? leiteParaVendaValues[i]
+                        : descricao === "Equivalência UA"
+                        ? equivalenciaUAValues[i]
                         : descricao === "Queijo (kg)"
                         ? queijoValues[i]
-                        : getCalculatedValue(descricao, i)
+                        : ""
                     }
                     onChange={(e) => {
                       switch (descricao) {
@@ -1744,7 +1939,7 @@ function VendasAnimaisTable({
               <TableCell key={i}>
                 <Input
                   type="text"
-                  value={calculateEquivalenciaUAForYear(i)}
+                  value={equivalenciaUAValues[i]}
                   className="w-full text-center"
                   disabled={true}
                 />
