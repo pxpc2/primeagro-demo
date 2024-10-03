@@ -65,6 +65,8 @@ export async function getProjetoFormsData() {
     dadosInvestimentos: formData.aba_investimentos.dadosInvestimentos,
   });
 
+  formData.aba_despesas = await getDespesasData();
+
   return formData;
 }
 
@@ -96,6 +98,78 @@ async function getOrcamentosData({ dadosInvestimentos }) {
 }
 /* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
 
+/* INICIO DESPESAS --------------------------------------------------------------------------------------------*/
+export async function submitDespesas({ despesasData }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  const upsertData = {
+    ...despesasData,
+    authuser_id: authUserID,
+  };
+  const { data, error } = await supabase
+    .from("aba_despesas")
+    .upsert(upsertData, { onConflict: ["authuser_id"] });
+
+  if (error) {
+    console.error("Erro inserindo Despesas data:", error);
+    throw new Error(error.message);
+  }
+}
+
+async function getDespesasData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_despesas")
+    .select("*")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  const filtered = {
+    custoPadraoBovinocultura: dados[0]?.bovinocultura_custopadrao || 0,
+    totalCustos: [
+      dados[0]?.bovinocultura_custo_ano0 || 0,
+      dados[0]?.bovinocultura_custo_ano1 || 0,
+      dados[0]?.bovinocultura_custo_ano2 || 0,
+      dados[0]?.bovinocultura_custo_ano3 || 0,
+      dados[0]?.bovinocultura_custo_ano4 || 0,
+      dados[0]?.bovinocultura_custo_ano5 || 0,
+      dados[0]?.bovinocultura_custo_ano6 || 0,
+      dados[0]?.bovinocultura_custo_ano7 || 0,
+      dados[0]?.bovinocultura_custo_ano8 || 0,
+      dados[0]?.bovinocultura_custo_ano9 || 0,
+      dados[0]?.bovinocultura_custo_ano10 || 0,
+      dados[0]?.bovinocultura_custo_ano11 || 0,
+    ],
+    lucroOperacional: [
+      dados[0]?.lucro_operacional_ano0 || 0,
+      dados[0]?.lucro_operacional_ano1 || 0,
+      dados[0]?.lucro_operacional_ano2 || 0,
+      dados[0]?.lucro_operacional_ano3 || 0,
+      dados[0]?.lucro_operacional_ano4 || 0,
+      dados[0]?.lucro_operacional_ano5 || 0,
+      dados[0]?.lucro_operacional_ano6 || 0,
+      dados[0]?.lucro_operacional_ano7 || 0,
+      dados[0]?.lucro_operacional_ano8 || 0,
+      dados[0]?.lucro_operacional_ano9 || 0,
+      dados[0]?.lucro_operacional_ano10 || 0,
+      dados[0]?.lucro_operacional_ano11 || 0,
+    ],
+  };
+
+  return filtered;
+}
+/* FIM DESPESAS --------------------------------------------------------------------------------------------*/
+
 /* INICIO RECEITAS ------------------------------------------------------------------------------------------- */
 
 export async function submitReceitas({ receitasData }) {
@@ -115,7 +189,7 @@ export async function submitReceitas({ receitasData }) {
     .upsert(upsertData, { onConflict: ["authuser_id"] });
 
   if (error) {
-    console.error("Error upserting Receitas data:", error);
+    console.error("Erro inserindo Receitas data:", error);
     throw new Error(error.message);
   }
 }
