@@ -109,7 +109,13 @@ export default function ProjetoPage() {
           />
         );
       case "Total (UA)":
-        return <TotalTab data={formData?.aba_total_ua} isAdmin={isAdmin} />;
+        return (
+          <TotalTab
+            data={formData?.aba_total_ua}
+            isAdmin={isAdmin}
+            evolucaoRebanhoData={formData?.aba_evolucao_rebanho}
+          />
+        );
       case "Receitas":
         return (
           <ReceitasTab
