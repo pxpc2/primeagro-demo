@@ -10,10 +10,20 @@ import {
 } from "../ui/table";
 import { Input } from "../ui/input";
 
-export default function TotalTab({ data, isAdmin }) {
+/**
+ * 
+ * @TODO refazer AnimalTable para facilitar preenchimento e state management
+ * 
+ * manter:   
+    const [reprodutores, setReprodutores] = useState(
+      evolucaoRebanhoData?.dadosEvolucaoRebanho?.[0]
+      ?.animaisAdquirir_reprodutores || 0
+  );
+ * 
+ */
+export default function TotalTab({ data, isAdmin, evolucaoRebanhoData }) {
   const [loading, setLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
-
   const onEdit = () => {
     setFormsDisabled(false);
   };
@@ -22,6 +32,11 @@ export default function TotalTab({ data, isAdmin }) {
   const handleCancel = () => {
     setFormsDisabled(true);
   };
+
+  const [reprodutores, setReprodutores] = useState(
+    evolucaoRebanhoData?.dadosEvolucaoRebanho?.[0]
+      ?.animaisAdquirir_reprodutores || 0
+  );
 
   return (
     <div className="p-4 bg-gray-900/80">
@@ -51,30 +66,6 @@ export default function TotalTab({ data, isAdmin }) {
             "NOVILHO(AS)",
           ]}
           data={data?.bovinos}
-          formsDisabled={formsDisabled}
-        />
-        <AnimalTable
-          title="2- CAPRINOS"
-          ifValue="1,56"
-          categories={[
-            "REPRODUTORES",
-            "MATRIZES",
-            "MACHOS JOVENS",
-            "FÊMEAS JOVENS",
-          ]}
-          data={data?.caprinos}
-          formsDisabled={formsDisabled}
-        />
-        <AnimalTable
-          title="3- OVINOS"
-          ifValue="1,56"
-          categories={[
-            "REPRODUTORES",
-            "MATRIZES",
-            "MACHOS JOVENS",
-            "FÊMEAS JOVENS",
-          ]}
-          data={data?.ovinos}
           formsDisabled={formsDisabled}
         />
       </div>
