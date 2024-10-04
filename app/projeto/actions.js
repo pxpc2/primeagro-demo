@@ -66,6 +66,8 @@ export async function getProjetoFormsData() {
 
   formData.aba_despesas = await getDespesasData();
 
+  formData.aba_simuladorPNCF = await getSimuladorPNCFData();
+
   return formData;
 }
 
@@ -96,6 +98,27 @@ async function getOrcamentosData({ dadosInvestimentos }) {
   return { dadosOrcamento: dados, dadosInvestimentos: dadosInvestimentos };
 }
 /* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
+
+/* INICIO SIMULADOR PNCF ------------------------------------------------------------------------------------------- */
+async function getSimuladorPNCFData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_simuladorPNCF")
+    .select("*")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+
+/* FIM SIMULADOR PNCF ------------------------------------------------------------------------------------------- */
 
 /* INICIO DESPESAS --------------------------------------------------------------------------------------------*/
 export async function submitDespesas({ despesasData }) {
