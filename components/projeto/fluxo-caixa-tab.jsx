@@ -1,10 +1,42 @@
 import { useState } from "react";
 import Heading from "./Header";
 
-export default function FluxoCaixaTab({ fluxoCaixaData, isAdmin }) {
+export default function FluxoCaixaTab({
+  fluxoCaixaData,
+  isAdmin,
+  preAnaliseData,
+  dadosImovelData,
+  identificacaoBeneficiarioData,
+}) {
+  console.log("Pre analise data: ");
+  console.log(preAnaliseData);
+
+  console.log("Dados imovel data: ");
+  console.log(dadosImovelData);
+
+  console.log("Identificacao beneficiario data: ");
+  console.log(identificacaoBeneficiarioData);
+
   const [isLoading, setIsLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
-  console.log(fluxoCaixaData);
+
+  // @TODO
+  const [valorSalarioMinimoMensal, setValorSalarioMinimoMensal] = useState(
+    fluxoCaixaData?.salario_minimo_mensal || 0.0
+  );
+  const [municipioReferencia, setMunicipioReferencia] = useState(
+    preAnaliseData?.[0]?.campo_3 || ""
+  );
+  const [nomeImovel, setNomeImovel] = useState(
+    dadosImovelData?.[0]?.campo1 || ""
+  );
+  const [nomeCandidato, setNomeCandidato] = useState(
+    identificacaoBeneficiarioData?.[0]?.campo1 || ""
+  );
+  const [linhaFinanciamento, setLinhaFinanciamento] = useState(
+    preAnaliseData?.[0]?.campo_8 || ""
+  );
+
   const onEdit = () => {
     setFormsDisabled(false);
   };

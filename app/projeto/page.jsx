@@ -58,7 +58,6 @@ export default function ProjetoPage() {
    * @returns conteúdo baseado no nome da aba, a cada switch renderiza um component diferente
    */
   const renderContent = (tabName) => {
-    console.log(tabName);
     switch (tabName) {
       case "Menu":
         return (
@@ -162,6 +161,11 @@ export default function ProjetoPage() {
         return (
           <FluxoCaixaTab
             fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            dadosImovelData={formData?.aba_dadosImovel}
+            identificacaoBeneficiarioData={
+              formData?.aba_identificacao_beneficiario
+            }
+            preAnaliseData={formData?.aba_preanalise}
             isAdmin={isAdmin}
           />
         );
