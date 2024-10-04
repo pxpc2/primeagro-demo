@@ -51,7 +51,6 @@ export async function getProjetoFormsData() {
   });
 
   formData.aba_sib = await getSIBData({
-    dadosImovel: formData.aba_dadosImovel[0],
     dadosInvestimentos: formData.aba_investimentos,
   });
 
@@ -464,7 +463,7 @@ export async function getBenfeitoriasTotalValue() {
   return valorTotal;
 }
 
-export async function getSIBData({ dadosImovel, dadosInvestimentos }) {
+export async function getSIBData({ dadosInvestimentos }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -485,13 +484,15 @@ export async function getSIBData({ dadosImovel, dadosInvestimentos }) {
 
   if (sibError) {
     console.log(sibError);
-    return undefined;
+    return {
+      dadosInvestimentos,
+      valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
+    };
   }
 
   return {
     dadosProjeto: sibData?.aba_sib_dadosProjeto || [],
     valorAvaliado: sibData?.aba_sib_valorAvaliado || [],
-    dadosImovel,
     dadosInvestimentos,
     valorTotalBenfeitorias: await getBenfeitoriasTotalValue(),
     valorImovelCustos: {
@@ -538,6 +539,7 @@ export async function submitSIBDadosProjeto({ formData }) {
     });
 
   if (error) {
+    console.log(error);
     return redirect("/error?message=" + error.message);
   }
 }
