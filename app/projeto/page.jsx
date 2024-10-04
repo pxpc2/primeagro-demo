@@ -18,6 +18,7 @@ import ReceitasTab from "@/components/projeto/receitas-tab";
 import OrcamentosTab from "@/components/projeto/orcamentos-tab";
 import { set } from "react-hook-form";
 import DespesasTab from "@/components/projeto/despesas-tab";
+import SimuladorPNCF from "@/components/projeto/simuladorPNCF-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -141,6 +142,15 @@ export default function ProjetoPage() {
       case "Orçamentos":
         return (
           <OrcamentosTab data={formData?.aba_orcamentos} isAdmin={isAdmin} />
+        );
+      case "Simulador PNCF":
+        return (
+          <SimuladorPNCF
+            data={formData?.aba_simuladorPNCF}
+            isAdmin={isAdmin}
+            dadosSIB={formData?.aba_sib}
+            abaPreAnalise={formData?.aba_preanalise}
+          />
         );
       default:
         return <h1 className="h-screen">{tabName}</h1>;
