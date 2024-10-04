@@ -68,6 +68,8 @@ export async function getProjetoFormsData() {
 
   formData.aba_simuladorPNCF = await getSimuladorPNCFData();
 
+  formData.aba_fluxo_de_caixa = await getFluxoCaixaData();
+
   return formData;
 }
 
@@ -98,6 +100,26 @@ async function getOrcamentosData({ dadosInvestimentos }) {
   return { dadosOrcamento: dados, dadosInvestimentos: dadosInvestimentos };
 }
 /* FIM ORÇAMENTOS ------------------------------------------------------------------------------------------- */
+
+/* INICIO FLUXO DE CAIXA ------------------------------------------------------------------------------------------- */
+async function getFluxoCaixaData() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_fluxo_de_caixa")
+    .select("*")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+/* FIM FLUXO DE CAIXA ------------------------------------------------------------------------------------------- */
 
 /* INICIO SIMULADOR PNCF ------------------------------------------------------------------------------------------- */
 async function getSimuladorPNCFData() {

@@ -20,6 +20,7 @@ import { set } from "react-hook-form";
 import DespesasTab from "@/components/projeto/despesas-tab";
 import SimuladorPNCF from "@/components/projeto/simuladorPNCF-tab";
 import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
+import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -57,6 +58,7 @@ export default function ProjetoPage() {
    * @returns conteúdo baseado no nome da aba, a cada switch renderiza um component diferente
    */
   const renderContent = (tabName) => {
+    console.log(tabName);
     switch (tabName) {
       case "Menu":
         return (
@@ -154,6 +156,13 @@ export default function ProjetoPage() {
             isAdmin={isAdmin}
             dadosSIB={formData?.aba_sib}
             abaPreAnalise={formData?.aba_preanalise}
+          />
+        );
+      case "Fluxos de Caixa":
+        return (
+          <FluxoCaixaTab
+            fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            isAdmin={isAdmin}
           />
         );
       default:
