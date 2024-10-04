@@ -1069,6 +1069,8 @@ export async function submitPreAnaliseForm({ formData }) {
   const authUserID = user.id;
   const mappedData = {};
 
+  console.log(formData);
+
   Object.entries(formData).forEach(([key, value]) => {
     const match = key.match(/^(\d+)-/);
     if (match && value !== undefined) {
