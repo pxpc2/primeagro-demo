@@ -53,6 +53,16 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
+/**
+ *
+ * @TODO valor benfeitorias: tem que puxar no serverside os dados de:
+ * benfeitorias individuais E coletivas (duas entidades diferentes no banco)
+ * pois dados do inventario nao vem no carregamento do projeto, entao se preciso
+ * de algum deles tenho que puxar um por um no carregamento da aba especifica
+ *
+ * @param {} param0
+ * @returns
+ */
 export default function SIBTab({ data, isAdmin, dadosImovel }) {
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
