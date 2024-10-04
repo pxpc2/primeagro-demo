@@ -54,7 +54,7 @@ export default function LoginPage({ searchParams: { message, successmsg } }) {
               Não possui conta?
               <Dialog>
                 <DialogTrigger asChild>
-                  <p className="text-indigo-700 hover:cursor-pointer hover:underline">
+                  <p className="text-orange-500 hover:cursor-pointer hover:underline">
                     Registrar agora!
                   </p>
                 </DialogTrigger>
@@ -140,7 +140,7 @@ function LoginForm({ message }) {
               <div className="flex gap-2">
                 <FormDescription>Esta é a sua senha.</FormDescription>
                 <FormDescription
-                  className="text-indigo-700 hover:underline hover:cursor-pointer"
+                  className="text-orange-500 hover:underline hover:cursor-pointer"
                   onClick={() => {
                     console.log("esqueceu a senha");
                   }}
