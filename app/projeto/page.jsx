@@ -99,7 +99,13 @@ export default function ProjetoPage() {
         );
 
       case "SIB":
-        return <SIBTab data={formData?.aba_sib} isAdmin={isAdmin} />;
+        return (
+          <SIBTab
+            data={formData?.aba_sib}
+            isAdmin={isAdmin}
+            dadosImovel={formData?.aba_dadosImovel}
+          />
+        );
       case "Evolução do rebanho":
         return (
           <EvolucaoRebanhoTab

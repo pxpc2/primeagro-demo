@@ -53,158 +53,157 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-export default function SIBTab({ data, isAdmin }) {
-  console.log(data);
+export default function SIBTab({ data, isAdmin, dadosImovel }) {
   const form = useForm();
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const [totalInvestedSIB, setTotalInvestedSIB] = useState(0.0);
 
+  console.log(data);
+
   /* Dados do Projeto */
   const [numBeneficiarios, setNumBeneficiarios] = useState(
     data?.dadosProjeto?.numero_beneficiarios || 1
   );
 
-  const [tetoNacional, setTetoNacional] = useState("");
+  const [tetoNacional, setTetoNacional] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.dadosProjeto?.teto_nacional || 0;
-    setTetoNacional(formatCurrency(initialValue));
+    const initialValue = data?.dadosProjeto?.teto_nacional || 0.0;
+    setTetoNacional(initialValue);
   }, [data]);
 
   const handleTetoNacionalChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setTetoNacional(formatCurrency(value));
+    setTetoNacional(e.target.value);
   };
 
-  const [valorMinimoNegociacao, setValorMinimoNegociacao] = useState("");
+  const [valorMinimoNegociacao, setValorMinimoNegociacao] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.dadosImovel?.campo16
-      ? parseFloat(data?.dadosImovel?.campo16) * 0.9
+    const initialValue = dadosImovel?.[0]?.campo16
+      ? parseFloat(dadosImovel?.[0]?.campo16) * 0.9
       : 0;
-    setValorMinimoNegociacao(formatCurrency(initialValue));
-  }, [data]);
+    setValorMinimoNegociacao(initialValue);
+  }, []);
 
-  const [valorMaximoNegociacao, setValorMaximoNegociacao] = useState("");
+  const [valorMaximoNegociacao, setValorMaximoNegociacao] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.dadosImovel?.campo16
-      ? parseFloat(data?.dadosImovel?.campo16) * 1.1
+    const initialValue = dadosImovel?.[0]?.campo16
+      ? parseFloat(dadosImovel?.[0]?.campo16) * 1.1
       : 0;
-    setValorMaximoNegociacao(formatCurrency(initialValue));
-  }, [data]);
+    setValorMaximoNegociacao(initialValue);
+  }, []);
   /* Fim Dados do Projeto */
 
   /* Valor Avaliado */
-  const [valorTerraNua, setValorTerraNua] = useState("");
+  const [valorTerraNua, setValorTerraNua] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorAvaliado?.valor_terra_nua || 0;
-    setValorTerraNua(formatCurrency(initialValue));
+    const initialValue = data?.valorAvaliado?.valor_terra_nua || 0.0;
+    setValorTerraNua(initialValue);
   }, [data]);
 
   const handleValorTerraNuaChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setValorTerraNua(formatCurrency(value));
+    setValorTerraNua(e.target.value);
   };
 
-  const [valorBenfeitorias, setValorBenfeitorias] = useState("");
+  const [valorBenfeitorias, setValorBenfeitorias] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorTotalBenfeitorias || 0;
-    setValorBenfeitorias(formatCurrency(initialValue));
+    const initialValue = data?.valorTotalBenfeitorias || 0.0;
+    setValorBenfeitorias(initialValue);
   }, [data]);
 
-  const [valorTotalImovel, setValorTotalImovel] = useState("");
+  const [valorTotalImovel, setValorTotalImovel] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorAvaliado?.valor_total_imovel || 0;
-    setValorTotalImovel(formatCurrency(initialValue));
+    const initialValue = data?.valorAvaliado?.valor_total_imovel || 0.0;
+    setValorTotalImovel(initialValue);
   }, [data]);
 
-  const [vtiHa, setVtiHa] = useState(data?.valorAvaliado?.vti_ha || "");
+  const [vtiHa, setVtiHa] = useState(data?.valorAvaliado?.vti_ha || 0.0);
   /* Fim Valor Avaliado */
 
   /* VALOR IMÓVEL + CUSTOS */
-  const [valorImovelNegociado, setValorImovelNegociado] = useState(0);
+  const [valorImovelNegociado, setValorImovelNegociado] = useState(
+    dadosImovel?.[0]?.campo17 || 0.0
+  );
 
-  const [custoMedicaoInterna, setCustoMedicaoInterna] = useState("");
+  console.log(valorImovelNegociado);
+
+  const [custoMedicaoInterna, setCustoMedicaoInterna] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.custoMedicaoInterna || 0;
-    setCustoMedicaoInterna(formatCurrency(initialValue));
+    const initialValue = data?.valorImovelCustos?.custoMedicaoInterna || 0.0;
+    setCustoMedicaoInterna(initialValue);
   }, [data]);
 
   const handleCustoMedicaoInternaChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setCustoMedicaoInterna(formatCurrency(value));
+    setCustoMedicaoInterna(e.target.value);
   };
 
-  const [valorITBI, setValorITBI] = useState("");
-
-  const [despesasCartorarias, setDespesasCartorarias] = useState("");
+  const [valorITBI, setValorITBI] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.despesasCartorarias || 0;
-    setDespesasCartorarias(formatCurrency(initialValue));
+    setValorITBI(valorImovelNegociado * 0.02);
+  }, [valorImovelNegociado]);
+
+  const [despesasCartorarias, setDespesasCartorarias] = useState(0.0);
+
+  useEffect(() => {
+    const initialValue = data?.valorImovelCustos?.despesasCartorarias || 0.0;
+    setDespesasCartorarias(initialValue);
   }, [data]);
 
   const handleDespesasCartorariasChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setDespesasCartorarias(formatCurrency(value));
+    setDespesasCartorarias(e.target.value);
   };
 
-  const [elaboracaoProjeto, setElaboracaoProjeto] = useState("");
+  const [elaboracaoProjeto, setElaboracaoProjeto] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.elaboracaoProjeto || 0;
-    setElaboracaoProjeto(formatCurrency(initialValue));
+    const initialValue = data?.valorImovelCustos?.elaboracaoProjeto || 0.0;
+    setElaboracaoProjeto(initialValue);
   }, [data]);
 
   const handleElaboracaoProjetoChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setElaboracaoProjeto(formatCurrency(value));
+    setElaboracaoProjeto(e.target.value);
   };
 
   const [valorATER, setValorATER] = useState("");
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.valorATER || 0;
-    setValorATER(formatCurrency(initialValue));
+    const initialValue = data?.valorImovelCustos?.valorATER || 0.0;
+    setValorATER(initialValue);
   }, [data]);
 
   const handleValorATERChange = (e) => {
-    let value = e.target.value.replace(/[^\d,]/g, "").replace(",", ".");
-    value = parseFloat(value || 0);
-    setValorATER(formatCurrency(value));
+    setValorATER(e.target.value);
   };
 
-  const [valorTotalDespesas, setValorTotalDespesas] = useState("");
+  const [valorTotalDespesas, setValorTotalDespesas] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.valorTotalDespesas || 0;
-    setValorTotalDespesas(formatCurrency(initialValue));
+    const initialValue = data?.valorImovelCustos?.valorTotalDespesas || 0.0;
+    setValorTotalDespesas(initialValue);
   }, [data]);
 
-  const [valorTotalInvestimentos, setValorTotalInvestimentos] = useState("");
+  const [valorTotalInvestimentos, setValorTotalInvestimentos] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.valorTotalInvestimentos || 0;
-    setValorTotalInvestimentos(formatCurrency(initialValue));
+    const initialValue =
+      data?.valorImovelCustos?.valorTotalInvestimentos || 0.0;
+    setValorTotalInvestimentos(initialValue);
   }, [data]);
 
-  const [valorTotalFinanciamento, setValorTotalFinanciamento] = useState("");
+  const [valorTotalFinanciamento, setValorTotalFinanciamento] = useState(0.0);
 
   useEffect(() => {
-    const initialValue = data?.valorImovelCustos?.valorTotalFinanciamento || 0;
-    setValorTotalFinanciamento(formatCurrency(initialValue));
+    const initialValue =
+      data?.valorImovelCustos?.valorTotalFinanciamento || 0.0;
+    setValorTotalFinanciamento(initialValue);
   }, [data]);
   /* Fim VALOR IMÓVEL + CUSTOS */
 
@@ -216,27 +215,27 @@ export default function SIBTab({ data, isAdmin }) {
     const response1 = await submitSIBDadosProjeto({
       formData: {
         numBeneficiarios,
-        tetoNacional: parseCurrency(tetoNacional),
-        valorMinimoNegociacao: parseCurrency(valorMinimoNegociacao),
-        valorMaximoNegociacao: parseCurrency(valorMaximoNegociacao),
+        tetoNacional: tetoNacional,
+        valorMinimoNegociacao: valorMinimoNegociacao,
+        valorMaximoNegociacao: valorMaximoNegociacao,
       },
     });
     const response2 = await submitSIBValorAvaliado({
       formData: {
-        valorTerraNua: parseCurrency(valorTerraNua),
-        valorBenfeitorias: parseCurrency(valorBenfeitorias),
-        valorTotalImovel: parseCurrency(valorTotalImovel),
+        valorTerraNua: valorTerraNua,
+        valorBenfeitorias: valorBenfeitorias,
+        valorTotalImovel: valorTotalImovel,
         vtiHa,
       },
     });
     const response3 = await submitSIBCustos({
       formData: {
-        valorImovelNegociado: parseCurrency(valorImovelNegociado),
-        custoMedicaoInterna: parseCurrency(custoMedicaoInterna),
-        valorITBI: parseCurrency(valorITBI),
-        despesasCartorarias: parseCurrency(despesasCartorarias),
-        elaboracaoProjeto: parseCurrency(elaboracaoProjeto),
-        valorATER: parseCurrency(valorATER),
+        valorImovelNegociado: valorImovelNegociado,
+        custoMedicaoInterna: custoMedicaoInterna,
+        valorITBI: valorITBI,
+        despesasCartorarias: despesasCartorarias,
+        elaboracaoProjeto: elaboracaoProjeto,
+        valorATER: valorATER,
       },
     });
     setLoading(false);
@@ -248,38 +247,25 @@ export default function SIBTab({ data, isAdmin }) {
 
   // USE EFFECT GERAL (CALCULOS INICIAIS NECESSARIOS)
   useEffect(() => {
-    const campo17 = data?.dadosImovel?.campo17 || "";
-    const computedValorImovelNegociado =
-      campo17 === "" ? 0 : parseFloat(campo17);
-    const formattedValorImovelNegociado = formatCurrency(
-      computedValorImovelNegociado
-    );
-    setValorImovelNegociado(formattedValorImovelNegociado);
-
-    const valorITBI = calculateValorITBI(computedValorImovelNegociado);
-    const formattedValorITBI = formatCurrency(valorITBI);
-    setValorITBI(formattedValorITBI);
-
     const valoresH5aH9 = [
-      parseCurrency(custoMedicaoInterna),
-      parseCurrency(valorITBI),
-      parseCurrency(despesasCartorarias),
-      parseCurrency(elaboracaoProjeto),
-      parseCurrency(valorATER),
+      custoMedicaoInterna,
+      valorITBI,
+      despesasCartorarias,
+      elaboracaoProjeto,
+      valorATER,
     ];
     const totalDespesas = calculateValorTotalDespesas(
-      computedValorImovelNegociado,
+      valorImovelNegociado,
       valoresH5aH9
     );
-    const formattedTotalDespesas = formatCurrency(totalDespesas);
-    setValorTotalDespesas(formattedTotalDespesas);
+    setValorTotalDespesas(totalDespesas);
   }, [
-    data,
     custoMedicaoInterna,
-    valorITBI,
     despesasCartorarias,
     elaboracaoProjeto,
     valorATER,
+    valorITBI,
+    valorImovelNegociado,
   ]);
   // FIM USE EFFECT GERAL
 
@@ -392,7 +378,8 @@ function DadosDoProjetoTable({
           <div>
             <p className="font-semibold">TETO NACIONAL</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={tetoNacional}
               onChange={handleTetoNacionalChange}
               disabled={formsDisabled}
@@ -402,13 +389,23 @@ function DadosDoProjetoTable({
             <p className="font-semibold">
               VALOR MÍNIMO PARA NEGOCIAÇÃO / FAMÍLIA
             </p>
-            <Input type="text" value={valorMinimoNegociacao} disabled />
+            <Input
+              type="number"
+              step="0.01"
+              value={valorMinimoNegociacao}
+              disabled
+            />
           </div>
           <div>
             <p className="font-semibold">
               VALOR MÁXIMO PARA NEGOCIAÇÃO / FAMÍLIA
             </p>
-            <Input type="text" value={valorMaximoNegociacao} disabled />
+            <Input
+              type="number"
+              step="0.01"
+              value={valorMaximoNegociacao}
+              disabled
+            />
           </div>
         </div>
       </div>
@@ -438,7 +435,8 @@ function ValorImovelAvaliadoTable({
           <div>
             <p className="font-semibold">1 - VALOR DE TERRA NUA</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorTerraNua}
               onChange={handleValorTerraNuaChange}
               disabled={formsDisabled}
@@ -447,7 +445,8 @@ function ValorImovelAvaliadoTable({
           <div>
             <p className="font-semibold">2 - VALOR DAS BENFEITORIAS</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorBenfeitorias}
               disabled
               className="bg-blue-800 text-white"
@@ -456,7 +455,8 @@ function ValorImovelAvaliadoTable({
           <div>
             <p className="font-semibold">3 - VALOR TOTAL DO IMÓVEL</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorTotalImovel}
               onChange={(e) => setValorTotalImovel(e.target.value)}
               disabled={formsDisabled}
@@ -465,7 +465,8 @@ function ValorImovelAvaliadoTable({
           <div>
             <p className="font-semibold">4 - VTI/HA</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={vtiHa}
               onChange={(e) => setVtiHa(e.target.value)}
               disabled={formsDisabled}
@@ -499,33 +500,34 @@ function ValorImovelCustosTable({
 
   // H12
   const valorTotalFinanciamento =
-    parseCurrency(valorImovelNegociado) +
-    parseCurrency(valorTotalDespesas) +
-    parseCurrency(valorTotalInvestimentos);
+    parseFloat(valorImovelNegociado) +
+    parseFloat(valorTotalDespesas) +
+    parseFloat(valorTotalInvestimentos);
+
+  console.log(
+    `Valor total financiamento (${valorTotalFinanciamento}) = valorImovelNegociado (${valorImovelNegociado}) + valorTotalDespesas (${valorTotalDespesas}) + valorTotalInvestimentos (${valorTotalInvestimentos})`
+  );
 
   // K11 (tava escondido)
   const valorTotalInvestimentosAlternativo =
-    parseCurrency(valorImovelNegociado) - parseCurrency(valorTotalDespesas);
+    parseFloat(valorImovelNegociado) - parseFloat(valorTotalDespesas);
 
   // K12
   const valorTotalFinanciamentoAlternativo =
-    parseCurrency(valorImovelNegociado) +
-    parseCurrency(valorTotalDespesas) +
-    parseCurrency(valorTotalInvestimentosAlternativo);
+    parseFloat(valorImovelNegociado) +
+    parseFloat(valorTotalDespesas) +
+    parseFloat(valorTotalInvestimentosAlternativo);
 
   useEffect(() => {
     if (valorTotalInvestimentos < 0) {
       setStatusMessage("VERIFIQUE SEU PROJETO");
       setStatusColor("bg-red-600");
-    } else if (parseCurrency(valorImovelNegociado) === 0) {
+    } else if (valorImovelNegociado === 0) {
       setStatusMessage("");
-    } else if (
-      valorTotalFinanciamento >
-      parseCurrency(valorImovelNegociado) * 2
-    ) {
+    } else if (valorTotalFinanciamento > valorImovelNegociado * 2) {
       setStatusMessage("VERIFIQUE SEU PROJETO");
       setStatusColor("bg-red-600");
-    } else if (valorTotalFinanciamento > parseCurrency(tetoNacional)) {
+    } else if (valorTotalFinanciamento > tetoNacional) {
       setStatusMessage("VERIFIQUE SEU PROJETO");
       setStatusColor("bg-red-600");
     } else {
@@ -552,7 +554,8 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR DO IMÓVEL NEGOCIADO</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorImovelNegociado}
               disabled={true}
               className="bg-blue-800 text-white"
@@ -561,7 +564,8 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">CUSTO DE MEDIÇÃO INTERNA</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={custoMedicaoInterna}
               onChange={handleCustoMedicaoInternaChange}
               disabled={formsDisabled}
@@ -570,16 +574,17 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR DO ITBI</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorITBI}
-              onChange={(e) => setValorITBI(e.target.value)}
               disabled={true}
             />
           </div>
           <div>
             <p className="font-semibold">DESPESAS CARTORÁRIAS</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={despesasCartorarias}
               onChange={handleDespesasCartorariasChange}
               disabled={formsDisabled}
@@ -588,7 +593,8 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">ELABORAÇÃO DO PROJETO</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={elaboracaoProjeto}
               onChange={handleElaboracaoProjetoChange}
               disabled={formsDisabled}
@@ -597,7 +603,8 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR DA ATER</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorATER}
               onChange={handleValorATERChange}
               disabled={formsDisabled}
@@ -610,7 +617,8 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR TOTAL DAS DESPESAS</p>
             <Input
-              type="text"
+              type="number"
+              step="0.01"
               value={valorTotalDespesas}
               disabled={true}
               className="bg-blue-800 text-white"
@@ -619,8 +627,9 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR TOTAL DOS INVESTIMENTOS</p>
             <Input
-              type="text"
-              value={formatCurrency(valorTotalInvestimentos)}
+              type="number"
+              step="0.01"
+              value={valorTotalInvestimentos}
               disabled={true}
               className="bg-blue-800 text-white"
             />
@@ -628,8 +637,9 @@ function ValorImovelCustosTable({
           <div>
             <p className="font-semibold">VALOR TOTAL DO FINANCIAMENTO</p>
             <Input
-              type="text"
-              value={formatCurrency(valorTotalFinanciamento)}
+              type="number"
+              step="0.01"
+              value={valorTotalFinanciamento}
               disabled={true}
               className="bg-blue-800 text-white"
             />
@@ -649,16 +659,18 @@ function QuadroResumoInvestimentos({
   setTotalInvestedSIB,
 }) {
   const categorias = INVESTIMENTO_CATEGORIAS;
-  const somasCategorias = categorias.reduce((acc, category) => {
-    acc[category] = { SIB: 0, PRONAF_A: 0, Recursos_Proprios: 0, Total: 0 };
+  const somasCategorias = categorias.reduce((acc, categoria) => {
+    acc[categoria] = { SIB: 0, PRONAF_A: 0, Recursos_Proprios: 0, Total: 0 };
     return acc;
   }, {});
   data?.dadosInvestimentos?.dadosInvestimentos?.forEach((investimento) => {
+    console.log(investimento);
     const { categoria, fonte_financiamento, valor_total } = investimento;
 
     const valor = parseCurrency(valor_total);
 
     if (fonte_financiamento === "SIB") {
+      console.log(categoria);
       somasCategorias[categoria].SIB += valor;
     } else if (fonte_financiamento === "PRONAF-A") {
       somasCategorias[categoria].PRONAF_A += valor;
@@ -669,11 +681,11 @@ function QuadroResumoInvestimentos({
     somasCategorias[categoria].Total += valor;
   });
   const totalInvested = categorias.reduce(
-    (acc, category) => {
-      acc.SIB += somasCategorias[category].SIB;
-      acc.PRONAF_A += somasCategorias[category].PRONAF_A;
-      acc.Recursos_Proprios += somasCategorias[category].Recursos_Proprios;
-      acc.Total += somasCategorias[category].Total;
+    (acc, categoria) => {
+      acc.SIB += somasCategorias[categoria].SIB;
+      acc.PRONAF_A += somasCategorias[categoria].PRONAF_A;
+      acc.Recursos_Proprios += somasCategorias[categoria].Recursos_Proprios;
+      acc.Total += somasCategorias[categoria].Total;
       return acc;
     },
     { SIB: 0, PRONAF_A: 0, Recursos_Proprios: 0, Total: 0 }
@@ -706,16 +718,16 @@ function QuadroResumoInvestimentos({
               <tr key={index}>
                 <td className="text-left p-2">{category}</td>
                 <td className="text-right p-2">
-                  {formatCurrency(somasCategorias[category].SIB)}
+                  {somasCategorias[category].SIB}
                 </td>
                 <td className="text-right p-2">
-                  {formatCurrency(somasCategorias[category].PRONAF_A)}
+                  {somasCategorias[category].PRONAF_A}
                 </td>
                 <td className="text-right p-2">
-                  {formatCurrency(somasCategorias[category].Recursos_Proprios)}
+                  {somasCategorias[category].Recursos_Proprios}
                 </td>
                 <td className="text-right p-2">
-                  {formatCurrency(somasCategorias[category].Total)}
+                  {somasCategorias[category].Total}
                 </td>
               </tr>
             ))}
@@ -726,16 +738,16 @@ function QuadroResumoInvestimentos({
                 TOTAL INVESTIDO
               </td>
               <td className="text-right p-2 font-bold bg-gray-800 text-white">
-                {formatCurrency(totalInvested.SIB)}
+                {totalInvested.SIB}
               </td>
               <td className="text-right p-2 font-bold bg-gray-800 text-white">
-                {formatCurrency(totalInvested.PRONAF_A)}
+                {totalInvested.PRONAF_A}
               </td>
               <td className="text-right p-2 font-bold bg-gray-800 text-white">
-                {formatCurrency(totalInvested.Recursos_Proprios)}
+                {totalInvested.Recursos_Proprios}
               </td>
               <td className="text-right p-2 font-bold bg-gray-800 text-white">
-                {formatCurrency(totalInvested.Total)}
+                {totalInvested.Total}
               </td>
             </tr>
             <tr>
