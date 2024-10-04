@@ -19,6 +19,7 @@ import OrcamentosTab from "@/components/projeto/orcamentos-tab";
 import { set } from "react-hook-form";
 import DespesasTab from "@/components/projeto/despesas-tab";
 import SimuladorPNCF from "@/components/projeto/simuladorPNCF-tab";
+import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -27,6 +28,7 @@ export default function ProjetoPage() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [vendasAnimaisData, setVendasAnimaisData] = useState({}); // p/ usar em receitas
+  const [dadosEnquadramento, setDadosEnquadramento] = useState({});
   const handleVendasAnimaisUpdate = (newData) => {
     setVendasAnimaisData(newData);
   };
@@ -34,6 +36,7 @@ export default function ProjetoPage() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getProjetoFormsData();
+      setDadosEnquadramento(await getDadosEnquadramentoForm());
       setIsAdmin(await isAdminUser());
       setFormData(data);
       setLoading(false);
@@ -64,6 +67,7 @@ export default function ProjetoPage() {
           <PreAnaliseTab
             defaultValues={formData?.aba_preanalise}
             isAdmin={isAdmin}
+            dadosEnquadramento={dadosEnquadramento}
           />
         );
       case "Identificação do Beneficiário":

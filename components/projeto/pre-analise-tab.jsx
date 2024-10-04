@@ -83,11 +83,36 @@ const parseFormData = (defaultValues) => {
   return transformed;
 };
 
-export default function PreAnaliseTab({ defaultValues, isAdmin }) {
+export default function PreAnaliseTab({
+  defaultValues,
+  isAdmin,
+  dadosEnquadramento,
+}) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const parsed = parseFormData(defaultValues[0]);
+  const [linhaFinanciamentoPNCF, setLinhaFinanciamentoPNCF] = useState("");
   console.log(defaultValues);
+  useEffect(() => {
+    if (dadosEnquadramento) {
+      switch (true) {
+        case dadosEnquadramento[0].campo7?.includes("Social"):
+          setLinhaFinanciamentoPNCF("Social");
+          break;
+        case dadosEnquadramento[0].campo7?.includes("Mais"):
+          setLinhaFinanciamentoPNCF("Mais");
+          break;
+        case dadosEnquadramento[0].campo7?.includes("Jovem Terra da Juventude"):
+          setLinhaFinanciamentoPNCF("Jovem Terra da Juventude");
+          break;
+        case dadosEnquadramento[0].campo7?.includes("Empreendedor"):
+          setLinhaFinanciamentoPNCF("Empreendedor");
+          break;
+        default:
+          setLinhaFinanciamentoPNCF("Não se enquadra");
+      }
+    }
+  }, []);
   const [text17, setText17] = useState(
     parsed["17-radioGroupJaFoiBeneficiario"] === "nao"
       ? "Preenche o requisito"
@@ -165,7 +190,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
         parsed["29-dataValidadeCertificadoCet"] || ""
       );
     }
-  }, [defaultValues, form]);
+  }, [form]);
 
   const [dataElaboracao, setDataElaboracao] = useState(
     parsed["23-dataElaboracao"] || ""
@@ -192,6 +217,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
     setLoading(true);
     form.handleSubmit(async (data) => {
       console.log(data);
+      data["8-linhaPNCF"] = linhaFinanciamentoPNCF;
       data["23-dataElaboracao"] = dataElaboracao;
       data["24-creaCfta"] = creaCfta;
       data["25-engenheiroResponsavel"] = engenheiroResponsavel;
@@ -225,6 +251,7 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
               form={form}
               formDisabled={formsDisabled}
               municipiosMap={municipiosMap}
+              linhaFinanciamentoPNCF={linhaFinanciamentoPNCF}
             />
           </div>
         </div>
@@ -338,7 +365,12 @@ export default function PreAnaliseTab({ defaultValues, isAdmin }) {
   );
 }
 
-function InformacoesIniciaisForm({ formDisabled, form, municipiosMap }) {
+function InformacoesIniciaisForm({
+  formDisabled,
+  form,
+  municipiosMap,
+  linhaFinanciamentoPNCF,
+}) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -543,7 +575,7 @@ function InformacoesIniciaisForm({ formDisabled, form, municipiosMap }) {
                   <Input
                     type="text"
                     {...field}
-                    value={field.value || ""}
+                    value={linhaFinanciamentoPNCF || ""}
                     disabled={formDisabled}
                   />
                 </FormControl>
