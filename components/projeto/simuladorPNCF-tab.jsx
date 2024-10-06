@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import Heading from "./Header";
 import { ANO_INICIAL } from "@/utils/constants";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { Input } from "../ui/input";
 
 export default function SimuladorPNCF({
   data,
@@ -53,10 +64,35 @@ export default function SimuladorPNCF({
   const [valorATER, setValorATER] = useState(
     dadosSIB?.valorImovelCustos?.valorATER || 0.0
   );
-  // @TODO falta valor investimentos e financiamento, tem que fazer os calculos com os dados que ja temos
-  const [valorInvestimentos, setValorInvestimentos] = useState(0.0); // nao vieram junto
-  const [valorFinanciamento, setValorFinanciamento] = useState(0.0); // dos dados de SIB
-  // mas nao vou trocar o backend de SIB so pra isso nao
+
+  const [valorInvestimentos, setValorInvestimentos] = useState(0.0);
+  const [valorFinanciamento, setValorFinanciamento] = useState(0.0);
+  useEffect(() => {
+    const investimentos =
+      dadosSIB?.dadosInvestimentos?.dadosInvestimentos || [];
+    const totalSum = investimentos.reduce((sum, item) => {
+      const valorTotal = parseFloat(
+        item.valor_total.replace(/\./g, "").replace(",", ".")
+      );
+      return sum + valorTotal;
+    }, 0);
+    setValorInvestimentos(totalSum);
+    const custos = dadosSIB?.valorImovelCustos || {};
+    const totalDespesas =
+      custos["custoMedicaoInterna"] +
+      custos["valorITBI"] +
+      custos["despesasCartorarias"] +
+      custos["elaboracaoProjeto"] +
+      custos["valorATER"];
+    setValorFinanciamento(valorImovelNegociado + totalDespesas + totalSum);
+  }, []);
+
+  const [parcelas, setParcelas] = useState([]);
+  useEffect(() => {
+    const p = data?.[0]?.aba_simuladorPNCF_parcelas;
+    const sortedParcelas = [...p].sort((a, b) => a.ano - b.ano);
+    setParcelas(sortedParcelas);
+  }, []);
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -66,9 +102,6 @@ export default function SimuladorPNCF({
   const handleCancel = () => {
     setFormsDisabled(true);
   };
-
-  console.log(dadosSIB);
-  console.log(abaPreAnalise);
 
   return (
     <div className="p-4 bg-gray-900/90">
@@ -99,7 +132,109 @@ export default function SimuladorPNCF({
           taxaDeJurosAno={taxaDeJurosAno}
         />
       </div>
+      <div className="mt-8 bg-gray-950  ">
+        <ParcelasTable
+          parcelas={parcelas}
+          setParcelas={setParcelas}
+          formsDisabled={formsDisabled}
+        />
+      </div>
     </div>
+  );
+}
+
+function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
+  const handleInputChange = (index, field, value) => {
+    console.log(`index: ${index}, field: ${field}, value: ${value}`);
+    const ano = ANO_INICIAL + index;
+  };
+  return (
+    <Table className="border-collapse text-xs">
+      <TableHeader className="bg-gray-800">
+        <TableRow>
+          <TableHead className="text-center text-white">ANO</TableHead>
+          <TableHead className="text-center text-white">
+            SALDO INICIAL
+          </TableHead>
+          <TableHead className="text-center text-white">JUROS</TableHead>
+          <TableHead className="text-center text-white">AMORTIZAÇÃO</TableHead>
+          <TableHead className="text-center text-white">BÔNUS</TableHead>
+          <TableHead className="text-center text-white">PARCELA</TableHead>
+          <TableHead className="text-center text-white">
+            SALDO DEVEDOR
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {parcelas.map((item, index) => (
+          <TableRow key={item.id}>
+            <TableCell className="text-center bg-gray-800">
+              {item.ano}
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.saldo_inicial || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "saldo_inicial", e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.juros || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "juros", e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.amortizacao || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "amortizacao", e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.bonus || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "bonus", e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.parcela || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "parcela", e.target.value)
+                }
+              />
+            </TableCell>
+            <TableCell className="text-center">
+              <Input
+                type="text"
+                value={item.saldo_devedor || ""}
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleInputChange(index, "saldo_devedor", e.target.value)
+                }
+              />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }
 

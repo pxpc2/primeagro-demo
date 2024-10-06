@@ -70,8 +70,6 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
 
   const [totalInvestedSIB, setTotalInvestedSIB] = useState(0.0);
 
-  console.log(data);
-
   /* Dados do Projeto */
   const [numBeneficiarios, setNumBeneficiarios] = useState(
     data?.dadosProjeto?.numero_beneficiarios || 1
@@ -140,8 +138,6 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
   const [valorImovelNegociado, setValorImovelNegociado] = useState(
     dadosImovel?.[0]?.campo17 || 0.0
   );
-
-  console.log(valorImovelNegociado);
 
   const [custoMedicaoInterna, setCustoMedicaoInterna] = useState(0.0);
 
@@ -514,9 +510,9 @@ function ValorImovelCustosTable({
     parseFloat(valorTotalDespesas) +
     parseFloat(valorTotalInvestimentos);
 
-  console.log(
+  /*console.log(
     `Valor total financiamento (${valorTotalFinanciamento}) = valorImovelNegociado (${valorImovelNegociado}) + valorTotalDespesas (${valorTotalDespesas}) + valorTotalInvestimentos (${valorTotalInvestimentos})`
-  );
+  );*/
 
   // K11 (tava escondido)
   const valorTotalInvestimentosAlternativo =
@@ -674,13 +670,11 @@ function QuadroResumoInvestimentos({
     return acc;
   }, {});
   data?.dadosInvestimentos?.dadosInvestimentos?.forEach((investimento) => {
-    console.log(investimento);
     const { categoria, fonte_financiamento, valor_total } = investimento;
 
     const valor = parseCurrency(valor_total);
 
     if (fonte_financiamento === "SIB") {
-      console.log(categoria);
       somasCategorias[categoria].SIB += valor;
     } else if (fonte_financiamento === "PRONAF-A") {
       somasCategorias[categoria].PRONAF_A += valor;
