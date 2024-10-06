@@ -129,7 +129,7 @@ async function getSimuladorPNCFData() {
   } = await supabase.auth.getUser();
   let { data: dados, error } = await supabase
     .from("aba_simuladorPNCF")
-    .select("*")
+    .select("*, aba_simuladorPNCF_parcelas(*)")
     .eq("authuser_id", user.id);
 
   if (error) {
