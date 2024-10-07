@@ -89,15 +89,51 @@ export default function SimuladorPNCF({
 
   const [parcelas, setParcelas] = useState([]);
   useEffect(() => {
-    const p = data?.[0]?.aba_simuladorPNCF_parcelas;
-    const sortedParcelas = [...p].sort((a, b) => a.ano - b.ano);
-    setParcelas(sortedParcelas);
-  }, []);
+    const anoInicial = ANO_INICIAL + 1;
+    const anoFinal = anoInicial + 24;
+
+    const p = [];
+
+    for (let i = 0; i <= anoFinal - anoInicial; i++) {
+      const ano = anoInicial + i;
+
+      let saldoInicial;
+      let juros;
+      let amortizacao = 0;
+      let bonus = 0;
+      let parcela = 0;
+      let saldoDevedor;
+
+      if (i === 0) {
+        saldoInicial = valorFinanciamento;
+      } else {
+        saldoInicial = p[i - 1].saldo_devedor;
+      }
+
+      juros = saldoInicial * taxaDeJurosAno;
+      saldoDevedor = saldoInicial + juros - amortizacao;
+
+      const parcelaNova = {
+        ano: ano,
+        saldo_inicial: saldoInicial,
+        juros: juros,
+        amortizacao: amortizacao,
+        bonus: bonus,
+        parcela: parcela,
+        saldo_devedor: saldoDevedor,
+      };
+
+      p.push(parcelaNova);
+    }
+    setParcelas(p);
+  }, [taxaDeJurosAno, valorFinanciamento]);
 
   const onEdit = () => {
     setFormsDisabled(false);
   };
-  const onSave = async () => {};
+  const onSave = async () => {
+    console.log(parcelas);
+  };
 
   const handleCancel = () => {
     setFormsDisabled(true);
@@ -126,7 +162,7 @@ export default function SimuladorPNCF({
           valorInvestimentos={valorInvestimentos}
         />
         <CondicoesFinanciamentoTable
-          anoInicioFinanciamento={ANO_INICIAL}
+          anoInicioFinanciamento={ANO_INICIAL + 1}
           bonusAdimplencia={bonusAdimplencia}
           linhaFinanciamento={linhaFinanciamento}
           taxaDeJurosAno={taxaDeJurosAno}
@@ -137,17 +173,68 @@ export default function SimuladorPNCF({
           parcelas={parcelas}
           setParcelas={setParcelas}
           formsDisabled={formsDisabled}
+          taxaDeJurosAno={taxaDeJurosAno}
         />
       </div>
     </div>
   );
 }
 
-function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
+function ParcelasTable({
+  parcelas,
+  setParcelas,
+  formsDisabled,
+  taxaDeJurosAno,
+}) {
   const handleInputChange = (index, field, value) => {
-    console.log(`index: ${index}, field: ${field}, value: ${value}`);
-    const ano = ANO_INICIAL + index;
+    if (
+      (field === "amortizacao" || field === "bonus" || field === "parcela") &&
+      index <= 2
+    ) {
+      const parsedValue = parseFloat(value) || 0;
+
+      setParcelas((prevParcelas) => {
+        const updatedParcelas = [...prevParcelas];
+
+        updatedParcelas[index] = {
+          ...updatedParcelas[index],
+          [field]: parsedValue,
+        };
+        updatedParcelas[index].saldo_devedor =
+          updatedParcelas[index].saldo_inicial +
+          updatedParcelas[index].juros -
+          updatedParcelas[index].amortizacao;
+
+        for (let i = index + 1; i < updatedParcelas.length; i++) {
+          updatedParcelas[i].saldo_inicial =
+            updatedParcelas[i - 1].saldo_devedor;
+
+          updatedParcelas[i].juros =
+            updatedParcelas[i].saldo_inicial * taxaDeJurosAno;
+
+          updatedParcelas[i].saldo_devedor =
+            updatedParcelas[i].saldo_inicial +
+            updatedParcelas[i].juros -
+            updatedParcelas[i].amortizacao;
+        }
+
+        return updatedParcelas;
+      });
+    } else {
+      console.log("Erro ao editar campo!!");
+    }
   };
+
+  const isDisabled = (index, desc) => {
+    if (formsDisabled) return true;
+    if (desc === "saldo_inicial") return true;
+    if (desc === "juros") return true;
+    if (desc === "amortizacao") return index > 2;
+    if (desc === "bonus") return index > 2;
+    if (desc === "parcela") return index > 2;
+    if (desc === "saldo_devedor") return true;
+  };
+
   return (
     <Table className="border-collapse text-xs">
       <TableHeader className="bg-gray-800">
@@ -167,7 +254,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
       </TableHeader>
       <TableBody>
         {parcelas.map((item, index) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.ano}>
             <TableCell className="text-center bg-gray-800">
               {item.ano}
             </TableCell>
@@ -175,7 +262,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.saldo_inicial || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "saldo_inicial")}
                 onChange={(e) =>
                   handleInputChange(index, "saldo_inicial", e.target.value)
                 }
@@ -185,7 +272,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.juros || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "juros")}
                 onChange={(e) =>
                   handleInputChange(index, "juros", e.target.value)
                 }
@@ -195,7 +282,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.amortizacao || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "amortizacao")}
                 onChange={(e) =>
                   handleInputChange(index, "amortizacao", e.target.value)
                 }
@@ -205,7 +292,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.bonus || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "bonus")}
                 onChange={(e) =>
                   handleInputChange(index, "bonus", e.target.value)
                 }
@@ -215,7 +302,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.parcela || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "parcela")}
                 onChange={(e) =>
                   handleInputChange(index, "parcela", e.target.value)
                 }
@@ -225,7 +312,7 @@ function ParcelasTable({ parcelas, setParcelas, formsDisabled }) {
               <Input
                 type="text"
                 value={item.saldo_devedor || ""}
-                disabled={formsDisabled}
+                disabled={isDisabled(index, "saldo_devedor")}
                 onChange={(e) =>
                   handleInputChange(index, "saldo_devedor", e.target.value)
                 }
