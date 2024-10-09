@@ -111,6 +111,24 @@ export default function SimuladorPNCF({
       }
 
       juros = saldoInicial * taxaDeJurosAno;
+
+      if (i === 3) {
+        const saldoDevedorYear2 = p[2].saldo_devedor;
+        amortizacao =
+          (saldoDevedorYear2 * taxaDeJurosAno) /
+          (1 - 1 / Math.pow(1 + taxaDeJurosAno, 22));
+      } else if (i > 3) {
+        const saldoDevedorYear3 = p[3].saldo_devedor;
+        amortizacao =
+          (saldoDevedorYear3 * taxaDeJurosAno) /
+          (1 - 1 / Math.pow(1 + taxaDeJurosAno, 21));
+      }
+
+      if (i >= 3) {
+        bonus = bonusAdimplencia * amortizacao;
+        parcela = amortizacao - bonus;
+      }
+
       saldoDevedor = saldoInicial + juros - amortizacao;
 
       const parcelaNova = {
@@ -126,7 +144,7 @@ export default function SimuladorPNCF({
       p.push(parcelaNova);
     }
     setParcelas(p);
-  }, [taxaDeJurosAno, valorFinanciamento]);
+  }, [bonusAdimplencia, taxaDeJurosAno, valorFinanciamento]);
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -174,6 +192,7 @@ export default function SimuladorPNCF({
           setParcelas={setParcelas}
           formsDisabled={formsDisabled}
           taxaDeJurosAno={taxaDeJurosAno}
+          bonusAdimplencia={bonusAdimplencia}
         />
       </div>
     </div>
@@ -185,6 +204,7 @@ function ParcelasTable({
   setParcelas,
   formsDisabled,
   taxaDeJurosAno,
+  bonusAdimplencia,
 }) {
   const handleInputChange = (index, field, value) => {
     if (
@@ -211,6 +231,26 @@ function ParcelasTable({
 
           updatedParcelas[i].juros =
             updatedParcelas[i].saldo_inicial * taxaDeJurosAno;
+
+          if (i === 3) {
+            const saldoDevedorYear2 = updatedParcelas[2].saldo_devedor;
+            updatedParcelas[i].amortizacao =
+              (saldoDevedorYear2 * taxaDeJurosAno) /
+              (1 - 1 / Math.pow(1 + taxaDeJurosAno, 22));
+            updatedParcelas[i].bonus =
+              bonusAdimplencia * updatedParcelas[i].amortizacao;
+            updatedParcelas[i].parcela =
+              updatedParcelas[i].amortizacao - updatedParcelas[i].bonus;
+          } else if (i > 3) {
+            const saldoDevedorYear3 = updatedParcelas[3].saldo_devedor;
+            updatedParcelas[i].amortizacao =
+              (saldoDevedorYear3 * taxaDeJurosAno) /
+              (1 - 1 / Math.pow(1 + taxaDeJurosAno, 21));
+            updatedParcelas[i].bonus =
+              bonusAdimplencia * updatedParcelas[i].amortizacao;
+            updatedParcelas[i].parcela =
+              updatedParcelas[i].amortizacao - updatedParcelas[i].bonus;
+          }
 
           updatedParcelas[i].saldo_devedor =
             updatedParcelas[i].saldo_inicial +
