@@ -121,6 +121,7 @@ export async function submitSimuladorPRONAF({
         carencia: dadosIniciaisData.prazoCarencia,
         juros: dadosIniciaisData.prazoJuros,
         rebate: dadosIniciaisData.prazoRebate,
+        ano_implantacao: dadosIniciaisData.anoImplantacao,
       },
       { onConflict: ["authuser_id"] }
     )

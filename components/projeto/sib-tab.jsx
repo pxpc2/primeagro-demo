@@ -527,6 +527,20 @@ function ValorImovelAvaliadoTable({
   );
 }
 
+/**
+ * @TODO implementar tabela para visualização...
+ * olhar aba Simulador PRONAF p/ referência
+ *
+ * @param {} param0
+ */
+function ValoresPRONAFTable({ formsDisabled, dadosValoresPRONAF }) {
+  // dadosValoresPRONAF é p/ ser objeto com valor_pronaf_total,
+  // valor_pronaf_indvidiual,
+  // valor_pronaf_familia,
+  // saldo_total_pronaf
+  // deficit_total_pronaf
+}
+
 function ValorImovelCustosTable({
   formsDisabled,
   valorImovelNegociado, // H4
