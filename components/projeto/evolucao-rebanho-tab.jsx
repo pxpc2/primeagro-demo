@@ -46,8 +46,6 @@ export default function EvolucaoRebanhoTab({
     try {
       setLoading(true);
 
-      console.log(bovinoculturaData);
-
       const updatedBovinoculturaData = {
         ...bovinoculturaData[0],
         animaisAdquirir_reprodutores: bovinoculturaData?.reprodutoresAdquirir,

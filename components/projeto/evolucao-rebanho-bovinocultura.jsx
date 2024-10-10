@@ -37,8 +37,6 @@ export default function EvolucaoRebanhoBovinocultura({
     onChange(updatedData);
   };
 
-  console.log(data);
-
   const arr =
     data?.dadosEvolucaoRebanho?.[0]?.aba_evolucao_rebanho_indicadores_tecnicos;
 
