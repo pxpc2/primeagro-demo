@@ -536,6 +536,7 @@ export async function getSIBData({ dadosInvestimentos }) {
   }
 
   return {
+    haveraPRONAF: sibData?.havera_pronaf || false,
     dadosProjeto: sibData?.aba_sib_dadosProjeto || [],
     valorAvaliado: sibData?.aba_sib_valorAvaliado || [],
     dadosInvestimentos,
@@ -624,6 +625,28 @@ export async function submitSIBValorAvaliado({ formData }) {
 
   if (error) {
     return redirect("/error?message=" + error.message);
+  }
+}
+
+export async function submitSIB({ data }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  let { data: sibRecord, error: sibError } = await supabase
+    .from("aba_sib")
+    .upsert(
+      { authuser_id: authUserID, havera_pronaf: data.haveraPRONAF },
+      { onConflict: ["authuser_id"] }
+    )
+    .select()
+    .single();
+
+  if (sibError) {
+    console.log(sibError);
+    return redirect("/error?message=" + sibError.message);
   }
 }
 
