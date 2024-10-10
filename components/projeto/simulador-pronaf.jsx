@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Heading from "./Header";
-import { INVESTIMENTO_CATEGORIAS } from "@/utils/constants";
+import { ANO_INICIAL, INVESTIMENTO_CATEGORIAS } from "@/utils/constants";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import {
@@ -36,6 +36,11 @@ export default function SimuladorPRONAF({
   const [prazoCarencia, setPrazoCarencia] = useState(data?.[0]?.carencia || 0);
   const [prazoJuros, setPrazoJuros] = useState(data?.[0].juros || 0.0);
   const [prazoRebate, setPrazoRebate] = useState(data?.[0].rebate || 0.0);
+  const [anoImplantacao, setAnoImplantacao] = useState(
+    data?.[0].ano_implantacao || ANO_INICIAL
+  );
+
+  const [parcelas, setParcelas] = useState([]);
 
   function parseCurrency(value) {
     if (typeof value === "string") {
@@ -94,6 +99,7 @@ export default function SimuladorPRONAF({
         prazoCarencia: prazoCarencia,
         prazoJuros: prazoJuros?.toFixed(2),
         prazoRebate: prazoRebate?.toFixed(2),
+        anoImplantacao: anoImplantacao,
       };
       await submitSimuladorPRONAF({
         dadosIniciaisData: dadosIniciais,
@@ -110,6 +116,40 @@ export default function SimuladorPRONAF({
   const handleCancel = () => {
     setFormsDisabled(true);
   };
+
+  function getSaldoInicial({ anoIndex, parcelas }) {
+    if (anoIndex === 0) {
+      return valorPRONAF;
+    }
+    return parcelas[anoIndex - 1].saldo_final;
+  }
+
+  useEffect(() => {
+    const anoInicial = anoImplantacao;
+    const newParcelas = [];
+
+    for (let i = 0; i < 10; i++) {
+      let ano = anoInicial + i;
+      let saldo_inicial = getSaldoInicial({
+        anoIndex: i,
+        parcelas: newParcelas,
+      });
+      let juros = saldo_inicial * prazoJuros;
+      let amortizacao, parcela, rebate, parcela_com_rebate, saldo_final;
+      newParcelas.push({
+        ano,
+        saldo_inicial,
+        juros,
+        amortizacao,
+        parcela,
+        rebate,
+        parcela_com_rebate,
+        saldo_final,
+      });
+    }
+
+    setParcelas(newParcelas);
+  }, []);
 
   return (
     <div className="p-4 bg-gray-900/90">
@@ -136,7 +176,16 @@ export default function SimuladorPRONAF({
           setPrazoRebate,
           valorPRONAF,
           haveraPRONAF,
+          anoImplantacao,
+          setAnoImplantacao,
         }}
+      />
+      <PrestacoesTable
+        parcelas={parcelas}
+        setParcelas={setParcelas}
+        formsDisabled={formsDisabled}
+        prazoJuros={prazoJuros}
+        prazoRebate={prazoRebate}
       />
     </div>
   );
@@ -155,6 +204,8 @@ function DadosIniciaisTable({
   setPrazoRebate,
   valorPRONAF,
   haveraPRONAF,
+  anoImplantacao,
+  setAnoImplantacao,
 }) {
   return (
     <div className="overflow-hidden mt-4 border-gray-800 border shadow sm:rounded-lg text-sm">
@@ -183,6 +234,18 @@ function DadosIniciaisTable({
             <TableRow>
               <TableCell className="font-bold">Área a ser adquirida</TableCell>
               <TableCell>{areaAdquirida}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-bold">Ano de implantação</TableCell>
+              <TableCell>
+                <Input
+                  type="number"
+                  value={anoImplantacao}
+                  onChange={(e) => setAnoImplantacao(e.target.value)}
+                  disabled={formsDisabled}
+                  className="w-full"
+                />
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="font-bold">Carência</TableCell>
@@ -237,6 +300,98 @@ function DadosIniciaisTable({
               <TableCell className="font-bold">Haverá PRONAF?</TableCell>
               <TableCell>{haveraPRONAF}</TableCell>
             </TableRow>
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
+}
+
+function PrestacoesTable({
+  parcelas,
+  setParcelas,
+  formsDisabled,
+  prazoJuros,
+  prazoRebate,
+}) {
+  return (
+    <div className="overflow-hidden mt-4 border-gray-800 border shadow sm:rounded-lg text-sm">
+      <div className="bg-gray-800 p-4">
+        <h3 className="text-md font-bold leading-6 text-gray-200">
+          SIMULAÇÃO DE AMORTIZAÇÃO DAS PRESTAÇÕES
+        </h3>
+      </div>
+      <div className="bg-gray-900 p-4 text-gray-200">
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="text-center">Parcela</TableHead>
+              <TableHead className="text-center">Saldo Inicial</TableHead>
+              <TableHead className="text-center">Juros</TableHead>
+              <TableHead className="text-center">Amortização</TableHead>
+              <TableHead className="text-center">Parcela</TableHead>
+              <TableHead className="text-center">Rebate</TableHead>
+              <TableHead className="text-center">Parcela com Rebate</TableHead>
+              <TableHead className="text-center">Saldo Final</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {parcelas.map((item, index) => (
+              <TableRow key={item.ano}>
+                <TableCell className="text-center bg-gray-800">
+                  {item.ano}
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.saldo_inicial || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.juros || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.amortizacao || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.parcela || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.rebate || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.parcela_com_rebate || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Input
+                    type="number"
+                    value={item.saldo_final || ""}
+                    disabled={true}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
