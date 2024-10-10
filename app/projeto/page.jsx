@@ -21,6 +21,7 @@ import DespesasTab from "@/components/projeto/despesas-tab";
 import SimuladorPNCF from "@/components/projeto/simuladorPNCF-tab";
 import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
+import SimuladorPRONAF from "@/components/projeto/simulador-pronaf";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -167,6 +168,15 @@ export default function ProjetoPage() {
             }
             preAnaliseData={formData?.aba_preanalise}
             isAdmin={isAdmin}
+          />
+        );
+      case "Simulador PRONAF":
+        return (
+          <SimuladorPRONAF
+            data={formData?.aba_simuladorPRONAF}
+            isAdmin={isAdmin}
+            preAnaliseData={formData?.aba_preanalise}
+            sibData={formData?.aba_sib}
           />
         );
       default:

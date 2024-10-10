@@ -8,15 +8,6 @@ export default function FluxoCaixaTab({
   dadosImovelData,
   identificacaoBeneficiarioData,
 }) {
-  console.log("Pre analise data: ");
-  console.log(preAnaliseData);
-
-  console.log("Dados imovel data: ");
-  console.log(dadosImovelData);
-
-  console.log("Identificacao beneficiario data: ");
-  console.log(identificacaoBeneficiarioData);
-
   const [isLoading, setIsLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
 
