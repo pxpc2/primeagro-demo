@@ -13,11 +13,15 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import {
+  submitSIB,
   submitSIBCustos,
   submitSIBDadosProjeto,
   submitSIBValorAvaliado,
 } from "@/app/projeto/actions";
 import { INVESTIMENTO_CATEGORIAS } from "@/utils/constants";
+import { Select } from "../ui/select";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
 function parseCurrency(value) {
   if (typeof value === "string") {
@@ -206,6 +210,8 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
 
   const [valorTotalFinanciamento, setValorTotalFinanciamento] = useState(0.0);
 
+  const [haveraPRONAF, setHaveraPRONAF] = useState(data?.haveraPRONAF || false);
+
   useEffect(() => {
     const initialValue =
       data?.valorImovelCustos?.valorTotalFinanciamento || 0.0;
@@ -218,7 +224,8 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
   };
   const onSave = async () => {
     setLoading(true);
-    const response1 = await submitSIBDadosProjeto({
+    await submitSIB({ data: { haveraPRONAF } });
+    await submitSIBDadosProjeto({
       formData: {
         numBeneficiarios,
         tetoNacional: tetoNacional,
@@ -226,7 +233,7 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
         valorMaximoNegociacao: valorMaximoNegociacao,
       },
     });
-    const response2 = await submitSIBValorAvaliado({
+    await submitSIBValorAvaliado({
       formData: {
         valorTerraNua: valorTerraNua,
         valorBenfeitorias: valorBenfeitorias,
@@ -234,7 +241,7 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
         vtiHa,
       },
     });
-    const response3 = await submitSIBCustos({
+    await submitSIBCustos({
       formData: {
         valorImovelNegociado: valorImovelNegociado,
         custoMedicaoInterna: custoMedicaoInterna,
@@ -275,6 +282,10 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
   ]);
   // FIM USE EFFECT GERAL
 
+  const handlePRONAFchange = (value) => {
+    setHaveraPRONAF(value === "Sim");
+  };
+
   return (
     <div className="p-4 bg-gray-900/80">
       <Heading
@@ -290,6 +301,38 @@ export default function SIBTab({ data, isAdmin, dadosImovel }) {
         <div className="h-full text-sm py-4">
           <div className="grid grid-cols-2 gap-8">
             <div className="flex flex-col gap-0 justify-between">
+              <div className="overflow-hidden border shadow sm:rounded-lg text-sm">
+                <div className="">
+                  <div className="bg-gray-800 p-4">
+                    <h3 className="text-md font-bold leading-6 text-white">
+                      O PRONAF -A IRÁ CONTRIBUIR PARA CAPACIDADE DE PAGAMENTO DO
+                      PROJETO?
+                    </h3>
+                  </div>
+                  <div className="bg-white p-4 text-gray-800">
+                    <div className="flex flex-row justify-around w-full">
+                      <RadioGroup
+                        value={haveraPRONAF ? "Sim" : "Não"}
+                        onValueChange={handlePRONAFchange}
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center">
+                          <RadioGroupItem value="Sim" id="sim" />
+                          <Label htmlFor="sim" className="ml-2">
+                            Sim
+                          </Label>
+                        </div>
+                        <div className="flex items-center">
+                          <RadioGroupItem value="Não" id="nao" />
+                          <Label htmlFor="nao" className="ml-2">
+                            Não
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div>
                 <DadosDoProjetoTable
                   formsDisabled={formsDisabled}
