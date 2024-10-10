@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { submitSimuladorPRONAF } from "@/app/projeto/actions";
+import { set } from "react-hook-form";
 
 export default function SimuladorPRONAF({
   data,
@@ -124,6 +125,8 @@ export default function SimuladorPRONAF({
     return parcelas[anoIndex - 1].saldo_final;
   }
 
+  const [p3, setP3] = useState(0.0);
+
   useEffect(() => {
     const anoInicial = anoImplantacao;
     const newParcelas = [];
@@ -148,8 +151,20 @@ export default function SimuladorPRONAF({
       });
     }
 
+    if (haveraPRONAF === "Não") setP3(0.0);
+    else {
+      // pegar qtd beneficiarios em SIB
+      if (sibData?.dadosProjeto?.numero_beneficiarios === 0) setP3(0.0);
+      else {
+        // vai ser valor total investimentos PRONAF
+        setP3(valorPRONAF);
+      }
+    }
+
     setParcelas(newParcelas);
   }, []);
+
+  console.log(sibData);
 
   return (
     <div className="p-4 bg-gray-900/90">
