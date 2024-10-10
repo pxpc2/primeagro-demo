@@ -70,6 +70,8 @@ export async function getProjetoFormsData() {
 
   formData.aba_fluxo_de_caixa = await getFluxoCaixaData();
 
+  formData.aba_simuladorPRONAF = await getSimuladorPRONAF();
+
   return formData;
 }
 
@@ -80,6 +82,77 @@ const calculateArea = (totalArea, porcentagem) => {
     100
   ).toFixed(4);
 };
+
+/* INICIO SIMULADOR PRONAF ------------------------------------------------------------------------------------------- */
+
+async function getSimuladorPRONAF() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let { data: dados, error } = await supabase
+    .from("aba_simuladorPRONAF")
+    .select("*, aba_simuladorPRONAF_parcelas(*)")
+    .eq("authuser_id", user.id);
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return dados;
+}
+
+export async function submitSimuladorPRONAF({
+  dadosIniciaisData,
+  parcelasData,
+}) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  let { data: simuladorRecord, error: simuladorError } = await supabase
+    .from("aba_simuladorPRONAF")
+    .upsert(
+      {
+        authuser_id: authUserID,
+        carencia: dadosIniciaisData.prazoCarencia,
+        juros: dadosIniciaisData.prazoJuros,
+        rebate: dadosIniciaisData.prazoRebate,
+      },
+      { onConflict: ["authuser_id"] }
+    )
+    .select()
+    .single();
+
+  if (simuladorError) {
+    console.log(simuladorError);
+    return redirect("/error?message=" + simuladorError.message);
+  }
+
+  // @TODO: Implementar a inserção das parcelas
+
+  /*const parcelas = parcelasData.map((item) => ({
+    ...item,
+    simulador_pronaf_id: simuladorRecord.id,
+    authuser_id: authUserID,
+  }));
+
+  const { error: parcelasError } = await supabase
+    .from("aba_simuladorPRONAF_parcelas")
+    .upsert(parcelas, {
+      onConflict: ["simulador_pronaf_id"],
+    });
+
+  if (parcelasError) {
+    console.log(parcelasError);
+    return redirect("/error?message=" + parcelasError.message);
+  }*/
+}
+
+/* FIM SIMULADOR PRONAF ------------------------------------------------------------------------------------------- */
 
 /* INICIO ORÇAMENTOS ------------------------------------------------------------------------------------------- */
 async function getOrcamentosData({ dadosInvestimentos }) {
