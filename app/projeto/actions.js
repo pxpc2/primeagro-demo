@@ -135,22 +135,22 @@ export async function submitSimuladorPRONAF({
 
   // @TODO: Implementar a inserção das parcelas
 
-  /*const parcelas = parcelasData.map((item) => ({
+  const parcelas = parcelasData.map((item) => ({
     ...item,
-    simulador_pronaf_id: simuladorRecord.id,
+    simuladorPRONAF_id: simuladorRecord.id,
     authuser_id: authUserID,
   }));
 
   const { error: parcelasError } = await supabase
     .from("aba_simuladorPRONAF_parcelas")
     .upsert(parcelas, {
-      onConflict: ["simulador_pronaf_id"],
+      onConflict: ["ano", "simuladorPRONAF_id"],
     });
 
   if (parcelasError) {
     console.log(parcelasError);
     return redirect("/error?message=" + parcelasError.message);
-  }*/
+  }
 }
 
 /* FIM SIMULADOR PRONAF ------------------------------------------------------------------------------------------- */
