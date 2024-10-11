@@ -23,8 +23,6 @@ export default function SimuladorPRONAF({
   const [loading, setLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
 
-  console.log(data);
-
   const [municipio, setMunicipio] = useState(
     preAnaliseData?.[0]?.campo_3 || ""
   );
@@ -105,7 +103,7 @@ export default function SimuladorPRONAF({
       };
       await submitSimuladorPRONAF({
         dadosIniciaisData: dadosIniciais,
-        parcelasData: {},
+        parcelasData: parcelas,
       });
       setFormsDisabled(true);
     } catch (error) {
@@ -121,18 +119,10 @@ export default function SimuladorPRONAF({
 
   function getSaldoInicial({ anoIndex, parcelas, amortizacao, encargos }) {
     if (anoIndex === 0) {
-      console.log(p3 + p3 * 0.005);
       return p3 + p3 * 0.005;
     } else if (anoIndex < 3) {
       return parcelas[anoIndex - 1].saldo_final;
     } else if (anoIndex >= 3) {
-      console.log(
-        "index ",
-        anoIndex,
-        "maior ou igual a 3, com amortizacao, encargos: ",
-        amortizacao,
-        encargos
-      );
       return parcelas[anoIndex - 1].saldo_final - amortizacao - encargos;
     }
   }
@@ -209,8 +199,6 @@ export default function SimuladorPRONAF({
 
     setParcelas(newParcelas);
   }, [p3, setP3]);
-
-  console.log(sibData);
 
   return (
     <div className="p-4 bg-gray-900/90">
