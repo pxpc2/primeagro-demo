@@ -42,6 +42,7 @@ export default function SimuladorPRONAF({
   );
 
   const [parcelas, setParcelas] = useState([]);
+  const [p3, setP3] = useState(0.0);
 
   function parseCurrency(value) {
     if (typeof value === "string") {
@@ -118,38 +119,27 @@ export default function SimuladorPRONAF({
     setFormsDisabled(true);
   };
 
-  function getSaldoInicial({ anoIndex, parcelas }) {
+  function getSaldoInicial({ anoIndex, parcelas, amortizacao, encargos }) {
     if (anoIndex === 0) {
-      return valorPRONAF;
+      console.log(p3 + p3 * 0.005);
+      return p3 + p3 * 0.005;
+    } else if (anoIndex < 3) {
+      return parcelas[anoIndex - 1].saldo_final;
+    } else if (anoIndex >= 3) {
+      console.log(
+        "index ",
+        anoIndex,
+        "maior ou igual a 3, com amortizacao, encargos: ",
+        amortizacao,
+        encargos
+      );
+      return parcelas[anoIndex - 1].saldo_final - amortizacao - encargos;
     }
-    return parcelas[anoIndex - 1].saldo_final;
   }
-
-  const [p3, setP3] = useState(0.0);
 
   useEffect(() => {
     const anoInicial = anoImplantacao;
     const newParcelas = [];
-
-    for (let i = 0; i < 10; i++) {
-      let ano = anoInicial + i;
-      let saldo_inicial = getSaldoInicial({
-        anoIndex: i,
-        parcelas: newParcelas,
-      });
-      let juros = saldo_inicial * prazoJuros;
-      let amortizacao, parcela, rebate, parcela_com_rebate, saldo_final;
-      newParcelas.push({
-        ano,
-        saldo_inicial,
-        juros,
-        amortizacao,
-        parcela,
-        rebate,
-        parcela_com_rebate,
-        saldo_final,
-      });
-    }
 
     if (haveraPRONAF === "Não") setP3(0.0);
     else {
@@ -161,8 +151,64 @@ export default function SimuladorPRONAF({
       }
     }
 
+    for (let i = 0; i < 10; i++) {
+      let ano = anoInicial + i;
+      let amortizacao = i < 3 ? 0 : p3 / 7;
+
+      let saldo_devedor = 0.0,
+        encargos = 0.0;
+      if (i >= 3) {
+        if (i === 3) {
+          saldo_devedor = p3 - amortizacao;
+          encargos = saldo_devedor * 0.0033584;
+        } else {
+          saldo_devedor = newParcelas[i - 1].saldo_devedor - amortizacao;
+          switch (i) {
+            case 4:
+              encargos = saldo_devedor * 0.0050503;
+            case 5:
+              encargos = saldo_devedor * 0.007594299620285;
+            case 6:
+              encargos = saldo_devedor * 0.0118430674562045;
+            case 7:
+              encargos = saldo_devedor * 0.0203533;
+            case 8:
+              encargos = saldo_devedor * 0.0459101;
+            case 9:
+              encargos = saldo_devedor * 0.051140722737734;
+          }
+        }
+      }
+      let saldo_inicial = getSaldoInicial({
+        anoIndex: i,
+        parcelas: newParcelas,
+        amortizacao: amortizacao,
+        encargos: encargos,
+      });
+      let juros = saldo_inicial * prazoJuros;
+      let parcela = i < 3 ? 0.0 : amortizacao + encargos;
+
+      let saldo_final =
+        i < 3 ? saldo_inicial + juros - parcela : saldo_inicial + juros;
+
+      let rebate = i < 3 ? 0.0 : amortizacao * prazoRebate;
+      let parcela_com_rebate = i < 3 ? 0.0 : parcela - rebate;
+      newParcelas.push({
+        ano,
+        saldo_inicial,
+        juros,
+        amortizacao,
+        parcela,
+        rebate,
+        parcela_com_rebate,
+        saldo_final,
+        saldo_devedor,
+        encargos,
+      });
+    }
+
     setParcelas(newParcelas);
-  }, []);
+  }, [p3, setP3]);
 
   console.log(sibData);
 
