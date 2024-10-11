@@ -63,25 +63,25 @@ export default function DashboardSteps({
   };
 
   return (
-    <div className="lg:border-b lg:border-t lg:border-gray-200">
+    <div className="lg:border-b lg:border-t lg:border-gray-800">
       <nav
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         aria-label="Progress"
       >
         <ol
           role="list"
-          className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-200"
+          className="overflow-hidden rounded-md lg:flex lg:rounded-none lg:border-l lg:border-r lg:border-gray-800"
         >
           {steps.map((step, stepIdx) => (
             <li
               key={step.id}
-              className="relative overflow-hidden lg:flex-1 bg-white cursor-default"
+              className="relative overflow-hidden lg:flex-1 bg-gray-950/80 cursor-default"
             >
               <div
                 className={classNames(
                   stepIdx === 0 ? "rounded-t-md border-b-0" : "",
                   stepIdx === steps.length - 1 ? "rounded-b-md border-t-0" : "",
-                  "overflow-hidden border border-gray-200 lg:border-0"
+                  "overflow-hidden border border-gray-800 lg:border-0"
                 )}
               >
                 {step.status === "complete" ? (
@@ -97,18 +97,18 @@ export default function DashboardSteps({
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-700">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-lime-200">
                           <CheckIcon
-                            className="h-6 w-6 text-white"
+                            className="h-6 w-6 text-black"
                             aria-hidden="true"
                           />
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium text-green-800">
+                        <span className="text-sm font-medium text-lime-200">
                           {step.name}
                         </span>
-                        <span className="text-sm sm:text-sm mt-1 sm:mt-0 font-normal text-gray-500">
+                        <span className="text-sm sm:text-sm mt-1 sm:mt-0 font-normal text-gray-300">
                           {step.description}
                         </span>
                       </span>
@@ -134,15 +134,15 @@ export default function DashboardSteps({
                       )}
                     >
                       <span className="flex-shrink-0">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-orange-600">
-                          <span className="text-orange-600">{step.id}</span>
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-orange-400">
+                          <span className="text-orange-400">{step.id}</span>
                         </span>
                       </span>
                       <span className="ml-4 mt-0.5 flex min-w-0 flex-col">
-                        <span className="text-sm font-medium text-orange-600">
+                        <span className="text-sm font-medium text-orange-400">
                           {step.name}
                         </span>
-                        <span className="text-sm sm:text-sm mt-1 sm:mt-0 font-normal  text-gray-500">
+                        <span className="text-sm sm:text-sm mt-1 sm:mt-0 font-normal  text-gray-300">
                           {step.description}
                         </span>
                       </span>

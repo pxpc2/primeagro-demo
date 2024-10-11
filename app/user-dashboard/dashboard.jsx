@@ -147,7 +147,7 @@ export default function UserDashboardPage({
                             }
                             className={classNames(
                               selectedTab === item.name
-                                ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
+                                ? "text-gray-200 bg-gray-800 hover:bg-gray-800"
                                 : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
                               "flex justify-start gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 w-full"
                             )}
@@ -188,9 +188,9 @@ export default function UserDashboardPage({
                         onClick={() => setSelectedTab(item.name)}
                         className={classNames(
                           selectedTab === item.name
-                            ? "border text-gray-200 bg-gray-800 hover:bg-gray-800"
+                            ? " text-gray-200 bg-gray-800 hover:bg-gray-800"
                             : "text-gray-200 hover:bg-gray-800 hover:text-white bg-gray-900",
-                          "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                          "group flex gap-x-3 rounded-md p-2 text-xs font-normal leading-6"
                         )}
                         disabled={
                           item.name === "Documentos" &&
@@ -213,9 +213,13 @@ export default function UserDashboardPage({
                   className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
                 >
                   <Avatar className="text-black">
-                    <AvatarFallback>{iniciais}</AvatarFallback>
+                    <AvatarFallback className="bg-gray-300">
+                      {iniciais}
+                    </AvatarFallback>
                   </Avatar>
-                  <span className="truncate">{usuario.email}</span>
+                  <span className="truncate text-gray-200">
+                    {usuario.email}
+                  </span>
                 </a>
               </li>
             </ul>
@@ -240,13 +244,17 @@ export default function UserDashboardPage({
         </a>
       </div>
 
-      <main className="py-2 lg:pl-72 sm:h-full bg-gray-200 ">
+      <main
+        className={`py-2 lg:pl-72 sm:h-full ${
+          selectedTab === "Geral" ? "bg-gray-950" : "bg-gray-100"
+        }`}
+      >
         <div
           className={`px-4 sm:px-6 lg:px-8 flex flex-col align-middle h-full  ${
             selectedTab === "Geral" ? "sm:justify-center" : "py-8"
           }`}
         >
-          <div className="rounded-sm bg-white px-1 py-6 shadow sm:px-6">
+          <div className="   px-1 py-6 shadow sm:px-6">
             {!isAdmin && selectedTab === "Geral" ? (
               <DashboardSteps
                 cliente={usuario}
