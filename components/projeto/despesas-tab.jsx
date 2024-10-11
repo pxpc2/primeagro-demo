@@ -31,6 +31,8 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
     data?.lucroOperacional || Array(12).fill(0)
   );
 
+  console.log(data);
+
   // Calcula os totais de Receitas para cada ano
   // ultimos dois anos copia ao 2033
   useEffect(() => {
