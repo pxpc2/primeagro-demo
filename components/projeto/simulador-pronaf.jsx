@@ -265,12 +265,7 @@ function DadosIniciaisTable({
       </div>
       <div className="bg-gray-900 p-4 text-gray-200">
         <Table className="w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-left">Item</TableHead>
-              <TableHead className="text-left">Valor</TableHead>
-            </TableRow>
-          </TableHeader>
+          <TableHeader></TableHeader>
           <TableBody>
             <TableRow>
               <TableCell className="font-bold">Município</TableCell>
