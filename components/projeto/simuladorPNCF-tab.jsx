@@ -265,13 +265,17 @@ function ParcelasTable({
     }
   };
 
+  /*
+   * era antes usada para desabilitar campos de acordo com a regra de negócio,
+   * agora todos são desabilitados.
+   */
   const isDisabled = (index, desc) => {
     if (formsDisabled) return true;
     if (desc === "saldo_inicial") return true;
     if (desc === "juros") return true;
-    if (desc === "amortizacao") return index > 2;
-    if (desc === "bonus") return index > 2;
-    if (desc === "parcela") return index > 2;
+    if (desc === "amortizacao") return true;
+    if (desc === "bonus") return true;
+    if (desc === "parcela") return true;
     if (desc === "saldo_devedor") return true;
   };
 
