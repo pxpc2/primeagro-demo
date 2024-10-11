@@ -166,7 +166,7 @@ export default function DocumentoInstance({
           <div className="flex flex-row w-full">
             <label
               htmlFor={`file-upload-${doc.id}`}
-              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+              className="relative cursor-pointer rounded-md  font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
             >
               <ArrowUpTrayIcon className="w-4 h-4 inline-block mr-2" />
               <input

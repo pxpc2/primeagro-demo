@@ -134,7 +134,7 @@ export default function DocumentosDashboard({ cliente }) {
                   : "text-gray-500 hover:text-gray-700",
                 tabIdx === 0 ? "rounded-l-lg" : "",
                 tabIdx === tabs.length - 1 ? "rounded-r-lg" : "",
-                "group relative min-w-0 flex-1 overflow-hidden hover:cursor-pointer bg-white py-4 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10"
+                "group relative min-w-0 flex-1 overflow-hidden hover:cursor-pointer bg-gray-800 py-4 px-4 text-center text-sm font-medium hover:bg-gray-700 text-white hover:text-white focus:z-10"
               )}
               aria-current={tab.current ? "page" : undefined}
             >
@@ -194,7 +194,7 @@ export default function DocumentosDashboard({ cliente }) {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-gray-200 bg-gray-100">
                   {filteredDocuments().map((doc) => (
                     <DocumentoInstance
                       doc={doc}

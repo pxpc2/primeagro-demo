@@ -85,7 +85,7 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
   };
 
   return (
-    <div>
+    <div className="">
       {!statusEnquadramento && (
         <div>
           <div className="flex flex-col sm:flex-row gap-4 items-center py-4 text-sm">
@@ -134,12 +134,12 @@ export default function FormularioEnquadramentoPreview({ dados, cliente }) {
           </p>
         </div>
       )}
-      <div className="pt-8">
+      <div className="pt-4">
         <h3 className="text-base font-bold leading-7 text-gray-900">
           Dados Básicos
         </h3>
       </div>
-      <div className="mt-6 border-t border-gray-100">
+      <div className="mt-6 border-t border-gray-100 bg-gray-100">
         <dl className="divide-y divide-gray-100">
           <div className="bg-gray-100 px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
             <dt className="text-sm font-medium leading-6 text-gray-900">
