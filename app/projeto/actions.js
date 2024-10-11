@@ -183,7 +183,7 @@ async function getFluxoCaixaData() {
   } = await supabase.auth.getUser();
   let { data: dados, error } = await supabase
     .from("aba_fluxo_de_caixa")
-    .select("*")
+    .select("*, aba_fluxo_de_caixa_tabela(*)")
     .eq("authuser_id", user.id);
 
   if (error) {

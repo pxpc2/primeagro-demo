@@ -257,13 +257,13 @@ function DadosIniciaisTable({
   setAnoImplantacao,
 }) {
   return (
-    <div className="overflow-hidden mt-4 border-gray-800 border shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden mt-8 border-gray-800 border shadow sm:rounded-lg text-sm">
       <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-gray-200">
           DADOS INICIAIS
         </h3>
       </div>
-      <div className="bg-gray-900 p-4 text-gray-200">
+      <div className="bg-gray-950 p-4 text-gray-200">
         <Table className="w-full">
           <TableHeader></TableHeader>
           <TableBody>
@@ -359,17 +359,17 @@ function PrestacoesTable({
   prazoRebate,
 }) {
   return (
-    <div className="overflow-hidden mt-4 border-gray-800 border shadow sm:rounded-lg text-sm">
+    <div className="overflow-hidden mt-8 border-gray-800 border shadow sm:rounded-lg text-sm">
       <div className="bg-gray-800 p-4">
         <h3 className="text-md font-bold leading-6 text-gray-200">
           SIMULAÇÃO DE AMORTIZAÇÃO DAS PRESTAÇÕES
         </h3>
       </div>
-      <div className="bg-gray-900 p-4 text-gray-200">
+      <div className="bg-gray-950 text-gray-200">
         <Table className="w-full">
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Parcela</TableHead>
+              <TableHead className="text-center bg-gray-800">Ano</TableHead>
               <TableHead className="text-center">Saldo Inicial</TableHead>
               <TableHead className="text-center">Juros</TableHead>
               <TableHead className="text-center">Amortização</TableHead>
