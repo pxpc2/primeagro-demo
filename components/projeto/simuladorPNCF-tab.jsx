@@ -176,7 +176,7 @@ export default function SimuladorPNCF({
         onCancel={handleCancel}
         tabName={"Simulador PNCF"}
       />
-      <div className="p-4 mt-8 flex flex-row gap-8 items-center justify-center">
+      <div className="px-4 mt-4 flex flex-row gap-8 items-center justify-center">
         <DadosFinanciamentoTable
           custoMedicaoInterna={custoMedicaoInterna}
           despesasCartorarias={despesasCartorarias}
