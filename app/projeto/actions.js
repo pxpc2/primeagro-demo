@@ -133,14 +133,16 @@ export async function submitSimuladorPRONAF({
     return redirect("/error?message=" + simuladorError.message);
   }
 
-  // @TODO: Implementar a inserção das parcelas
+  const simuladorPRONAF_id = simuladorRecord.id;
 
+  // Map the `parcelasData` to include the `simuladorPRONAF_id` and `authuser_id`
   const parcelas = parcelasData.map((item) => ({
     ...item,
-    simuladorPRONAF_id: simuladorRecord.id,
+    simuladorPRONAF_id,
     authuser_id: authUserID,
   }));
 
+  // Upsert the parcelas into the `aba_simuladorPRONAF_parcelas` table
   const { error: parcelasError } = await supabase
     .from("aba_simuladorPRONAF_parcelas")
     .upsert(parcelas, {
@@ -212,6 +214,58 @@ async function getSimuladorPNCFData() {
   }
 
   return dados;
+}
+
+export async function submitSimuladorPNCF({ data }) {
+  console.log(data);
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+
+  let { data: simuladorRecord, error: simuladorError } = await supabase
+    .from("aba_simuladorPNCF")
+    .upsert({ authuser_id: authUserID }, { onConflict: ["authuser_id"] })
+    .select()
+    .single();
+
+  if (simuladorError) {
+    console.log(simuladorError);
+    return redirect("/error?message=" + simuladorError.message);
+  }
+
+  if (!simuladorRecord) {
+    const { data: newRecord, error: fetchError } = await supabase
+      .from("aba_simuladorPNCF")
+      .select()
+      .eq("authuser_id", authUserID)
+      .single();
+
+    if (fetchError) {
+      console.log(fetchError);
+      return redirect("/error?message=" + fetchError.message);
+    }
+
+    simuladorRecord = newRecord;
+  }
+
+  const parcelas = data.map((item) => ({
+    ...item,
+    simuladorPNCF_id: simuladorRecord.id,
+    authuser_id: authUserID,
+  }));
+
+  let { error: parcelasError } = await supabase
+    .from("aba_simuladorPNCF_parcelas")
+    .upsert(parcelas, {
+      onConflict: ["ano", "simuladorPNCF_id"],
+    });
+
+  if (parcelasError) {
+    console.log(parcelasError);
+    return redirect("/error?message=" + parcelasError.message);
+  }
 }
 
 /* FIM SIMULADOR PNCF ------------------------------------------------------------------------------------------- */

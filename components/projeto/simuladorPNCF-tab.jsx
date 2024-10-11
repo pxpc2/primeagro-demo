@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Input } from "../ui/input";
+import { submitSimuladorPNCF } from "@/app/projeto/actions";
 
 export default function SimuladorPNCF({
   data,
@@ -150,7 +151,14 @@ export default function SimuladorPNCF({
     setFormsDisabled(false);
   };
   const onSave = async () => {
-    console.log(parcelas);
+    try {
+      setLoading(true);
+      await submitSimuladorPNCF({ data: parcelas });
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+    setFormsDisabled(true);
   };
 
   const handleCancel = () => {
