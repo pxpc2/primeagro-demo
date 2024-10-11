@@ -135,14 +135,12 @@ export async function submitSimuladorPRONAF({
 
   const simuladorPRONAF_id = simuladorRecord.id;
 
-  // Map the `parcelasData` to include the `simuladorPRONAF_id` and `authuser_id`
   const parcelas = parcelasData.map((item) => ({
     ...item,
     simuladorPRONAF_id,
     authuser_id: authUserID,
   }));
 
-  // Upsert the parcelas into the `aba_simuladorPRONAF_parcelas` table
   const { error: parcelasError } = await supabase
     .from("aba_simuladorPRONAF_parcelas")
     .upsert(parcelas, {
@@ -194,6 +192,29 @@ async function getFluxoCaixaData() {
   }
 
   return dados;
+}
+
+export async function submitFluxoCaixa({ salario_minimo, tableData }) {
+  console.log(salario_minimo);
+  console.log(tableData);
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const authUserID = user.id;
+  let { data: fluxoCaixaRecord, error: fluxoCaixaError } = await supabase
+    .from("aba_fluxo_de_caixa")
+    .upsert(
+      { valor_salario_minimo: salario_minimo, authuser_id: authUserID },
+      { onConflict: ["authuser_id"] }
+    )
+    .select()
+    .single();
+
+  if (fluxoCaixaError) {
+    console.log(fluxoCaixaError);
+    return undefined;
+  }
 }
 /* FIM FLUXO DE CAIXA ------------------------------------------------------------------------------------------- */
 
