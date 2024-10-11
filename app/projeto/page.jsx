@@ -168,6 +168,8 @@ export default function ProjetoPage() {
             }
             preAnaliseData={formData?.aba_preanalise}
             isAdmin={isAdmin}
+            despesasData={formData?.aba_despesas}
+            receitasData={formData?.aba_receitas}
           />
         );
       case "Simulador PRONAF":

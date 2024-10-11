@@ -17,6 +17,8 @@ export default function FluxoCaixaTab({
   preAnaliseData,
   dadosImovelData,
   identificacaoBeneficiarioData,
+  despesasData,
+  receitasData,
 }) {
   const [loading, setLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
@@ -37,11 +39,55 @@ export default function FluxoCaixaTab({
     preAnaliseData?.[0]?.campo_8 || ""
   );
 
-  console.log(fluxoCaixaData);
+  const [totalReceitas, setTotalReceitas] = useState(Array(12).fill(0));
+  const [totalCustos, setTotalCustos] = useState(Array(12).fill(0));
+
+  const [custoPadraoBovinocultura, setCustoPadraoBovinocultura] = useState(
+    despesasData?.custoPadraoBovinocultura || 0.5
+  );
+
+  useEffect(() => {
+    const newTotalReceitas = Array(12).fill(0);
+    for (let i = 0; i < 10; i++) {
+      const totalMatrizes =
+        receitasData?.dadosReceita?.valorMatrizesDescartadas?.[i] || 0;
+      const totalNovilhos =
+        receitasData?.dadosReceita?.valorNovilhosVendidos?.[i] || 0;
+      const totalNovilhas =
+        receitasData?.dadosReceita?.valorNovilhasVendidas?.[i] || 0;
+      const totalQueijo = receitasData?.dadosReceita?.valorQueijo?.[i] || 0;
+      const totalLeite =
+        receitasData?.dadosReceita?.valorLeiteParaVenda?.[i] || 0;
+
+      newTotalReceitas[i] =
+        totalMatrizes +
+        totalNovilhos +
+        totalNovilhas +
+        totalQueijo +
+        totalLeite;
+
+      if (i === 9) {
+        newTotalReceitas[i + 1] = newTotalReceitas[i];
+        newTotalReceitas[i + 2] = newTotalReceitas[i];
+      }
+    }
+    setTotalReceitas(newTotalReceitas);
+    const newCustos = newTotalReceitas.map((total, index) => {
+      return total * custoPadraoBovinocultura;
+    });
+    setTotalCustos(newCustos);
+  }, []);
 
   const [tabelaData, setTabelaData] = useState(
     fluxoCaixaData?.[0]?.aba_fluxo_de_caixa_tabela || []
   );
+
+  // @todo calcular valores da tabela de fluxo de caixa
+  useEffect(() => {
+    let newTabelaData = [];
+    console.log(totalReceitas);
+    for (let i = 0; i < 26; i++) {}
+  }, [tabelaData]);
 
   const onEdit = () => {
     setFormsDisabled(false);
