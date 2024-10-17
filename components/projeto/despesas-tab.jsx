@@ -24,14 +24,28 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
   const [custoPadraoBovinocultura, setCustoPadraoBovinocultura] = useState(
     data?.custoPadraoBovinocultura || 0.5
   );
-  const [totalCustos, setTotalCustos] = useState(
+  /**
+   * @TODO
+   */
+
+  const [totalCustosBovinocultura, setTotalCustosBovinocultura] = useState(
     data?.totalCustos || Array(12).fill(0)
   );
+  const [totalCustosSequeiro, setTotalCustosSequeiro] = useState(
+    Array(12).fill(0)
+  );
+  const [totalCustosIrrigada, setTotalCustosIrrigada] = useState(
+    Array(12).fill(0)
+  );
+  const [totalCustosOutras, setTotalCustosOutras] = useState(Array(12).fill(0));
   const [lucroOperacional, setLucroOperacional] = useState(
     data?.lucroOperacional || Array(12).fill(0)
   );
+  const [totalCustos, setTotalCustos] = useState(
+    data?.totalCustos || Array(12).fill(0)
+  );
 
-  console.log(data);
+  console.log(receitasData);
 
   // Calcula os totais de Receitas para cada ano
   // ultimos dois anos copia ao 2033
@@ -48,12 +62,22 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
       const totalLeite =
         receitasData?.dadosReceita?.valorLeiteParaVenda?.[i] || 0;
 
+      /**
+       * @TODO vem de objeto separado por ano em receitas
+       */
+      const totalSequeiro = 0;
+      const totalIrrigada = 0;
+      const totalOutras = 0;
+
       newTotalReceitas[i] =
         totalMatrizes +
         totalNovilhos +
         totalNovilhas +
         totalQueijo +
-        totalLeite;
+        totalLeite +
+        totalSequeiro +
+        totalIrrigada +
+        totalOutras;
 
       if (i === 9) {
         newTotalReceitas[i + 1] = newTotalReceitas[i];
@@ -66,12 +90,15 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
     /**
      * @TODO separar totalCustos para BOVINOCULTURA, AGR. SEQUEIRO, AGR. IRRIGADA e OUTROS
      */
-    const newCustos = newTotalReceitas.map((total, index) => {
+    const newCustosBovinocultura = newTotalReceitas.map((total, index) => {
       return total * custoPadraoBovinocultura;
     });
-    setTotalCustos(newCustos);
+    setTotalCustosBovinocultura(newCustosBovinocultura);
 
-    const newLucroOperacional = newCustos.map((custo, index) => {
+    /**
+     *  @TODO vai pegar custosTotal inves de só bovinocultura dps
+     */
+    const newLucroOperacional = newCustosBovinocultura.map((custo, index) => {
       return newTotalReceitas[index] - custo;
     });
     setLucroOperacional(newLucroOperacional);
@@ -91,18 +118,18 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
 
       const despesasData = {
         bovinocultura_custopadrao: custoPadraoBovinocultura,
-        bovinocultura_custo_ano0: totalCustos[0],
-        bovinocultura_custo_ano1: totalCustos[1],
-        bovinocultura_custo_ano2: totalCustos[2],
-        bovinocultura_custo_ano3: totalCustos[3],
-        bovinocultura_custo_ano4: totalCustos[4],
-        bovinocultura_custo_ano5: totalCustos[5],
-        bovinocultura_custo_ano6: totalCustos[6],
-        bovinocultura_custo_ano7: totalCustos[7],
-        bovinocultura_custo_ano8: totalCustos[8],
-        bovinocultura_custo_ano9: totalCustos[9],
-        bovinocultura_custo_ano10: totalCustos[10],
-        bovinocultura_custo_ano11: totalCustos[11],
+        bovinocultura_custo_ano0: totalCustosBovinocultura[0],
+        bovinocultura_custo_ano1: totalCustosBovinocultura[1],
+        bovinocultura_custo_ano2: totalCustosBovinocultura[2],
+        bovinocultura_custo_ano3: totalCustosBovinocultura[3],
+        bovinocultura_custo_ano4: totalCustosBovinocultura[4],
+        bovinocultura_custo_ano5: totalCustosBovinocultura[5],
+        bovinocultura_custo_ano6: totalCustosBovinocultura[6],
+        bovinocultura_custo_ano7: totalCustosBovinocultura[7],
+        bovinocultura_custo_ano8: totalCustosBovinocultura[8],
+        bovinocultura_custo_ano9: totalCustosBovinocultura[9],
+        bovinocultura_custo_ano10: totalCustosBovinocultura[10],
+        bovinocultura_custo_ano11: totalCustosBovinocultura[11],
         lucro_operacional_ano0: lucroOperacional[0],
         lucro_operacional_ano1: lucroOperacional[1],
         lucro_operacional_ano2: lucroOperacional[2],
@@ -125,7 +152,7 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
     }
   };
 
-  const handleCustoPadraoChange = (e) => {
+  const handleCustoPadraoBovinoculturaChange = (e) => {
     setCustoPadraoBovinocultura(parseFloat(e.target.value));
   };
 
@@ -142,6 +169,9 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
       />
       <div className="p-4 mt-8 flex flex-col gap-8 items-center justify-center">
         <div>
+          <h2 className="text-center p-2 bg-gray-950 border-x border-t border-gray-500">
+            RECEITAS ANUAIS (A)
+          </h2>
           <TotalReceitasTable anos={anos} totalReceitas={totalReceitas} />
         </div>
         <div className="w-full items-center justify-center">
@@ -149,13 +179,41 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
             data={data}
             formsDisabled={formsDisabled}
             custoPadraoBovinocultura={custoPadraoBovinocultura}
-            handleInputChange={handleCustoPadraoChange}
+            handleInputChange={handleCustoPadraoBovinoculturaChange}
           />
         </div>
         <div className="w-full items-center justify-center">
-          <TotalCustosTable anos={anos} totalCustos={totalCustos} />
+          <h2 className="text-center p-2 bg-gray-950 border-x border-t border-gray-500">
+            BOVINOCULTURA (B1)
+          </h2>
+          <TotalCustosTable
+            anos={anos}
+            totalCustos={totalCustosBovinocultura}
+          />
         </div>
         <div className="w-full items-center justify-center">
+          <h2 className="text-center p-2 bg-gray-950 border-x border-t border-gray-500">
+            AGRICULTURA SEQUEIRO (B2)
+          </h2>
+          <TotalCustosTable anos={anos} totalCustos={totalCustosSequeiro} />
+        </div>
+        <div className="w-full items-center justify-center">
+          <h2 className="text-center p-2 bg-gray-950 border-x border-t border-gray-500">
+            AGRICULTURA IRRIGADA (B3)
+          </h2>
+          <TotalCustosTable anos={anos} totalCustos={totalCustosIrrigada} />
+        </div>
+        <div className="w-full items-center justify-center">
+          <h2 className="text-center p-2 bg-gray-950 border-x border-t border-gray-500">
+            OUTRAS ATIVIDADES (B4)
+          </h2>
+          <TotalCustosTable anos={anos} totalCustos={totalCustosOutras} />
+        </div>
+
+        <div className="w-full items-center justify-center">
+          <h2 className="text-center p-2 text-gray-950 font-bold bg-gray-300 border-x border-t border-gray-500">
+            LUCRO OPERACIONAL (A - B1 - B2 - B3 - B4)
+          </h2>
           <LucroOperacionalTable
             anos={anos}
             totalLucroOperacional={lucroOperacional}
@@ -233,7 +291,9 @@ function TotalCustosTable({ anos, totalCustos }) {
               className={`border p-1 text-right text-sm border-gray-500 ${
                 total < 0
                   ? "border-red-500 text-red-500"
-                  : "border-green-500 text-green-500"
+                  : total > 0
+                  ? "border-green-500 text-green-500"
+                  : "border-gray-400 text-gray-400"
               }`}
             >
               {total.toLocaleString("pt-BR", {
@@ -291,6 +351,7 @@ function TotalReceitasTable({ anos, totalReceitas }) {
 
 function CustoPadrao({
   custoPadraoBovinocultura,
+
   handleInputChange,
   formsDisabled,
 }) {
