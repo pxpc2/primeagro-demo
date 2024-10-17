@@ -24,28 +24,44 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
   const [custoPadraoBovinocultura, setCustoPadraoBovinocultura] = useState(
     data?.custoPadraoBovinocultura || 0.5
   );
+
   /**
    * @TODO
    */
-
   const [totalCustosBovinocultura, setTotalCustosBovinocultura] = useState(
     data?.totalCustos || Array(12).fill(0)
   );
+  /**
+   * @TODO
+   */
   const [totalCustosSequeiro, setTotalCustosSequeiro] = useState(
     Array(12).fill(0)
   );
+  /**
+   * @TODO
+   */
   const [totalCustosIrrigada, setTotalCustosIrrigada] = useState(
     Array(12).fill(0)
   );
+  /**
+   * @TODO
+   */
   const [totalCustosOutras, setTotalCustosOutras] = useState(Array(12).fill(0));
+  /**
+   * @TODO
+   */
   const [lucroOperacional, setLucroOperacional] = useState(
     data?.lucroOperacional || Array(12).fill(0)
   );
+  /**
+   * @TODO
+   */
   const [totalCustos, setTotalCustos] = useState(
     data?.totalCustos || Array(12).fill(0)
   );
 
   console.log(receitasData);
+  console.log(data);
 
   // Calcula os totais de Receitas para cada ano
   // ultimos dois anos copia ao 2033
