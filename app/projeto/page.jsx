@@ -22,6 +22,7 @@ import SimuladorPNCF from "@/components/projeto/simuladorPNCF-tab";
 import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
 import SimuladorPRONAF from "@/components/projeto/simulador-pronaf";
+import CapacidadePagamentoTab from "@/components/projeto/capacidade-pagamento-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -179,6 +180,13 @@ export default function ProjetoPage() {
             isAdmin={isAdmin}
             preAnaliseData={formData?.aba_preanalise}
             sibData={formData?.aba_sib}
+          />
+        );
+      case "Capacidade de Pagamento":
+        return (
+          <CapacidadePagamentoTab
+            data={formData?.aba_capacidade_pagamento}
+            isAdmin={isAdmin}
           />
         );
       default:
