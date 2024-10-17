@@ -63,6 +63,9 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
     setTotalReceitas(newTotalReceitas);
 
     // sempre atualizamos os custos independente
+    /**
+     * @TODO separar totalCustos para BOVINOCULTURA, AGR. SEQUEIRO, AGR. IRRIGADA e OUTROS
+     */
     const newCustos = newTotalReceitas.map((total, index) => {
       return total * custoPadraoBovinocultura;
     });

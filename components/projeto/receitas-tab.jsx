@@ -22,6 +22,8 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
 
+  console.log(data);
+
   // vai ser o mesmo para todos os anos de cada descrição
   const [unidadeMatrizesDescartadas, setUnidadeMatrizesDescartadas] = useState(
     data?.dadosReceita?.unidadeMatrizesDescartadas || ""
@@ -303,9 +305,14 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
         isAdmin={isAdmin}
       />
       <div className="mt-4 grid grid-cols-1 gap-6">
+        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-gray-950">
+          BOVINOCULTURA
+        </h2>
         {DESCRICOES.map((descricao, index) => (
           <div key={index} className="p-4 rounded-lg shadow-md mb-6">
-            <h3 className="font-bold text-lg mb-4">{descricao}</h3>
+            <h3 className="font-bold text-md  p-2 rounded-lg bg-gray-950">
+              {descricao}
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {anos.map((ano, i) => (
                 <div
@@ -451,7 +458,18 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
             </div>
           </div>
         ))}
+        <TabelaAtividades data={data} atividade={"sequeiro"} />
+        <TabelaAtividades data={data} atividade={"irrigada"} />
+        <TabelaAtividades data={data} atividade={"outras"} />
       </div>
+    </div>
+  );
+}
+
+function TabelaAtividades({ data, atividade }) {
+  return (
+    <div>
+      <p>{atividade}</p>
     </div>
   );
 }

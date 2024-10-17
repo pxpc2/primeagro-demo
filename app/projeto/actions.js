@@ -365,6 +365,9 @@ async function getDespesasData() {
 
 /* INICIO RECEITAS ------------------------------------------------------------------------------------------- */
 
+/**
+ * @TODO inserção de outros tipos de receitas além de bovinocultura
+ */
 export async function submitReceitas({ receitasData }) {
   const supabase = createClient();
   const {
@@ -385,6 +388,48 @@ export async function submitReceitas({ receitasData }) {
     console.error("Erro inserindo Receitas data:", error);
     throw new Error(error.message);
   }
+}
+
+async function getReceitasAgriculturaSequeiro() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_receitas_agrsequeiro")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
+}
+
+async function getReceitasAgriculturaIrrigada() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_receitas_agrirrigada")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
+}
+
+async function getReceitasOutrasAtividades() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_receitas_outras_atividades")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
 }
 
 export async function getReceitasData({ dadosEvolucaoRebanho }) {
@@ -486,7 +531,17 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     ],
   };
 
-  return { dadosReceita: receitasMapped, dadosEvolucaoRebanho };
+  const receitasAgriculturaSequeiro = await getReceitasAgriculturaSequeiro();
+  const receitasAgriculturaIrrigada = await getReceitasAgriculturaIrrigada();
+  const receitasOutrasAtividades = await getReceitasOutrasAtividades();
+
+  return {
+    dadosReceita: receitasMapped,
+    dadosEvolucaoRebanho,
+    receitasAgriculturaSequeiro,
+    receitasAgriculturaIrrigada,
+    receitasOutrasAtividades,
+  };
 }
 /* fim RECEITAS ------------------------------------------------------------------------------------------- */
 
