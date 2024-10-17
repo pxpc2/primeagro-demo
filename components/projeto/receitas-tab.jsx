@@ -458,15 +458,15 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
             </div>
           </div>
         ))}
-        <TabelaAtividades data={data} atividade={"sequeiro"} />
-        <TabelaAtividades data={data} atividade={"irrigada"} />
-        <TabelaAtividades data={data} atividade={"outras"} />
+        <TabelaAtividades data={data} atividade={"sequeiro"} anos={anos} />
+        <TabelaAtividades data={data} atividade={"irrigada"} anos={anos} />
+        <TabelaAtividades data={data} atividade={"outras"} anos={anos} />
       </div>
     </div>
   );
 }
 
-function TabelaAtividades({ data, atividade }) {
+function TabelaAtividades({ data, atividade, anos }) {
   return (
     <div>
       <p>{atividade}</p>
