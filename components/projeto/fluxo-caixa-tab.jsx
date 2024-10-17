@@ -64,7 +64,10 @@ export default function FluxoCaixaTab({
         totalNovilhos +
         totalNovilhas +
         totalQueijo +
-        totalLeite;
+        totalLeite; // é somente a parte de bovinocultura
+      /**
+       * @TODO adicionar outras receitas (sequeiro, irrigado e outras atividades)
+       */
 
       if (i === 9) {
         newTotalReceitas[i + 1] = newTotalReceitas[i];
@@ -72,22 +75,54 @@ export default function FluxoCaixaTab({
       }
     }
     setTotalReceitas(newTotalReceitas);
+    /**
+     * @TODO recalcular custos totais (ou puxar diretamente de despesas logo)
+     */
     const newCustos = newTotalReceitas.map((total, index) => {
-      return total * custoPadraoBovinocultura;
+      return total * custoPadraoBovinocultura; // esse tá pegando só pra bovinocultura ainda
     });
     setTotalCustos(newCustos);
+    let newTabelaData = [];
+    for (let i = 0; i < 26; i++) {
+      const ano = ANO_INICIAL + i;
+      let receitas, despesas;
+      if (i < 12) {
+        receitas = newTotalReceitas[i];
+        despesas = newCustos[i];
+      } else if (i === 12) {
+        receitas = newTotalReceitas[11];
+        despesas = newCustos[11];
+      } else {
+        receitas = newTotalReceitas[10];
+        despesas = newCustos[10];
+      }
+      const lucroOperacional = receitas - despesas;
+      const totalEncargos = 0; // @TODO
+      const capacidadePagamento = lucroOperacional - totalEncargos;
+      const totalAmortizacoes = 0; // @TODO
+      const lucroLiquido = capacidadePagamento - totalAmortizacoes;
+      const percentualUtilizacao = 0; // @TODO
+      const valorLiquidoMensal = lucroLiquido / 12;
+
+      newTabelaData.push({
+        ano,
+        receitas,
+        despesas,
+        lucro_operacional: lucroOperacional,
+        total_encargos: totalEncargos,
+        capacidade_pagamento: capacidadePagamento,
+        total_amortizacoes: totalAmortizacoes,
+        lucro_liquido: lucroLiquido,
+        percentual_utilizacao: percentualUtilizacao,
+        valor_liquido_mensal: valorLiquidoMensal,
+      });
+    }
+    setTabelaData(newTabelaData);
   }, []);
 
   const [tabelaData, setTabelaData] = useState(
     fluxoCaixaData?.[0]?.aba_fluxo_de_caixa_tabela || []
   );
-
-  // @todo calcular valores da tabela de fluxo de caixa
-  useEffect(() => {
-    let newTabelaData = [];
-    console.log(totalReceitas);
-    for (let i = 0; i < 26; i++) {}
-  }, [tabelaData]);
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -110,26 +145,6 @@ export default function FluxoCaixaTab({
   const handleCancel = () => {
     setFormsDisabled(true);
   };
-
-  useEffect(() => {
-    const initialParcelas = [];
-    for (let i = 0; i < 26; i++) {
-      const ano = ANO_INICIAL + i;
-      initialParcelas.push({
-        ano,
-        receitas: 0.0,
-        despesas: 0.0,
-        lucro_operacional: 0.0,
-        total_encargos: 0.0,
-        capacidade_pagamento: 0.0,
-        total_amortizacoes: 0.0,
-        lucro_liquido: 0.0,
-        percentual_utilizacao: 0.0,
-        valor_liquido_mensal: 0.0,
-      });
-    }
-    setTabelaData(initialParcelas);
-  }, []);
 
   return (
     <div className="p-4 bg-gray-900/90">
