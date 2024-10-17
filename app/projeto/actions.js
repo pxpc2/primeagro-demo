@@ -390,48 +390,6 @@ export async function submitReceitas({ receitasData }) {
   }
 }
 
-async function getReceitasAgriculturaSequeiro() {
-  const supabase = createClient();
-  let { data, error } = await supabase
-    .from("aba_receitas_agrsequeiro")
-    .select("*");
-
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-
-  return data;
-}
-
-async function getReceitasAgriculturaIrrigada() {
-  const supabase = createClient();
-  let { data, error } = await supabase
-    .from("aba_receitas_agrirrigada")
-    .select("*");
-
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-
-  return data;
-}
-
-async function getReceitasOutrasAtividades() {
-  const supabase = createClient();
-  let { data, error } = await supabase
-    .from("aba_receitas_outras_atividades")
-    .select("*");
-
-  if (error) {
-    console.log(error);
-    return undefined;
-  }
-
-  return data;
-}
-
 export async function getReceitasData({ dadosEvolucaoRebanho }) {
   const supabase = createClient();
   const {
@@ -531,21 +489,56 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     ],
   };
 
-  const receitasAgriculturaSequeiro = await getReceitasAgriculturaSequeiro();
-  const receitasAgriculturaIrrigada = await getReceitasAgriculturaIrrigada();
-  const receitasOutrasAtividades = await getReceitasOutrasAtividades();
-
   return {
     dadosReceita: receitasMapped,
     dadosEvolucaoRebanho,
-    receitasAgriculturaSequeiro,
-    receitasAgriculturaIrrigada,
-    receitasOutrasAtividades,
   };
 }
 /* fim RECEITAS ------------------------------------------------------------------------------------------- */
 
 /* INICIO EVOLUCAO REBANHO ------------------------------------------------------------------------------------------- */
+
+async function getEvolucaoRebanhoAgriculturaSequeiro() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_evolucao_rebanho_agrsequeiro")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
+}
+
+async function getEvolucaoRebanhoAgriculturaIrrigada() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_evolucao_rebanho_agrirrigada")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
+}
+
+async function getEvolucaoRebanhoOutrasAtividades() {
+  const supabase = createClient();
+  let { data, error } = await supabase
+    .from("aba_evolucao_rebanho_outras_atividades")
+    .select("*");
+
+  if (error) {
+    console.log(error);
+    return undefined;
+  }
+
+  return data;
+}
 
 export async function getEvolucaoRebanho() {
   const supabase = createClient();
@@ -562,9 +555,16 @@ export async function getEvolucaoRebanho() {
     return undefined;
   }
 
+  const agriculturaSequeiro = await getEvolucaoRebanhoAgriculturaSequeiro();
+  const agriculturaIrrigada = await getEvolucaoRebanhoAgriculturaIrrigada();
+  const outrasAtividades = await getEvolucaoRebanhoOutrasAtividades();
+
   return {
     dadosEvolucaoRebanho: dados,
     dadosInventario: await getInventarioIndividual(),
+    dadosAgriculturaSequeiro: agriculturaSequeiro,
+    dadosAgriculturaIrrigada: agriculturaIrrigada,
+    dadosOutrasAtividades: outrasAtividades,
   };
 }
 

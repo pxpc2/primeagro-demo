@@ -3,6 +3,7 @@ import IndicadoresTecnicos from "./evolucao-rebanho-indicadores-tecnicos";
 import Heading from "./Header";
 import EvolucaoRebanhoBovinocultura from "./evolucao-rebanho-bovinocultura";
 import { submitEvolucaoRebanho } from "@/app/projeto/actions";
+import TabelaAtividades from "./agricultura-e-atividades";
 
 export default function EvolucaoRebanhoTab({
   data,
@@ -12,12 +13,24 @@ export default function EvolucaoRebanhoTab({
   const [loading, setLoading] = useState(false);
   const [formsDisabled, setFormsDisabled] = useState(true);
 
+  console.log(data);
+
   const [indicadoresTecnicosData, setIndicadoresTecnicosData] = useState(
     data?.dadosEvolucaoRebanho[0]?.aba_evolucao_rebanho_indicadores_tecnicos ||
       []
   );
   const [bovinoculturaData, setBovinoculturaData] = useState(data || [{}]);
   const anoInicial = 2024; // vai vir como dado do SimuladorPNCF
+
+  const [dadosAgriculturaSequeiro, setDadosAgriculturaSequeiro] = useState(
+    data?.dadosAgriculturaSequeiro || []
+  );
+  const [dadosAgriculturaIrrigada, setDadosAgriculturaIrrigada] = useState(
+    data?.dadosAgriculturaIrrigada || []
+  );
+  const [dadosOutrasAtividades, setDadosOutrasAtividades] = useState(
+    data?.dadosOutrasAtividades || []
+  );
 
   useEffect(() => {
     setVendaAnimaisData({
@@ -116,7 +129,7 @@ export default function EvolucaoRebanhoTab({
         onCancel={handleCancel}
         isAdmin={isAdmin}
       />
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 items-center">
         <div className="mt-4 flex flex-col gap-8">
           <IndicadoresTecnicos
             data={indicadoresTecnicosData || []}
@@ -133,6 +146,28 @@ export default function EvolucaoRebanhoTab({
             onChange={setBovinoculturaData}
           />
         </div>
+        <div className="pt-4 border-b-2 border-gray-600 w-[60%]"></div>
+        <h1 className="text-lg text-center font-bold p-3 mt-4 bg-gray-800 rounded-sm w-full">
+          ATIVIDADES AGRÍCOLAS
+        </h1>
+        <TabelaAtividades
+          data={dadosAgriculturaSequeiro}
+          setData={setDadosAgriculturaSequeiro}
+          atividade="sequeiro"
+          anoInicial={anoInicial}
+        />
+        <TabelaAtividades
+          data={dadosAgriculturaIrrigada}
+          setData={setDadosAgriculturaIrrigada}
+          atividade="irrigada"
+          anoInicial={anoInicial}
+        />
+        <TabelaAtividades
+          data={dadosOutrasAtividades}
+          setData={setDadosOutrasAtividades}
+          atividade="outras"
+          anoInicial={anoInicial}
+        />
       </div>
     </div>
   );

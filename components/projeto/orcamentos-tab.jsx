@@ -12,6 +12,7 @@ export default function OrcamentosTab({ data, isAdmin }) {
   }));
 
   const [orcamentos, setOrcamentos] = useState(initialOrcamentosState);
+  console.log(orcamentos);
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -22,6 +23,7 @@ export default function OrcamentosTab({ data, isAdmin }) {
   };
   const onSave = async () => {
     console.log("salvando orçamentos data");
+    console.log(orcamentos);
   };
 
   const addNewOrcamento = (investimentoId) => {
