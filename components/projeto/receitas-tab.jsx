@@ -101,65 +101,81 @@ export default function ReceitasTab({
     evolucaoRebanhoData?.dadosOutrasAtividades || []
   );
 
+  /*
+   * states pra mandar depois pro backend, nova versao dos dados das atividades vindo de receitas
+
+  QTD feito
+  valorUnitario feito (preciso testar se ta pegando direito)
+  falta caluclar valorTotal
+   */
+  const [qtdAgriculturaSequeiro, setQtdAgriculturaSequeiro] = useState([]);
+  const [valorTotalAgriculturaSequeiro, setValorTotalAgriculturaSequeiro] =
+    useState([]);
+  const [
+    valorUnitarioAgriculturaSequeiro,
+    setValorUnitarioAgriculturaSequeiro,
+  ] = useState([]);
+  const [qtdAgriculturaIrrigada, setQtdAgriculturaIrrigada] = useState([]);
+  const [valorTotalAgriculturaIrrigada, setValorTotalAgriculturaIrrigada] =
+    useState([]);
+  const [
+    valorUnitarioAgriculturaIrrigada,
+    setValorUnitarioAgriculturaIrrigada,
+  ] = useState([]);
+  const [qtdOutrasAtividades, setQtdOutrasAtividades] = useState([]);
+  const [valorTotalOutrasAtividades, setValorTotalOutrasAtividades] = useState(
+    []
+  );
+  const [valorUnitarioOutrasAtividades, setValorUnitarioOutrasAtividades] =
+    useState([]);
+
+  /**
+   * @TODO ajustar implicancias do valor unitario nos calculos dos fields
+   *
+   */
   const handleAgriculturaInputChange = (type, index, value) => {
     let updatedData;
     if (type === "sequeiro") {
-      updatedData = [...dadosAgriculturaSequeiro];
-      updatedData[index].valor_unitario = value;
-      setDadosAgriculturaSequeiro(updatedData);
-      console.log(updatedData);
+      updatedData = [...valorUnitarioAgriculturaSequeiro];
+      updatedData[index] = value;
+      setValorUnitarioAgriculturaSequeiro(updatedData);
     } else if (type === "irrigada") {
-      updatedData = [...dadosAgriculturaIrrigada];
-      updatedData[index].valor_unitario = value;
-      setDadosAgriculturaIrrigada(updatedData);
-      console.log(updatedData);
+      updatedData = [...valorUnitarioAgriculturaIrrigada];
+      updatedData[index] = value;
+      setValorUnitarioAgriculturaIrrigada(updatedData);
     } else if (type === "outras") {
-      updatedData = [...dadosOutrasAtividades];
-      updatedData[index].valor_unitario = value;
-      setDadosOutrasAtividades(updatedData);
-      console.log(updatedData);
+      updatedData = [...valorUnitarioOutrasAtividades];
+      updatedData[index] = value;
+      setValorUnitarioOutrasAtividades(updatedData);
     }
   };
 
   // calcula o valor de quantidade pra cada ano/card das atividades
   useEffect(() => {
     const calculate = () => {
-      // Update quantidade for Agricultura Sequeiro
-      const updatedAgriculturaSequeiro = dadosAgriculturaSequeiro.map(
-        (item) => {
-          const newItem = { ...item };
-          for (let i = 1; i <= 9; i++) {
-            // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
-            newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
-          }
-          return newItem;
-        }
-      );
-      setDadosAgriculturaSequeiro(updatedAgriculturaSequeiro);
-
-      // Update quantidade for Agricultura Irrigada
-      const updatedAgriculturaIrrigada = dadosAgriculturaIrrigada.map(
-        (item) => {
-          const newItem = { ...item };
-          for (let i = 1; i <= 9; i++) {
-            // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
-            newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
-          }
-          return newItem;
-        }
-      );
-      setDadosAgriculturaIrrigada(updatedAgriculturaIrrigada);
-
-      // Update quantidade for Outras Atividades
-      const updatedOutrasAtividades = dadosOutrasAtividades.map((item) => {
-        const newItem = { ...item };
+      const newQtdSequeiroArray = [...qtdAgriculturaSequeiro];
+      dadosAgriculturaSequeiro.map((item) => {
         for (let i = 1; i <= 9; i++) {
-          // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
-          newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
+          newQtdSequeiroArray[i] = item.quantidade * item[`ano${i}`];
         }
-        return newItem;
       });
-      setDadosOutrasAtividades(updatedOutrasAtividades);
+      setQtdAgriculturaSequeiro(newQtdSequeiroArray);
+
+      const newQtdIrrigadaArray = [...qtdAgriculturaIrrigada];
+      dadosAgriculturaIrrigada.map((item) => {
+        for (let i = 1; i <= 9; i++) {
+          newQtdIrrigadaArray[i] = item.quantidade * item[`ano${i}`];
+        }
+      });
+      setQtdAgriculturaIrrigada(newQtdIrrigadaArray);
+
+      const newQtdOutrasAtividades = [...qtdOutrasAtividades];
+      dadosOutrasAtividades.map((item) => {
+        for (let i = 1; i <= 9; i++) {
+          newQtdOutrasAtividades[i] = item.quantidade * item[`ano${i}`];
+        }
+      });
+      setQtdOutrasAtividades(newQtdOutrasAtividades);
     };
 
     calculate();
@@ -562,7 +578,7 @@ export default function ReceitasTab({
                           placeholder="Quantidade"
                           disabled={true}
                           className="border-gray-500"
-                          value={item.quantidade}
+                          value={qtdAgriculturaSequeiro[i + 1]}
                         />
                       </div>
                       <div className="w-1/2">
@@ -570,11 +586,12 @@ export default function ReceitasTab({
                           Valor
                         </label>
                         <Input
-                          type="text"
                           className="border-gray-500"
                           disabled={true}
                           placeholder="Valor"
-                          value={item[`ano${i + 1}`]}
+                          value={0.0}
+                          type="number"
+                          step="0.01"
                         />
                       </div>
                     </div>
@@ -624,7 +641,7 @@ export default function ReceitasTab({
                           placeholder="Quantidade"
                           disabled={true}
                           className="border-gray-500"
-                          value={item.quantidade}
+                          value={qtdAgriculturaIrrigada[i + 1]}
                         />
                       </div>
                       <div className="w-1/2">
@@ -632,11 +649,12 @@ export default function ReceitasTab({
                           Valor
                         </label>
                         <Input
-                          type="text"
                           className="border-gray-500"
                           disabled={true}
                           placeholder="Valor"
-                          value={item[`ano${i + 1}`]}
+                          value={0.0}
+                          type="number"
+                          step="0.01"
                         />
                       </div>
                     </div>
@@ -682,7 +700,7 @@ export default function ReceitasTab({
                           placeholder="Quantidade"
                           disabled={true}
                           className="border-gray-500"
-                          value={item.quantidade}
+                          value={qtdOutrasAtividades[i + 1]}
                         />
                       </div>
                       <div className="w-1/2">
@@ -690,11 +708,12 @@ export default function ReceitasTab({
                           Valor
                         </label>
                         <Input
-                          type="text"
+                          type="number"
+                          step="0.01"
                           className="border-gray-500"
                           disabled={true}
                           placeholder="Valor"
-                          value={item[`ano${i + 1}`]}
+                          value={0.0}
                         />
                       </div>
                     </div>
