@@ -136,6 +136,7 @@ export default function ProjetoPage() {
             data={formData?.aba_receitas}
             isAdmin={isAdmin}
             vendaAnimaisData={vendasAnimaisData}
+            evolucaoRebanhoData={formData?.aba_evolucao_rebanho}
           />
         );
       case "Despesas":
