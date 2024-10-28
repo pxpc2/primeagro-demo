@@ -107,16 +107,63 @@ export default function ReceitasTab({
       updatedData = [...dadosAgriculturaSequeiro];
       updatedData[index].valor_unitario = value;
       setDadosAgriculturaSequeiro(updatedData);
+      console.log(updatedData);
     } else if (type === "irrigada") {
       updatedData = [...dadosAgriculturaIrrigada];
       updatedData[index].valor_unitario = value;
       setDadosAgriculturaIrrigada(updatedData);
+      console.log(updatedData);
     } else if (type === "outras") {
       updatedData = [...dadosOutrasAtividades];
       updatedData[index].valor_unitario = value;
       setDadosOutrasAtividades(updatedData);
+      console.log(updatedData);
     }
   };
+
+  // calcula o valor de quantidade pra cada ano/card das atividades
+  useEffect(() => {
+    const calculate = () => {
+      // Update quantidade for Agricultura Sequeiro
+      const updatedAgriculturaSequeiro = dadosAgriculturaSequeiro.map(
+        (item) => {
+          const newItem = { ...item };
+          for (let i = 1; i <= 9; i++) {
+            // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
+            newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
+          }
+          return newItem;
+        }
+      );
+      setDadosAgriculturaSequeiro(updatedAgriculturaSequeiro);
+
+      // Update quantidade for Agricultura Irrigada
+      const updatedAgriculturaIrrigada = dadosAgriculturaIrrigada.map(
+        (item) => {
+          const newItem = { ...item };
+          for (let i = 1; i <= 9; i++) {
+            // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
+            newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
+          }
+          return newItem;
+        }
+      );
+      setDadosAgriculturaIrrigada(updatedAgriculturaIrrigada);
+
+      // Update quantidade for Outras Atividades
+      const updatedOutrasAtividades = dadosOutrasAtividades.map((item) => {
+        const newItem = { ...item };
+        for (let i = 1; i <= 9; i++) {
+          // Multiply item.quantidade by the respective anoX prop (e.g., ano1, ano2, etc.)
+          newItem[`ano${i}`] = item.quantidade * item[`ano${i}`];
+        }
+        return newItem;
+      });
+      setDadosOutrasAtividades(updatedOutrasAtividades);
+    };
+
+    calculate();
+  }, []);
 
   const onEdit = () => {
     setFormsDisabled(false);
