@@ -575,8 +575,6 @@ export async function submitEvolucaoRebanho({
   agriculturaSequeiroData,
   outrasAtividadesData,
 }) {
-  console.log(bovinoculturaData);
-
   const supabase = createClient();
   const {
     data: { user },
@@ -664,7 +662,30 @@ export async function submitEvolucaoRebanho({
       onConflict: ["descricao", "authuser_id"],
     });
 
-  // Handle Agricultura Irrigada Upsert
+  if (indicadoresError) {
+    console.error("Error saving Indicadores Tecnicos:", indicadoresError);
+    throw new Error(indicadoresError.message);
+  }
+
+  // Fetch existing records for Agricultura Irrigada
+  const { data: existingAgriculturaIrrigada } = await supabase
+    .from("aba_evolucao_rebanho_agrirrigada")
+    .select("id")
+    .eq("authuser_id", authUserID);
+
+  // Fetch existing records for Agricultura Sequeiro
+  const { data: existingAgriculturaSequeiro } = await supabase
+    .from("aba_evolucao_rebanho_agrsequeiro")
+    .select("id")
+    .eq("authuser_id", authUserID);
+
+  // Fetch existing records for Outras Atividades
+  const { data: existingOutrasAtividades } = await supabase
+    .from("aba_evolucao_rebanho_outras_atividades")
+    .select("id")
+    .eq("authuser_id", authUserID);
+
+  // Map client data with the correct authuser_id and evolucao_rebanho_id
   const agriculturaIrrigadaDataMapped = agriculturaIrrigadaData?.map(
     (item) => ({
       ...item,
@@ -672,13 +693,6 @@ export async function submitEvolucaoRebanho({
     })
   );
 
-  const { error: agrirrigadaError } = await supabase
-    .from("aba_evolucao_rebanho_agrirrigada")
-    .upsert(agriculturaIrrigadaDataMapped, {
-      onConflict: ["id"], // Only "id" is unique, so we can upsert based on that
-    });
-
-  // Handle Agricultura Sequeiro Upsert
   const agriculturaSequeiroDataMapped = agriculturaSequeiroData?.map(
     (item) => ({
       ...item,
@@ -686,27 +700,106 @@ export async function submitEvolucaoRebanho({
     })
   );
 
-  const { error: agrsequeiroError } = await supabase
-    .from("aba_evolucao_rebanho_agrsequeiro")
-    .upsert(agriculturaSequeiroDataMapped, {
-      onConflict: ["id"], // Use "id" for the conflict resolution
-    });
-
-  // Handle Outras Atividades Upsert
   const outrasAtividadesDataMapped = outrasAtividadesData?.map((item) => ({
     ...item,
     authuser_id: authUserID,
   }));
 
+  // Perform the upserts for each activity
+  const { error: agrirrigadaError } = await supabase
+    .from("aba_evolucao_rebanho_agrirrigada")
+    .upsert(agriculturaIrrigadaDataMapped, {
+      onConflict: ["id"], // use "id" for conflict resolution
+    });
+
+  const { error: agrsequeiroError } = await supabase
+    .from("aba_evolucao_rebanho_agrsequeiro")
+    .upsert(agriculturaSequeiroDataMapped, {
+      onConflict: ["id"],
+    });
+
   const { error: outrasAtividadesError } = await supabase
     .from("aba_evolucao_rebanho_outras_atividades")
     .upsert(outrasAtividadesDataMapped, {
-      onConflict: ["id"], // Use "id" for the conflict resolution
+      onConflict: ["id"],
     });
 
-  if (indicadoresError) {
-    console.error("Error saving Indicadores Tecnicos:", indicadoresError);
-    throw new Error(indicadoresError.message);
+  // Now handle deletions: Find records in the database that are not in the client data
+
+  const existingAgriculturaIrrigadaIds = existingAgriculturaIrrigada?.map(
+    (item) => item.id
+  );
+  const newAgriculturaIrrigadaIds = agriculturaIrrigadaDataMapped?.map(
+    (item) => item.id
+  );
+  const idsToDeleteIrrigada = existingAgriculturaIrrigadaIds.filter(
+    (id) => !newAgriculturaIrrigadaIds.includes(id)
+  );
+
+  const existingAgriculturaSequeiroIds = existingAgriculturaSequeiro?.map(
+    (item) => item.id
+  );
+  const newAgriculturaSequeiroIds = agriculturaSequeiroDataMapped?.map(
+    (item) => item.id
+  );
+  const idsToDeleteSequeiro = existingAgriculturaSequeiroIds.filter(
+    (id) => !newAgriculturaSequeiroIds.includes(id)
+  );
+
+  const existingOutrasAtividadesIds = existingOutrasAtividades?.map(
+    (item) => item.id
+  );
+  const newOutrasAtividadesIds = outrasAtividadesDataMapped?.map(
+    (item) => item.id
+  );
+  const idsToDeleteOutrasAtividades = existingOutrasAtividadesIds.filter(
+    (id) => !newOutrasAtividadesIds.includes(id)
+  );
+
+  // Perform the deletions for any items that are "missing" from the client data
+  if (idsToDeleteIrrigada.length > 0) {
+    const { error: deleteIrrigadaError } = await supabase
+      .from("aba_evolucao_rebanho_agrirrigada")
+      .delete()
+      .in("id", idsToDeleteIrrigada);
+
+    if (deleteIrrigadaError) {
+      console.error(
+        "Error deleting Agricultura Irrigada:",
+        deleteIrrigadaError
+      );
+      throw new Error(deleteIrrigadaError.message);
+    }
+  }
+
+  if (idsToDeleteSequeiro.length > 0) {
+    const { error: deleteSequeiroError } = await supabase
+      .from("aba_evolucao_rebanho_agrsequeiro")
+      .delete()
+      .in("id", idsToDeleteSequeiro);
+
+    if (deleteSequeiroError) {
+      console.error(
+        "Error deleting Agricultura Sequeiro:",
+        deleteSequeiroError
+      );
+      throw new Error(deleteSequeiroError.message);
+    }
+  }
+
+  if (idsToDeleteOutrasAtividades.length > 0) {
+    const { error: deleteOutrasAtividadesError } = await supabase
+      .from("aba_evolucao_rebanho_outras_atividades")
+      .delete()
+      .in("id", idsToDeleteOutrasAtividades);
+
+    if (deleteOutrasAtividadesError) {
+      console.error(
+        "Error deleting Outras Atividades:",
+        deleteOutrasAtividadesError
+      );
+      throw new Error(deleteOutrasAtividadesError.message);
+    }
   }
 
   if (agrirrigadaError) {
