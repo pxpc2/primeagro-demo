@@ -108,6 +108,9 @@ export default function EvolucaoRebanhoTab({
       await submitEvolucaoRebanho({
         indicadoresData: updatedIndicadoresTecnicosData,
         bovinoculturaData: finalBovinoculturaData,
+        agriculturaIrrigadaData: dadosAgriculturaIrrigada,
+        agriculturaSequeiroData: dadosAgriculturaSequeiro,
+        outrasAtividadesData: dadosOutrasAtividades,
       });
 
       setFormsDisabled(true);
