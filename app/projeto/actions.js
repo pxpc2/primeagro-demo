@@ -571,6 +571,9 @@ export async function getEvolucaoRebanho() {
 export async function submitEvolucaoRebanho({
   indicadoresData,
   bovinoculturaData,
+  agriculturaIrrigadaData,
+  agriculturaSequeiroData,
+  outrasAtividadesData,
 }) {
   console.log(bovinoculturaData);
 
@@ -661,9 +664,64 @@ export async function submitEvolucaoRebanho({
       onConflict: ["descricao", "authuser_id"],
     });
 
+  // Handle Agricultura Irrigada Upsert
+  const agriculturaIrrigadaDataMapped = agriculturaIrrigadaData?.map(
+    (item) => ({
+      ...item,
+      authuser_id: authUserID,
+    })
+  );
+
+  const { error: agrirrigadaError } = await supabase
+    .from("aba_evolucao_rebanho_agrirrigada")
+    .upsert(agriculturaIrrigadaDataMapped, {
+      onConflict: ["id"], // Only "id" is unique, so we can upsert based on that
+    });
+
+  // Handle Agricultura Sequeiro Upsert
+  const agriculturaSequeiroDataMapped = agriculturaSequeiroData?.map(
+    (item) => ({
+      ...item,
+      authuser_id: authUserID,
+    })
+  );
+
+  const { error: agrsequeiroError } = await supabase
+    .from("aba_evolucao_rebanho_agrsequeiro")
+    .upsert(agriculturaSequeiroDataMapped, {
+      onConflict: ["id"], // Use "id" for the conflict resolution
+    });
+
+  // Handle Outras Atividades Upsert
+  const outrasAtividadesDataMapped = outrasAtividadesData?.map((item) => ({
+    ...item,
+    authuser_id: authUserID,
+  }));
+
+  const { error: outrasAtividadesError } = await supabase
+    .from("aba_evolucao_rebanho_outras_atividades")
+    .upsert(outrasAtividadesDataMapped, {
+      onConflict: ["id"], // Use "id" for the conflict resolution
+    });
+
   if (indicadoresError) {
     console.error("Error saving Indicadores Tecnicos:", indicadoresError);
     throw new Error(indicadoresError.message);
+  }
+
+  if (agrirrigadaError) {
+    console.error("Error saving Agricultura Irrigada:", agrirrigadaError);
+    throw new Error(agrirrigadaError.message);
+  }
+
+  if (agrsequeiroError) {
+    console.error("Error saving Agricultura Sequeiro:", agrsequeiroError);
+    throw new Error(agrsequeiroError.message);
+  }
+
+  if (outrasAtividadesError) {
+    console.error("Error saving Outras Atividades:", outrasAtividadesError);
+    throw new Error(outrasAtividadesError.message);
   }
 
   const { error: bovinoculturaError } = await supabase
