@@ -16,13 +16,18 @@ import {
 } from "@/utils/constants";
 import { submitReceitas } from "@/app/projeto/actions";
 
-export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
+export default function ReceitasTab({
+  data,
+  isAdmin,
+  vendaAnimaisData,
+  evolucaoRebanhoData,
+}) {
   const [formsDisabled, setFormsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const anos = Array.from({ length: 10 }, (_, index) => ANO_INICIAL + index);
   const DESCRICOES = VENDA_ANIMAIS_PRODUTOS_DESCRICOES;
 
-  console.log(data);
+  console.log(evolucaoRebanhoData);
 
   // vai ser o mesmo para todos os anos de cada descrição
   const [unidadeMatrizesDescartadas, setUnidadeMatrizesDescartadas] = useState(
@@ -85,6 +90,33 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState(
     data?.dadosReceita?.valorLeiteParaVenda || []
   );
+
+  const [dadosAgriculturaSequeiro, setDadosAgriculturaSequeiro] = useState(
+    evolucaoRebanhoData?.dadosAgriculturaSequeiro || []
+  );
+  const [dadosAgriculturaIrrigada, setDadosAgriculturaIrrigada] = useState(
+    evolucaoRebanhoData?.dadosAgriculturaIrrigada || []
+  );
+  const [dadosOutrasAtividades, setDadosOutrasAtividades] = useState(
+    evolucaoRebanhoData?.dadosOutrasAtividades || []
+  );
+
+  const handleAgriculturaInputChange = (type, index, value) => {
+    let updatedData;
+    if (type === "sequeiro") {
+      updatedData = [...dadosAgriculturaSequeiro];
+      updatedData[index].valor_unitario = value;
+      setDadosAgriculturaSequeiro(updatedData);
+    } else if (type === "irrigada") {
+      updatedData = [...dadosAgriculturaIrrigada];
+      updatedData[index].valor_unitario = value;
+      setDadosAgriculturaIrrigada(updatedData);
+    } else if (type === "outras") {
+      updatedData = [...dadosOutrasAtividades];
+      updatedData[index].valor_unitario = value;
+      setDadosOutrasAtividades(updatedData);
+    }
+  };
 
   const onEdit = () => {
     setFormsDisabled(false);
@@ -177,7 +209,7 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
   };
 
   /**
-   * @TODO VALOR UNITARIO
+   * @TODO VALOR UNITARIO -- COMO ASSIM? BOTEI ESSE @TODO E NAO LEMBRO SE RESOLVI.
    */
   const handleInputChange = (descricao, ano, field, value, anoIndex) => {
     if (descricao === "Matrizes Descartadas") {
@@ -305,27 +337,24 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
         isAdmin={isAdmin}
       />
       <div className="mt-4 grid grid-cols-1 gap-6">
-        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-gray-950">
-          BOVINOCULTURA
+        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-orange-900">
+          Bovinocultura
         </h2>
         {DESCRICOES.map((descricao, index) => (
-          <div key={index} className="p-4 rounded-lg shadow-md mb-6">
-            <h3 className="font-bold text-md  p-2 rounded-lg bg-gray-950">
-              {descricao}
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div key={index} className="p-4 shadow-md mb-6">
+            <h3 className="font-bold text-md p-2 bg-gray-950">{descricao}</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
               {anos.map((ano, i) => (
-                <div
-                  key={ano}
-                  className="flex flex-col gap-2 bg-gray-700 p-5 rounded-lg"
-                >
+                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5">
                   <div className="font-semibold text-center mb-4">
                     Ano {ano}
                   </div>
                   <div className="flex flex-col">
                     <div className="flex gap-2">
                       <div className="w-1/2">
-                        <label className="block text-sm mb-2"></label>
+                        <label className="block text-sm text-gray-500">
+                          Unidade
+                        </label>
                         <Input
                           type="text"
                           className="border-gray-500"
@@ -356,7 +385,9 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                         />
                       </div>
                       <div className="w-1/2">
-                        <label className="block text-sm mb-2"></label>
+                        <label className="block text-sm text-gray-500">
+                          Valor unitário
+                        </label>
                         <Input
                           type="number"
                           step="0.01"
@@ -387,8 +418,12 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                           }
                         />
                       </div>
+                    </div>
+                    <div className="flex gap-2 mt-4">
                       <div className="w-1/2">
-                        <label className="block text-sm mb-2"></label>
+                        <label className="block text-sm text-gray-500">
+                          Qtd
+                        </label>
                         <Input
                           type="text"
                           className="border-gray-500"
@@ -407,26 +442,17 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? qtdLeiteParaVenda[i]
                               : ""
                           }
-                          onChange={(e) =>
-                            handleInputChange(
-                              descricao,
-                              ano,
-                              "qtd",
-                              e.target.value,
-                              i
-                            )
-                          }
                         />
                       </div>
-                    </div>
-                    <div className="flex items-center justify-center mt-8">
                       <div className="w-1/2">
-                        <label className="block text-sm mb-2"></label>
+                        <label className="block text-sm text-gray-500">
+                          Valor
+                        </label>
                         <Input
                           type="text"
+                          className="border-gray-500"
                           disabled={true}
                           placeholder="Valor"
-                          className="border-black"
                           value={
                             descricao === "Matrizes Descartadas"
                               ? valorMatrizesDescartadas[i]
@@ -440,15 +466,188 @@ export default function ReceitasTab({ data, isAdmin, vendaAnimaisData }) {
                               ? valorLeiteParaVenda[i]
                               : ""
                           }
-                          onChange={(e) =>
-                            handleInputChange(
-                              descricao,
-                              ano,
-                              "valor",
-                              e.target.value,
-                              i
-                            )
-                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-orange-900">
+          Agricultura Sequeiro
+        </h2>
+        {dadosAgriculturaSequeiro.map((item, index) => (
+          <div key={index} className="p-4 shadow-md mb-6">
+            <h3 className="font-bold text-md p-2 bg-gray-950">
+              {item.descricao} - Unidade: {item.unidade}
+            </h3>
+            <div className="flex flex-row gap-4 p-2">
+              Valor unitário:
+              <Input
+                className="p-2 w-1/12"
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleAgriculturaInputChange(
+                    "sequeiro",
+                    index,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+              {anos.map((ano, i) => (
+                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5">
+                  <div className="font-semibold text-center mb-4">
+                    Ano {ano}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex gap-2">
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Qtd
+                        </label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="Quantidade"
+                          disabled={true}
+                          className="border-gray-500"
+                          value={item.quantidade}
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Valor
+                        </label>
+                        <Input
+                          type="text"
+                          className="border-gray-500"
+                          disabled={true}
+                          placeholder="Valor"
+                          value={item[`ano${i + 1}`]}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-orange-900">
+          Agricultura Irrigada
+        </h2>
+        {dadosAgriculturaIrrigada.map((item, index) => (
+          <div key={index} className="p-4 shadow-md mb-6">
+            <h3 className="font-bold text-md p-2 bg-gray-950">
+              {item.descricao} - Unidade: {item.unidade}
+            </h3>
+            <div className="flex flex-row gap-4 p-2">
+              Valor unitário:
+              <Input
+                className="p-2 w-1/12"
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleAgriculturaInputChange(
+                    "irrigada",
+                    index,
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+              {anos.map((ano, i) => (
+                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5">
+                  <div className="font-semibold text-center mb-4">
+                    Ano {ano}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex gap-2">
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Qtd
+                        </label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="Quantidade"
+                          disabled={true}
+                          className="border-gray-500"
+                          value={item.quantidade}
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Valor
+                        </label>
+                        <Input
+                          type="text"
+                          className="border-gray-500"
+                          disabled={true}
+                          placeholder="Valor"
+                          value={item[`ano${i + 1}`]}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <h2 className="text-center font-bold py-4 text-xl rounded-lg mt-4 bg-orange-900">
+          Outras Atividades
+        </h2>
+        {dadosOutrasAtividades.map((item, index) => (
+          <div key={index} className="p-4 shadow-md mb-6">
+            <h3 className="font-bold text-md p-2 bg-gray-950">
+              {item.descricao} - Unidade: {item.unidade}
+            </h3>
+            <div className="flex flex-row gap-4 p-2">
+              Valor unitário:
+              <Input
+                className="p-2 w-1/12"
+                disabled={formsDisabled}
+                onChange={(e) =>
+                  handleAgriculturaInputChange("outras", index, e.target.value)
+                }
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
+              {anos.map((ano, i) => (
+                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5">
+                  <div className="font-semibold text-center mb-4">
+                    Ano {ano}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="flex gap-2">
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Qtd
+                        </label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          placeholder="Quantidade"
+                          disabled={true}
+                          className="border-gray-500"
+                          value={item.quantidade}
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm text-gray-500">
+                          Valor
+                        </label>
+                        <Input
+                          type="text"
+                          className="border-gray-500"
+                          disabled={true}
+                          placeholder="Valor"
+                          value={item[`ano${i + 1}`]}
                         />
                       </div>
                     </div>
