@@ -8,11 +8,11 @@ export default function OrcamentosTab({ data, isAdmin }) {
   const [loading, setLoading] = useState(false);
   const initialOrcamentosState = data?.dadosInvestimentos?.map((item) => ({
     ...item,
-    orcamentos: [], // passarei aqui os itens de orcamento
+    orcamentos: [], // passarei aqui os itens de orcamento vindo do banco de dados, banco ainda nao possui tabela p/ isso
   }));
 
   const [orcamentos, setOrcamentos] = useState(initialOrcamentosState);
-  console.log(orcamentos);
+  console.log(data?.dadosInvestimentos);
 
   const onEdit = () => {
     setFormsDisabled(false);

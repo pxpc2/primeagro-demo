@@ -3,7 +3,7 @@ import IndicadoresTecnicos from "./evolucao-rebanho-indicadores-tecnicos";
 import Heading from "./Header";
 import EvolucaoRebanhoBovinocultura from "./evolucao-rebanho-bovinocultura";
 import { submitEvolucaoRebanho } from "@/app/projeto/actions";
-import TabelaAtividades from "./agricultura-e-atividades";
+import TabelaAtividades from "./evolucao-rebanho-tabela-atividades";
 
 export default function EvolucaoRebanhoTab({
   data,
@@ -88,6 +88,10 @@ export default function EvolucaoRebanhoTab({
 
       const finalBovinoculturaData = [updatedBovinoculturaData];
 
+      console.log(dadosOutrasAtividades);
+      console.log(dadosAgriculturaIrrigada);
+      console.log(dadosAgriculturaSequeiro);
+
       const updatedIndicadoresTecnicosData = indicadoresTecnicosData?.map(
         (item) => {
           const updatedItem = { ...item };
@@ -153,20 +157,23 @@ export default function EvolucaoRebanhoTab({
         <TabelaAtividades
           data={dadosAgriculturaSequeiro}
           setData={setDadosAgriculturaSequeiro}
-          atividade="sequeiro"
+          nomeAtividade="Agricultura Sequeiro"
           anoInicial={anoInicial}
+          formsDisabled={formsDisabled}
         />
         <TabelaAtividades
           data={dadosAgriculturaIrrigada}
           setData={setDadosAgriculturaIrrigada}
-          atividade="irrigada"
+          nomeAtividade="Agricultura Irrigada"
           anoInicial={anoInicial}
+          formsDisabled={formsDisabled}
         />
         <TabelaAtividades
           data={dadosOutrasAtividades}
           setData={setDadosOutrasAtividades}
-          atividade="outras"
+          nomeAtividade="Outras Atividades"
           anoInicial={anoInicial}
+          formsDisabled={formsDisabled}
         />
       </div>
     </div>
