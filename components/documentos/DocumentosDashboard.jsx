@@ -67,7 +67,7 @@ export default function DocumentosDashboard({ cliente }) {
     try {
       const signedUrl = await downloadDoc(cliente.authuser_id, docName);
       if (signedUrl) {
-        window.location.href = signedUrl;
+      window.open(signedUrl, '_blank');
       }
     } catch (error) {
       console.error("Baixar o documento gerou o seguinte erro: ", error);

@@ -42,7 +42,7 @@ export let DOCUMENTOS = [
     nome: "DOCUMENTO DE IDENTIFICAÇÃO DO CONJUGE (RG, CPF, TÍTULO ELEITORAL, (CNH se houver)",
     descricao: "Ver mais",
   },
-  {
+  /*{
     id: "1.8",
     nome: "QUITAÇÃO ELEITORAL - PROPONENTE",
     descricao: "Ver mais",
@@ -51,7 +51,7 @@ export let DOCUMENTOS = [
     id: "1.9",
     nome: "QUITAÇÃO ELEITORAL - CONJUGE",
     descricao: "Ver mais",
-  },
+  }, */
   {
     id: "1.10",
     nome: "COMPROVANTE DE ENDEREÇO (NÃO DEVE HAVER DIVERGÊNCIA. MANTER SEMPRE EXATAMENTE O MESMO ENDEREÇO DA DECLARACAO DE ELEGIBILIDADE DE PREFERENCIA NO NOME DO BENEFICIÁRIO OU DA ESPOSA, SE EM NOME DE TERCEIROS, JÁ INCLUI JUNTO DECLARAÇÃO DE RESIDENCIA DE PREFERENCIA NO MESMO ARQUIVO.",

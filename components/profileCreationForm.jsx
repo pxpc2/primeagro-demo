@@ -264,7 +264,7 @@ export default function ProfileCreationForm() {
                     name="naturalidade"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Naturalidade</FormLabel>
+                        <FormLabel>Nacionalidade</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           value={field.value || ""}
