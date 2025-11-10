@@ -188,6 +188,11 @@ export default function ProjetoPage() {
           <CapacidadePagamentoTab
             data={formData?.aba_capacidade_pagamento}
             isAdmin={isAdmin}
+            preAnaliseData={formData?.aba_preanalise}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            dadosImovelData={formData?.aba_dadosImovel}
+            sibData={formData?.aba_sib}
+            fluxoCaixaData={formData?.aba_fluxo_de_caixa}
           />
         );
       default:
