@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Heading from "./Header";
 import { Input } from "../ui/input";
 import {
@@ -20,17 +20,62 @@ export default function CapacidadePagamentoTab({
   dadosImovelData,
   sibData,
   fluxoCaixaData,
+  receitasData,
+  despesasData,
 }) {
   const [formsDisabled, setFormsDisabled] = useState(true);
 
-  // Debug - verificar dados recebidos
-  console.log("=== DEBUG CAPACIDADE DE PAGAMENTO ===");
-  console.log("preAnaliseData:", preAnaliseData);
-  console.log("identificacaoBeneficiarioData:", identificacaoBeneficiarioData);
-  console.log("dadosImovelData:", dadosImovelData);
-  console.log("sibData:", sibData);
-  console.log("fluxoCaixaData:", fluxoCaixaData);
+  // Calcular tabela de fluxo de caixa localmente
+  const tabelaFluxo = useMemo(() => {
+    if (!receitasData || !despesasData) return [];
 
+    const anos = 26;
+    const tabela = [];
+
+    for (let i = 0; i < anos; i++) {
+      let receitaTotal = 0;
+      let custoTotal = 0;
+
+      // Primeiros 10 anos: usa dados reais
+      if (i < 10) {
+        // Soma todas as receitas
+        const totalMatrizes =
+          receitasData?.dadosReceita?.valorMatrizesDescartadas?.[i] || 0;
+        const totalNovilhos =
+          receitasData?.dadosReceita?.valorNovilhosVendidos?.[i] || 0;
+        const totalNovilhas =
+          receitasData?.dadosReceita?.valorNovilhasVendidas?.[i] || 0;
+        const totalQueijo = receitasData?.dadosReceita?.valorQueijo?.[i] || 0;
+        const totalLeite =
+          receitasData?.dadosReceita?.valorLeiteParaVenda?.[i] || 0;
+
+        receitaTotal =
+          totalMatrizes +
+          totalNovilhos +
+          totalNovilhas +
+          totalQueijo +
+          totalLeite;
+
+        // Usa custos calculados
+        custoTotal = despesasData?.totalCustos?.[i] || 0;
+      }
+
+      const lucroOperacional = receitaTotal - custoTotal;
+
+      const ano = {
+        ano: i,
+        receita_total: receitaTotal,
+        custo_total: custoTotal,
+        lucro_operacional: lucroOperacional,
+      };
+
+      tabela.push(ano);
+    }
+
+    return tabela;
+  }, [receitasData, despesasData]);
+
+  
   // Seção 1 - ATER
   const razaoSocialAter = preAnaliseData?.[0]?.campo_26 || "";
   const cnpjAter = "43.263.293/0001-02"; // Valor fixo - DTS REBOUÇAS LTDA
@@ -70,9 +115,6 @@ export default function CapacidadePagamentoTab({
     Number(valorMedicao);
   
   const haveraProNaf = preAnaliseData?.[0]?.campo_8?.includes("PRONAF") ? "SIM" : "NÃO";
-
-  // Seção 4 - Tabela Fluxo de Caixa
-  const tabelaFluxo = fluxoCaixaData?.[0]?.aba_fluxo_de_caixa_tabela || [];
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -307,7 +349,7 @@ export default function CapacidadePagamentoTab({
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Despesas</TableHead>
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Lucro Operacional</TableHead>
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Total Encargos</TableHead>
-                    <TableHead className="border border-gray-700 text-center text-gray-200 font-bold bg-green-900/50">Capacidade Pagamento</TableHead>
+                    <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Capacidade Pagamento</TableHead>
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Total Amortizações</TableHead>
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">Lucro Líquido</TableHead>
                     <TableHead className="border border-gray-700 text-center text-gray-200 font-bold">% Utilização</TableHead>
@@ -318,34 +360,34 @@ export default function CapacidadePagamentoTab({
                   {tabelaFluxo.map((row, index) => (
                     <TableRow key={index} className="hover:bg-gray-900">
                       <TableCell className="border border-gray-700 text-center font-medium text-gray-200">
-                        {row.ano}
+                        {2025 + row.ano}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.receitas)}
+                        {formatCurrency(row.receita_total)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.despesas)}
+                        {formatCurrency(row.custo_total)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
                         {formatCurrency(row.lucro_operacional)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.total_encargos)}
-                      </TableCell>
-                      <TableCell className="border border-gray-700 text-right bg-green-900/30 font-semibold text-gray-200">
-                        {formatCurrency(row.capacidade_pagamento)}
+                        {formatCurrency(row.total_encargos || 0)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.total_amortizacoes)}
+                        {formatCurrency(row.capacidade_pagamento || 0)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.lucro_liquido)}
+                        {formatCurrency(row.total_amortizacoes || 0)}
+                      </TableCell>
+                      <TableCell className="border border-gray-700 text-right text-gray-200">
+                        {formatCurrency(row.lucro_liquido || 0)}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-center text-gray-200">
                         {row.percentual_utilizacao ? `${row.percentual_utilizacao}%` : "-"}
                       </TableCell>
                       <TableCell className="border border-gray-700 text-right text-gray-200">
-                        {formatCurrency(row.valor_liquido_mensal)}
+                        {formatCurrency(row.valor_liquido_mensal || 0)}
                       </TableCell>
                     </TableRow>
                   ))}

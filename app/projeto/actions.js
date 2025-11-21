@@ -409,6 +409,18 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     valorUnitarioMatrizesDescartadas: parseFloat(
       dados[0]?.matrizesdescartadas_valorunitario || 0
     ),
+    qtdMatrizesDescartadas: [
+      dados[0]?.matrizesdescartadas_ano0_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano1_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano2_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano3_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano4_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano5_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano6_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano7_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano8_qtd || 0,
+      dados[0]?.matrizesdescartadas_ano9_qtd || 0,
+    ],
     valorMatrizesDescartadas: [
       dados[0]?.matrizesdescartadas_ano0_valortotal || 0,
       dados[0]?.matrizesdescartadas_ano1_valortotal || 0,
@@ -426,6 +438,18 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     valorUnitarioNovilhosVendidos: parseFloat(
       dados[0]?.novilhosvendidos_valorunitario || 0
     ),
+    qtdNovilhosVendidos: [
+      dados[0]?.novilhosvendidos_ano0_qtd || 0,
+      dados[0]?.novilhosvendidos_ano1_qtd || 0,
+      dados[0]?.novilhosvendidos_ano2_qtd || 0,
+      dados[0]?.novilhosvendidos_ano3_qtd || 0,
+      dados[0]?.novilhosvendidos_ano4_qtd || 0,
+      dados[0]?.novilhosvendidos_ano5_qtd || 0,
+      dados[0]?.novilhosvendidos_ano6_qtd || 0,
+      dados[0]?.novilhosvendidos_ano7_qtd || 0,
+      dados[0]?.novilhosvendidos_ano8_qtd || 0,
+      dados[0]?.novilhosvendidos_ano9_qtd || 0,
+    ],
     valorNovilhosVendidos: [
       dados[0]?.novilhosvendidos_ano0_valortotal || 0,
       dados[0]?.novilhosvendidos_ano1_valortotal || 0,
@@ -443,6 +467,18 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     valorUnitarioNovilhasVendidas: parseFloat(
       dados[0]?.novilhasvendidas_valorunitario || 0
     ),
+    qtdNovilhasVendidas: [
+      dados[0]?.novilhasvendidas_ano0_qtd || 0,
+      dados[0]?.novilhasvendidas_ano1_qtd || 0,
+      dados[0]?.novilhasvendidas_ano2_qtd || 0,
+      dados[0]?.novilhasvendidas_ano3_qtd || 0,
+      dados[0]?.novilhasvendidas_ano4_qtd || 0,
+      dados[0]?.novilhasvendidas_ano5_qtd || 0,
+      dados[0]?.novilhasvendidas_ano6_qtd || 0,
+      dados[0]?.novilhasvendidas_ano7_qtd || 0,
+      dados[0]?.novilhasvendidas_ano8_qtd || 0,
+      dados[0]?.novilhasvendidas_ano9_qtd || 0,
+    ],
     valorNovilhasVendidas: [
       dados[0]?.novilhasvendidas_ano0_valortotal || 0,
       dados[0]?.novilhasvendidas_ano1_valortotal || 0,
@@ -458,6 +494,18 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
 
     unidadeQueijo: dados[0]?.queijo_unidade || "",
     valorUnitarioQueijo: parseFloat(dados[0]?.queijo_valorunitario || 0),
+    qtdQueijo: [
+      dados[0]?.queijo_ano0_qtd || 0,
+      dados[0]?.queijo_ano1_qtd || 0,
+      dados[0]?.queijo_ano2_qtd || 0,
+      dados[0]?.queijo_ano3_qtd || 0,
+      dados[0]?.queijo_ano4_qtd || 0,
+      dados[0]?.queijo_ano5_qtd || 0,
+      dados[0]?.queijo_ano6_qtd || 0,
+      dados[0]?.queijo_ano7_qtd || 0,
+      dados[0]?.queijo_ano8_qtd || 0,
+      dados[0]?.queijo_ano9_qtd || 0,
+    ],
     valorQueijo: [
       dados[0]?.queijo_ano0_valortotal || 0,
       dados[0]?.queijo_ano1_valortotal || 0,
@@ -475,6 +523,18 @@ export async function getReceitasData({ dadosEvolucaoRebanho }) {
     valorUnitarioLeiteParaVenda: parseFloat(
       dados[0]?.leiteparavenda_valorunitario || 0
     ),
+    qtdLeiteParaVenda: [
+      dados[0]?.leiteparavenda_ano0_qtd || 0,
+      dados[0]?.leiteparavenda_ano1_qtd || 0,
+      dados[0]?.leiteparavenda_ano2_qtd || 0,
+      dados[0]?.leiteparavenda_ano3_qtd || 0,
+      dados[0]?.leiteparavenda_ano4_qtd || 0,
+      dados[0]?.leiteparavenda_ano5_qtd || 0,
+      dados[0]?.leiteparavenda_ano6_qtd || 0,
+      dados[0]?.leiteparavenda_ano7_qtd || 0,
+      dados[0]?.leiteparavenda_ano8_qtd || 0,
+      dados[0]?.leiteparavenda_ano9_qtd || 0,
+    ],
     valorLeiteParaVenda: [
       dados[0]?.leiteparavenda_ano0_valortotal || 0,
       dados[0]?.leiteparavenda_ano1_valortotal || 0,
