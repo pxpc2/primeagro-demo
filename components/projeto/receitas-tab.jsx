@@ -60,32 +60,57 @@ export default function ReceitasTab({
   const [valorUnitarioLeiteParaVenda, setValorUnitarioLeiteParaVenda] =
     useState(data?.dadosReceita?.valorUnitarioLeiteParaVenda || 0.0);
 
+  // Prioriza dados salvos no banco, depois usa evolução do rebanho como fallback
+  const getInitialQtd = (savedData, evolutionData) => {
+    // Se tem dados salvos E pelo menos um valor não é zero, usa os salvos
+    if (savedData && savedData.length > 0 && savedData.some(val => val !== 0)) {
+      return savedData;
+    }
+    // Senão, usa dados da evolução do rebanho
+    return evolutionData || Array(10).fill(0);
+  };
+
   const [qtdMatrizesDescartadas, setQtdMatrizesDescartadas] = useState(
-    vendaAnimaisData?.matrizesDescartadasValues || []
+    getInitialQtd(
+      data?.dadosReceita?.qtdMatrizesDescartadas,
+      vendaAnimaisData?.matrizesDescartadasValues
+    )
   );
   const [valorMatrizesDescartadas, setValorMatrizesDescartadas] = useState(
     data?.dadosReceita?.valorMatrizesDescartadas || []
   );
   const [qtdNovilhosVendidos, setQtdNovilhosVendidos] = useState(
-    vendaAnimaisData?.novilhosVendidosValues || []
+    getInitialQtd(
+      data?.dadosReceita?.qtdNovilhosVendidos,
+      vendaAnimaisData?.novilhosVendidosValues
+    )
   );
   const [valorNovilhosVendidos, setValorNovilhosVendidos] = useState(
     data?.dadosReceita?.valorNovilhosVendidos || []
   );
   const [qtdNovilhasVendidas, setQtdNovilhasVendidas] = useState(
-    vendaAnimaisData?.novilhasVendidasValues || []
+    getInitialQtd(
+      data?.dadosReceita?.qtdNovilhasVendidas,
+      vendaAnimaisData?.novilhasVendidasValues
+    )
   );
   const [valorNovilhasVendidas, setValorNovilhasVendidas] = useState(
     data?.dadosReceita?.valorNovilhasVendidas || []
   );
   const [qtdQueijo, setQtdQueijo] = useState(
-    vendaAnimaisData?.queijoValues || []
+    getInitialQtd(
+      data?.dadosReceita?.qtdQueijo,
+      vendaAnimaisData?.queijoValues
+    )
   );
   const [valorQueijo, setValorQueijo] = useState(
     data?.dadosReceita?.valorQueijo || []
   );
   const [qtdLeiteParaVenda, setQtdLeiteParaVenda] = useState(
-    vendaAnimaisData?.leiteParaVendaValues || []
+    getInitialQtd(
+      data?.dadosReceita?.qtdLeiteParaVenda,
+      vendaAnimaisData?.leiteParaVendaValues
+    )
   );
   const [valorLeiteParaVenda, setValorLeiteParaVenda] = useState(
     data?.dadosReceita?.valorLeiteParaVenda || []
@@ -198,6 +223,16 @@ export default function ReceitasTab({
       const receitasData = {
         matrizesdescartadas_unidade: unidadeMatrizesDescartadas,
         matrizesdescartadas_valorunitario: valorUnitarioMatrizesDescartadas,
+        matrizesdescartadas_ano0_qtd: qtdMatrizesDescartadas[0],
+        matrizesdescartadas_ano1_qtd: qtdMatrizesDescartadas[1],
+        matrizesdescartadas_ano2_qtd: qtdMatrizesDescartadas[2],
+        matrizesdescartadas_ano3_qtd: qtdMatrizesDescartadas[3],
+        matrizesdescartadas_ano4_qtd: qtdMatrizesDescartadas[4],
+        matrizesdescartadas_ano5_qtd: qtdMatrizesDescartadas[5],
+        matrizesdescartadas_ano6_qtd: qtdMatrizesDescartadas[6],
+        matrizesdescartadas_ano7_qtd: qtdMatrizesDescartadas[7],
+        matrizesdescartadas_ano8_qtd: qtdMatrizesDescartadas[8],
+        matrizesdescartadas_ano9_qtd: qtdMatrizesDescartadas[9],
         matrizesdescartadas_ano0_valortotal: valorMatrizesDescartadas[0],
         matrizesdescartadas_ano1_valortotal: valorMatrizesDescartadas[1],
         matrizesdescartadas_ano2_valortotal: valorMatrizesDescartadas[2],
@@ -211,6 +246,16 @@ export default function ReceitasTab({
 
         novilhosvendidos_unidade: unidadeNovilhosVendidos,
         novilhosvendidos_valorunitario: valorUnitarioNovilhosVendidos,
+        novilhosvendidos_ano0_qtd: qtdNovilhosVendidos[0],
+        novilhosvendidos_ano1_qtd: qtdNovilhosVendidos[1],
+        novilhosvendidos_ano2_qtd: qtdNovilhosVendidos[2],
+        novilhosvendidos_ano3_qtd: qtdNovilhosVendidos[3],
+        novilhosvendidos_ano4_qtd: qtdNovilhosVendidos[4],
+        novilhosvendidos_ano5_qtd: qtdNovilhosVendidos[5],
+        novilhosvendidos_ano6_qtd: qtdNovilhosVendidos[6],
+        novilhosvendidos_ano7_qtd: qtdNovilhosVendidos[7],
+        novilhosvendidos_ano8_qtd: qtdNovilhosVendidos[8],
+        novilhosvendidos_ano9_qtd: qtdNovilhosVendidos[9],
         novilhosvendidos_ano0_valortotal: valorNovilhosVendidos[0],
         novilhosvendidos_ano1_valortotal: valorNovilhosVendidos[1],
         novilhosvendidos_ano2_valortotal: valorNovilhosVendidos[2],
@@ -224,6 +269,16 @@ export default function ReceitasTab({
 
         novilhasvendidas_unidade: unidadeNovilhasVendidas,
         novilhasvendidas_valorunitario: valorUnitarioNovilhasVendidas,
+        novilhasvendidas_ano0_qtd: qtdNovilhasVendidas[0],
+        novilhasvendidas_ano1_qtd: qtdNovilhasVendidas[1],
+        novilhasvendidas_ano2_qtd: qtdNovilhasVendidas[2],
+        novilhasvendidas_ano3_qtd: qtdNovilhasVendidas[3],
+        novilhasvendidas_ano4_qtd: qtdNovilhasVendidas[4],
+        novilhasvendidas_ano5_qtd: qtdNovilhasVendidas[5],
+        novilhasvendidas_ano6_qtd: qtdNovilhasVendidas[6],
+        novilhasvendidas_ano7_qtd: qtdNovilhasVendidas[7],
+        novilhasvendidas_ano8_qtd: qtdNovilhasVendidas[8],
+        novilhasvendidas_ano9_qtd: qtdNovilhasVendidas[9],
         novilhasvendidas_ano0_valortotal: valorNovilhasVendidas[0],
         novilhasvendidas_ano1_valortotal: valorNovilhasVendidas[1],
         novilhasvendidas_ano2_valortotal: valorNovilhasVendidas[2],
@@ -237,6 +292,16 @@ export default function ReceitasTab({
 
         queijo_unidade: unidadeQueijo,
         queijo_valorunitario: valorUnitarioQueijo,
+        queijo_ano0_qtd: qtdQueijo[0],
+        queijo_ano1_qtd: qtdQueijo[1],
+        queijo_ano2_qtd: qtdQueijo[2],
+        queijo_ano3_qtd: qtdQueijo[3],
+        queijo_ano4_qtd: qtdQueijo[4],
+        queijo_ano5_qtd: qtdQueijo[5],
+        queijo_ano6_qtd: qtdQueijo[6],
+        queijo_ano7_qtd: qtdQueijo[7],
+        queijo_ano8_qtd: qtdQueijo[8],
+        queijo_ano9_qtd: qtdQueijo[9],
         queijo_ano0_valortotal: valorQueijo[0],
         queijo_ano1_valortotal: valorQueijo[1],
         queijo_ano2_valortotal: valorQueijo[2],
@@ -250,6 +315,16 @@ export default function ReceitasTab({
 
         leiteparavenda_unidade: unidadeLeiteParaVenda,
         leiteparavenda_valorunitario: valorUnitarioLeiteParaVenda,
+        leiteparavenda_ano0_qtd: qtdLeiteParaVenda[0],
+        leiteparavenda_ano1_qtd: qtdLeiteParaVenda[1],
+        leiteparavenda_ano2_qtd: qtdLeiteParaVenda[2],
+        leiteparavenda_ano3_qtd: qtdLeiteParaVenda[3],
+        leiteparavenda_ano4_qtd: qtdLeiteParaVenda[4],
+        leiteparavenda_ano5_qtd: qtdLeiteParaVenda[5],
+        leiteparavenda_ano6_qtd: qtdLeiteParaVenda[6],
+        leiteparavenda_ano7_qtd: qtdLeiteParaVenda[7],
+        leiteparavenda_ano8_qtd: qtdLeiteParaVenda[8],
+        leiteparavenda_ano9_qtd: qtdLeiteParaVenda[9],
         leiteparavenda_ano0_valortotal: valorLeiteParaVenda[0],
         leiteparavenda_ano1_valortotal: valorLeiteParaVenda[1],
         leiteparavenda_ano2_valortotal: valorLeiteParaVenda[2],
@@ -279,53 +354,96 @@ export default function ReceitasTab({
       if (field === "unidade") {
         setUnidadeMatrizesDescartadas(value);
       } else if (field === "valorUnitario") {
-        setValorUnitarioMatrizesDescartadas(value);
+        const numValue = parseFloat(value) || 0;
+        setValorUnitarioMatrizesDescartadas(numValue);
         const newValorMatrizesDescartadas = qtdMatrizesDescartadas.map(
-          (qtd, i) => {
-            return value * qtd;
-          }
+          (qtd) => numValue * qtd
         );
         setValorMatrizesDescartadas(newValorMatrizesDescartadas);
+      } else if (field === "qtd") {
+        const numValue = parseFloat(value) || 0;
+        const newQtd = [...qtdMatrizesDescartadas];
+        newQtd[anoIndex] = numValue;
+        setQtdMatrizesDescartadas(newQtd);
+        const newValor = [...valorMatrizesDescartadas];
+        newValor[anoIndex] = numValue * valorUnitarioMatrizesDescartadas;
+        setValorMatrizesDescartadas(newValor);
       }
     } else if (descricao === "Novilhos Vendidos") {
       if (field === "unidade") {
         setUnidadeNovilhosVendidos(value);
       } else if (field === "valorUnitario") {
-        setValorUnitarioNovilhosVendidos(value);
-        const newValorNovilhosVendidos = qtdNovilhosVendidos.map((qtd, i) => {
-          return value * qtd;
-        });
+        const numValue = parseFloat(value) || 0;
+        setValorUnitarioNovilhosVendidos(numValue);
+        const newValorNovilhosVendidos = qtdNovilhosVendidos.map(
+          (qtd) => numValue * qtd
+        );
         setValorNovilhosVendidos(newValorNovilhosVendidos);
+      } else if (field === "qtd") {
+        const numValue = parseFloat(value) || 0;
+        const newQtd = [...qtdNovilhosVendidos];
+        newQtd[anoIndex] = numValue;
+        setQtdNovilhosVendidos(newQtd);
+        const newValor = [...valorNovilhosVendidos];
+        newValor[anoIndex] = numValue * valorUnitarioNovilhosVendidos;
+        setValorNovilhosVendidos(newValor);
       }
     } else if (descricao === "Novilhas Vendidas") {
       if (field === "unidade") {
         setUnidadeNovilhasVendidas(value);
       } else if (field === "valorUnitario") {
-        setValorUnitarioNovilhasVendidas(value);
-        const newValorNovilhasVendidas = qtdNovilhasVendidas.map((qtd, i) => {
-          return value * qtd;
-        });
+        const numValue = parseFloat(value) || 0;
+        setValorUnitarioNovilhasVendidas(numValue);
+        const newValorNovilhasVendidas = qtdNovilhasVendidas.map(
+          (qtd) => numValue * qtd
+        );
         setValorNovilhasVendidas(newValorNovilhasVendidas);
+      } else if (field === "qtd") {
+        const numValue = parseFloat(value) || 0;
+        const newQtd = [...qtdNovilhasVendidas];
+        newQtd[anoIndex] = numValue;
+        setQtdNovilhasVendidas(newQtd);
+        const newValor = [...valorNovilhasVendidas];
+        newValor[anoIndex] = numValue * valorUnitarioNovilhasVendidas;
+        setValorNovilhasVendidas(newValor);
       }
     } else if (descricao === "Queijo (kg)") {
       if (field === "unidade") {
         setUnidadeQueijo(value);
       } else if (field === "valorUnitario") {
-        setValorUnitarioQueijo(value);
-        const newValorQueijo = qtdQueijo.map((qtd, i) => {
-          return value * qtd;
-        });
+        const numValue = parseFloat(value) || 0;
+        setValorUnitarioQueijo(numValue);
+        const newValorQueijo = qtdQueijo.map(
+          (qtd) => numValue * qtd
+        );
         setValorQueijo(newValorQueijo);
+      } else if (field === "qtd") {
+        const numValue = parseFloat(value) || 0;
+        const newQtd = [...qtdQueijo];
+        newQtd[anoIndex] = numValue;
+        setQtdQueijo(newQtd);
+        const newValor = [...valorQueijo];
+        newValor[anoIndex] = numValue * valorUnitarioQueijo;
+        setValorQueijo(newValor);
       }
     } else if (descricao === "Leite para venda (litros)") {
       if (field === "unidade") {
         setUnidadeLeiteParaVenda(value);
       } else if (field === "valorUnitario") {
-        setValorUnitarioLeiteParaVenda(value);
-        const newValorLeiteParaVenda = qtdLeiteParaVenda.map((qtd, i) => {
-          return value * qtd;
-        });
+        const numValue = parseFloat(value) || 0;
+        setValorUnitarioLeiteParaVenda(numValue);
+        const newValorLeiteParaVenda = qtdLeiteParaVenda.map(
+          (qtd) => numValue * qtd
+        );
         setValorLeiteParaVenda(newValorLeiteParaVenda);
+      } else if (field === "qtd") {
+        const numValue = parseFloat(value) || 0;
+        const newQtd = [...qtdLeiteParaVenda];
+        newQtd[anoIndex] = numValue;
+        setQtdLeiteParaVenda(newQtd);
+        const newValor = [...valorLeiteParaVenda];
+        newValor[anoIndex] = numValue * valorUnitarioLeiteParaVenda;
+        setValorLeiteParaVenda(newValor);
       }
     }
   };
@@ -404,133 +522,145 @@ export default function ReceitasTab({
           Bovinocultura
         </h2>
         {DESCRICOES.map((descricao, index) => (
-          <div key={index} className="p-4 shadow-md mb-6">
-            <h3 className="font-bold text-md p-2 bg-gray-950">{descricao}</h3>
+          <div key={index} className="p-4 shadow-md mb-6 bg-gray-800">
+            <h3 className="font-bold text-md p-2 bg-gray-950 mb-4">{descricao}</h3>
+            
+            {/* Campos únicos para todo o produto */}
+            <div className="flex gap-4 mb-6 p-4 bg-gray-900 rounded">
+              <div className="w-1/2">
+                <label className="block text-sm text-gray-400 mb-2">
+                  Unidade
+                </label>
+                <Input
+                  type="text"
+                  className="border-gray-500"
+                  disabled={formsDisabled}
+                  placeholder="UNIDADE"
+                  value={
+                    descricao === "Matrizes Descartadas"
+                      ? unidadeMatrizesDescartadas
+                      : descricao === "Novilhos Vendidos"
+                      ? unidadeNovilhosVendidos
+                      : descricao === "Novilhas Vendidas"
+                      ? unidadeNovilhasVendidas
+                      : descricao === "Queijo (kg)"
+                      ? unidadeQueijo
+                      : descricao === "Leite para venda (litros)"
+                      ? unidadeLeiteParaVenda
+                      : ""
+                  }
+                  onChange={(e) =>
+                    handleInputChange(
+                      descricao,
+                      null,
+                      "unidade",
+                      e.target.value,
+                      null
+                    )
+                  }
+                />
+              </div>
+              <div className="w-1/2">
+                <label className="block text-sm text-gray-400 mb-2">
+                  Valor unitário (R$)
+                </label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  disabled={formsDisabled}
+                  placeholder="Valor unitário"
+                  className="border-gray-500"
+                  value={
+                    descricao === "Matrizes Descartadas"
+                      ? valorUnitarioMatrizesDescartadas
+                      : descricao === "Novilhos Vendidos"
+                      ? valorUnitarioNovilhosVendidos
+                      : descricao === "Novilhas Vendidas"
+                      ? valorUnitarioNovilhasVendidas
+                      : descricao === "Queijo (kg)"
+                      ? valorUnitarioQueijo
+                      : descricao === "Leite para venda (litros)"
+                      ? valorUnitarioLeiteParaVenda
+                      : ""
+                  }
+                  onChange={(e) =>
+                    handleInputChange(
+                      descricao,
+                      null,
+                      "valorUnitario",
+                      e.target.value,
+                      null
+                    )
+                  }
+                />
+              </div>
+            </div>
+
+            {/* Cards por ano - apenas Qtd e Valor total */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-0">
               {anos.map((ano, i) => (
-                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5">
+                <div key={ano} className="flex flex-col gap-2 bg-gray-700 p-5 border border-gray-600">
                   <div className="font-semibold text-center mb-4">
                     Ano {ano}
                   </div>
-                  <div className="flex flex-col">
-                    <div className="flex gap-2">
-                      <div className="w-1/2">
-                        <label className="block text-sm text-gray-500">
-                          Unidade
-                        </label>
-                        <Input
-                          type="text"
-                          className="border-gray-500"
-                          disabled={formsDisabled}
-                          placeholder="UNIDADE"
-                          value={
-                            descricao === "Matrizes Descartadas"
-                              ? unidadeMatrizesDescartadas
-                              : descricao === "Novilhos Vendidos"
-                              ? unidadeNovilhosVendidos
-                              : descricao === "Novilhas Vendidas"
-                              ? unidadeNovilhasVendidas
-                              : descricao === "Queijo (kg)"
-                              ? unidadeQueijo
-                              : descricao === "Leite para venda (litros)"
-                              ? unidadeLeiteParaVenda
-                              : ""
-                          }
-                          onChange={(e) =>
-                            handleInputChange(
-                              descricao,
-                              ano,
-                              "unidade",
-                              e.target.value,
-                              i
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="w-1/2">
-                        <label className="block text-sm text-gray-500">
-                          Valor unitário
-                        </label>
-                        <Input
-                          type="number"
-                          step="0.01"
-                          disabled={formsDisabled}
-                          placeholder="Valor unitário"
-                          className="border-gray-500"
-                          value={
-                            descricao === "Matrizes Descartadas"
-                              ? valorUnitarioMatrizesDescartadas
-                              : descricao === "Novilhos Vendidos"
-                              ? valorUnitarioNovilhosVendidos
-                              : descricao === "Novilhas Vendidas"
-                              ? valorUnitarioNovilhasVendidas
-                              : descricao === "Queijo (kg)"
-                              ? valorUnitarioQueijo
-                              : descricao === "Leite para venda (litros)"
-                              ? valorUnitarioLeiteParaVenda
-                              : ""
-                          }
-                          onChange={(e) =>
-                            handleInputChange(
-                              descricao,
-                              ano,
-                              "valorUnitario",
-                              e.target.value,
-                              i
-                            )
-                          }
-                        />
-                      </div>
+                  <div className="flex gap-2">
+                    <div className="w-1/2">
+                      <label className="block text-sm text-gray-500">
+                        Qtd
+                      </label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        className="border-gray-500"
+                        disabled={formsDisabled}
+                        placeholder="Qtd"
+                        value={
+                          descricao === "Matrizes Descartadas"
+                            ? qtdMatrizesDescartadas[i] || 0
+                            : descricao === "Novilhos Vendidos"
+                            ? qtdNovilhosVendidos[i] || 0
+                            : descricao === "Novilhas Vendidas"
+                            ? qtdNovilhasVendidas[i] || 0
+                            : descricao === "Queijo (kg)"
+                            ? qtdQueijo[i] || 0
+                            : descricao === "Leite para venda (litros)"
+                            ? qtdLeiteParaVenda[i] || 0
+                            : 0
+                        }
+                        onChange={(e) =>
+                          handleInputChange(
+                            descricao,
+                            ano,
+                            "qtd",
+                            e.target.value,
+                            i
+                          )
+                        }
+                      />
                     </div>
-                    <div className="flex gap-2 mt-4">
-                      <div className="w-1/2">
-                        <label className="block text-sm text-gray-500">
-                          Qtd
-                        </label>
-                        <Input
-                          type="text"
-                          className="border-gray-500"
-                          disabled={true}
-                          placeholder="Qtd"
-                          value={
-                            descricao === "Matrizes Descartadas"
-                              ? qtdMatrizesDescartadas[i]
-                              : descricao === "Novilhos Vendidos"
-                              ? qtdNovilhosVendidos[i]
-                              : descricao === "Novilhas Vendidas"
-                              ? qtdNovilhasVendidas[i]
-                              : descricao === "Queijo (kg)"
-                              ? qtdQueijo[i]
-                              : descricao === "Leite para venda (litros)"
-                              ? qtdLeiteParaVenda[i]
-                              : ""
-                          }
-                        />
-                      </div>
-                      <div className="w-1/2">
-                        <label className="block text-sm text-gray-500">
-                          Valor
-                        </label>
-                        <Input
-                          type="text"
-                          className="border-gray-500"
-                          disabled={true}
-                          placeholder="Valor"
-                          value={
-                            descricao === "Matrizes Descartadas"
-                              ? valorMatrizesDescartadas[i]
-                              : descricao === "Novilhos Vendidos"
-                              ? valorNovilhosVendidos[i]
-                              : descricao === "Novilhas Vendidas"
-                              ? valorNovilhasVendidas[i]
-                              : descricao === "Queijo (kg)"
-                              ? valorQueijo[i]
-                              : descricao === "Leite para venda (litros)"
-                              ? valorLeiteParaVenda[i]
-                              : ""
-                          }
-                        />
-                      </div>
+                    <div className="w-1/2">
+                      <label className="block text-sm text-gray-500">
+                        Valor Total (R$)
+                      </label>
+                      <Input
+                        type="text"
+                        className="border-gray-500 bg-gray-600"
+                        disabled={true}
+                        placeholder="Valor"
+                        value={
+                          descricao === "Matrizes Descartadas"
+                            ? valorMatrizesDescartadas[i]?.toFixed(2) || "0.00"
+                            : descricao === "Novilhos Vendidos"
+                            ? valorNovilhosVendidos[i]?.toFixed(2) || "0.00"
+                            : descricao === "Novilhas Vendidas"
+                            ? valorNovilhasVendidas[i]?.toFixed(2) || "0.00"
+                            : descricao === "Queijo (kg)"
+                            ? valorQueijo[i]?.toFixed(2) || "0.00"
+                            : descricao === "Leite para venda (litros)"
+                            ? valorLeiteParaVenda[i]?.toFixed(2) || "0.00"
+                            : "0.00"
+                        }
+                      />
                     </div>
                   </div>
                 </div>

@@ -23,6 +23,7 @@ import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
 import SimuladorPRONAF from "@/components/projeto/simulador-pronaf";
 import CapacidadePagamentoTab from "@/components/projeto/capacidade-pagamento-tab";
+import SumulaTab from "@/components/projeto/sumula-tab";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -193,7 +194,30 @@ export default function ProjetoPage() {
             dadosImovelData={formData?.aba_dadosImovel}
             sibData={formData?.aba_sib}
             fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
           />
+        );
+      case "Súmula (PAG01)":
+        return (
+          <SumulaTab
+            preAnaliseData={formData?.aba_preanalise}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            dadosImovelData={formData?.aba_dadosImovel}
+            investimentosData={formData?.aba_investimentos}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
+            simuladorPNCFData={formData?.aba_simuladorPNCF}
+            simuladorPRONAFData={formData?.aba_simuladorPRONAF}
+            fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Imprimir a súmula":
+        return (
+          <div className="w-full h-[55vh] flex items-center justify-center">
+            <p className="text-xl text-gray-400">Use a aba Súmula (PAG01) para visualizar e imprimir</p>
+          </div>
         );
       default:
         return <h1 className="h-screen">{tabName}</h1>;

@@ -21,8 +21,9 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
   // aqui dentro a gente separaria a partir desse objeto de receitas ja com outros totais novos
   const anos = Array.from({ length: 12 }, (_, index) => ANO_INICIAL + index);
 
+  // Armazena em porcentagem para exibição (50 = 50%)
   const [custoPadraoBovinocultura, setCustoPadraoBovinocultura] = useState(
-    data?.custoPadraoBovinocultura || 0.5
+    data?.custoPadraoBovinocultura ? data.custoPadraoBovinocultura * 100 : 50
   );
 
   /**
@@ -101,24 +102,7 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
       }
     }
     setTotalReceitas(newTotalReceitas);
-
-    // sempre atualizamos os custos independente
-    /**
-     * @TODO separar totalCustos para BOVINOCULTURA, AGR. SEQUEIRO, AGR. IRRIGADA e OUTROS
-     */
-    const newCustosBovinocultura = newTotalReceitas.map((total, index) => {
-      return total * custoPadraoBovinocultura;
-    });
-    setTotalCustosBovinocultura(newCustosBovinocultura);
-
-    /**
-     *  @TODO vai pegar custosTotal inves de só bovinocultura dps
-     */
-    const newLucroOperacional = newCustosBovinocultura.map((custo, index) => {
-      return newTotalReceitas[index] - custo;
-    });
-    setLucroOperacional(newLucroOperacional);
-  }, []);
+  }, [receitasData]);
 
   const handleCancel = () => {
     setFormsDisabled(true);
@@ -133,7 +117,7 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
       setLoading(true);
 
       const despesasData = {
-        bovinocultura_custopadrao: custoPadraoBovinocultura,
+        bovinocultura_custopadrao: custoPadraoBovinocultura / 100, // Salva como decimal
         bovinocultura_custo_ano0: totalCustosBovinocultura[0],
         bovinocultura_custo_ano1: totalCustosBovinocultura[1],
         bovinocultura_custo_ano2: totalCustosBovinocultura[2],
@@ -169,7 +153,19 @@ export default function DespesasTab({ data, isAdmin, receitasData }) {
   };
 
   const handleCustoPadraoBovinoculturaChange = (e) => {
-    setCustoPadraoBovinocultura(parseFloat(e.target.value));
+    const percentValue = parseFloat(e.target.value) || 0;
+    setCustoPadraoBovinocultura(percentValue);
+
+    // Converte porcentagem para decimal (ex: 35 -> 0.35)
+    const decimalValue = percentValue / 100;
+
+    // Recalcula custos de bovinocultura baseado no valor decimal
+    const newCustos = totalReceitas.map(receita => receita * decimalValue);
+    setTotalCustosBovinocultura(newCustos);
+
+    // Recalcula lucro operacional
+    const newLucro = newCustos.map((custo, index) => totalReceitas[index] - custo);
+    setLucroOperacional(newLucro);
   };
 
   return (
@@ -383,15 +379,20 @@ function CustoPadrao({
           <div className=" p-2">
             <p className="font-semibold text-gray-100">1- BOVINOCULTURA</p>
           </div>
-          <div className="p-2">
+          <div className="p-2 relative">
             <Input
               type="number"
-              step="0.1"
+              step="1"
+              min="0"
+              max="100"
               disabled={formsDisabled}
               value={custoPadraoBovinocultura}
-              className="text-center font-bold"
+              className="text-center font-bold pr-8"
               onChange={handleInputChange}
             />
+            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              %
+            </span>
           </div>
         </div>
       </div>
