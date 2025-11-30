@@ -211,7 +211,7 @@ export default function Pag04Inventario({
 
       {/* Seção 1: Composição do Rebanho para 2029 */}
       <div className="mb-6">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           COMPOSIÇÃO DO REBANHO PARA 2029
         </h2>
 
@@ -221,7 +221,7 @@ export default function Pag04Inventario({
             <h3 className="text-xs font-semibold mb-1">REBANHO BOVINO</h3>
             <table className="w-full border-collapse border border-gray-300 text-xs">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-gray-800 print:bg-gray-100">
                   <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
                   <th className="border border-gray-300 p-1 text-center">UNIDADE</th>
                   <th className="border border-gray-300 p-1 text-center">QUANTIDADE</th>
@@ -253,7 +253,7 @@ export default function Pag04Inventario({
                   <td className="border border-gray-300 p-1 text-center">CAB</td>
                   <td className="border border-gray-300 p-1 text-center">{rebanho.bovino.novilhos}</td>
                 </tr>
-                <tr className="font-semibold bg-gray-50">
+                <tr className="font-semibold bg-gray-700 print:bg-gray-50">
                   <td className="border border-gray-300 p-1">TOTAL</td>
                   <td className="border border-gray-300 p-1 text-center">CAB</td>
                   <td className="border border-gray-300 p-1 text-center">{rebanho.bovino.total}</td>
@@ -266,7 +266,7 @@ export default function Pag04Inventario({
 
       {/* Seção 2: Produção Agrícola Prevista para 2029 */}
       <div className="mb-6">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           PRODUÇÃO AGRÍCOLA PREVISTA PARA 2029
         </h2>
 
@@ -276,8 +276,8 @@ export default function Pag04Inventario({
             <h3 className="text-xs font-semibold mb-1">AGRICULTURA SEQUEIRO</h3>
             <table className="w-full border-collapse border border-gray-300 text-xs">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
+                <tr className="bg-gray-800 print:bg-gray-100">
+                  <th className="border border-gray-300 p-1 text-left">ATIVIDADE</th>
                   <th className="border border-gray-300 p-1 text-center">UNIDADE</th>
                   <th className="border border-gray-300 p-1 text-center">2025</th>
                   <th className="border border-gray-300 p-1 text-center">2026</th>
@@ -309,7 +309,7 @@ export default function Pag04Inventario({
             <h3 className="text-xs font-semibold mb-1">AGRICULTURA IRRIGADA</h3>
             <table className="w-full border-collapse border border-gray-300 text-xs">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-gray-800 print:bg-gray-100">
                   <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
                   <th className="border border-gray-300 p-1 text-center">UNIDADE</th>
                   <th className="border border-gray-300 p-1 text-center">2025</th>
@@ -342,7 +342,7 @@ export default function Pag04Inventario({
             <h3 className="text-xs font-semibold mb-1">OUTRAS ATIVIDADES</h3>
             <table className="w-full border-collapse border border-gray-300 text-xs">
               <thead>
-                <tr className="bg-gray-100">
+                <tr className="bg-gray-800 print:bg-gray-100">
                   <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
                   <th className="border border-gray-300 p-1 text-center">UNIDADE</th>
                   <th className="border border-gray-300 p-1 text-center">2025</th>
@@ -372,7 +372,7 @@ export default function Pag04Inventario({
 
       {/* Seção 3: Receitas Estimadas até 2029 */}
       <div className="mb-6">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           RECEITAS ESTIMADAS ATÉ 2029
         </h2>
         <table className="w-full border-collapse border border-gray-300 text-xs">
@@ -411,7 +411,7 @@ export default function Pag04Inventario({
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(receitas.outrasAtividades[3])}</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(receitas.outrasAtividades[4])}</td>
             </tr>
-            <tr className="font-semibold bg-gray-50">
+            <tr className="font-semibold bg-gray-700 print:bg-gray-50">
               <td className="border border-gray-300 p-1">RECEITA TOTAL</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(receitas.total[0])}</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(receitas.total[1])}</td>
@@ -425,12 +425,12 @@ export default function Pag04Inventario({
 
       {/* Seção 4: Despesas Estimadas até 2029 */}
       <div className="mb-6">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           DESPESAS ESTIMADAS ATÉ 2029
         </h2>
         <table className="w-full border-collapse border border-gray-300 text-xs">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-800 print:bg-gray-100">
               <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
               <th className="border border-gray-300 p-1 text-center">2025</th>
               <th className="border border-gray-300 p-1 text-center">2026</th>
@@ -464,7 +464,7 @@ export default function Pag04Inventario({
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(despesas.outrasAtividades[3])}</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(despesas.outrasAtividades[4])}</td>
             </tr>
-            <tr className="font-semibold bg-gray-50">
+            <tr className="font-semibold bg-gray-700 print:bg-gray-50">
               <td className="border border-gray-300 p-1">DESPESA TOTAL</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(despesas.total[0])}</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(despesas.total[1])}</td>
@@ -478,12 +478,12 @@ export default function Pag04Inventario({
 
       {/* Seção 5: Capacidade de Pagamento (Anos 2025-2029) */}
       <div className="mb-6">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           CAPACIDADE DE PAGAMENTO (2025-2029)
         </h2>
         <table className="w-full border-collapse border border-gray-300 text-xs">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-gray-800 print:bg-gray-100">
               <th className="border border-gray-300 p-1 text-left">DESCRIÇÃO</th>
               <th className="border border-gray-300 p-1 text-center">2025</th>
               <th className="border border-gray-300 p-1 text-center">2026</th>
@@ -541,7 +541,7 @@ export default function Pag04Inventario({
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(capacidadePagamento[3]?.resultadoLiquido)}</td>
               <td className="border border-gray-300 p-1 text-right">{formatCurrency(capacidadePagamento[4]?.resultadoLiquido)}</td>
             </tr>
-            <tr className="font-semibold bg-yellow-50">
+            <tr className="font-semibold bg-yellow-900 print:bg-yellow-50">
               <td className="border border-gray-300 p-1">CAPACIDADE DE PAGAMENTO</td>
               <td className="border border-gray-300 p-1 text-right">{formatPercent(capacidadePagamento[0]?.capacidadePagamento)}</td>
               <td className="border border-gray-300 p-1 text-right">{formatPercent(capacidadePagamento[1]?.capacidadePagamento)}</td>
@@ -555,7 +555,7 @@ export default function Pag04Inventario({
 
       {/* Seção 6: Declaração de Responsabilidade Técnica */}
       <div className="mb-6 print:break-before-page">
-        <h2 className="text-sm font-bold bg-blue-100 p-2 mb-2">
+        <h2 className="text-sm font-bold bg-gray-800 p-2 mb-2 print:bg-blue-100">
           DECLARAÇÃO DE RESPONSABILIDADE TÉCNICA
         </h2>
         <div className="border border-gray-300 p-4">

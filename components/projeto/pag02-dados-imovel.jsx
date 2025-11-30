@@ -105,7 +105,7 @@ export default function Pag02DadosImovel({
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-white text-gray-900 p-8">
+    <div className="w-full h-full overflow-y-auto bg-gray-900 text-gray-100 p-8 print:bg-white print:text-gray-900">
       <Heading
         tabName="Dados do Imóvel (PAG02)"
         onSave={handlePrint}
@@ -277,7 +277,7 @@ export default function Pag02DadosImovel({
 
           <table className="w-full text-xs border-collapse print:text-xs">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-800 print:bg-gray-100">
                 <th className="border border-gray-400 p-2 print:p-1" rowSpan={2}>
                   DISTÂNCIA AO MUNICÍPIO MAIS PRÓXIMO
                 </th>
@@ -456,7 +456,7 @@ export default function Pag02DadosImovel({
           </h3>
           <table className="w-full text-xs border-collapse print:text-xs">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-800 print:bg-gray-100">
                 <th className="border border-gray-400 p-2 print:p-1">ÁREA</th>
                 <th className="border border-gray-400 p-2 print:p-1">%</th>
                 <th className="border border-gray-400 p-2 print:p-1">CLASSE</th>

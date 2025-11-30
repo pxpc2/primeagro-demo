@@ -170,7 +170,7 @@ export default function Pag03ResumoFinanciamento({
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-white text-gray-900 p-8">
+    <div className="w-full h-full overflow-y-auto bg-gray-900 text-gray-100 p-8 print:bg-white print:text-gray-900">
       <Heading
         tabName="Resumo do Financiamento (PAG03)"
         onSave={handlePrint}
@@ -333,7 +333,7 @@ export default function Pag03ResumoFinanciamento({
 
           <table className="w-full text-xs border-collapse print:text-xs">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-800 print:bg-gray-100">
                 <th className="border border-gray-400 p-2 print:p-1">ITEM</th>
                 <th className="border border-gray-400 p-2 print:p-1">SIB</th>
                 <th className="border border-gray-400 p-2 print:p-1">PRONAF-A</th>
@@ -367,7 +367,7 @@ export default function Pag03ResumoFinanciamento({
                   </td>
                 </tr>
               ))}
-              <tr className="bg-gray-200 font-bold">
+              <tr className="bg-gray-700 font-bold print:bg-gray-200">
                 <td className="border border-gray-400 p-2 print:p-1">
                   TOTAL INVESTIDO
                 </td>
