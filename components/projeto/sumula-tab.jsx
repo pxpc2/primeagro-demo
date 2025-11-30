@@ -201,7 +201,7 @@ export default function SumulaTab({
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto bg-white text-gray-900 p-8">
+    <div className="w-full h-full overflow-y-auto bg-gray-900 text-gray-100 p-8 print:bg-white print:text-gray-900">
       <Heading
         tabName="Súmula (PAG01)"
         onSave={handlePrint}
@@ -211,7 +211,7 @@ export default function SumulaTab({
 
       <div className="print:p-4">
         {/* Cabeçalho */}
-        <div className="text-center mb-8 border-b pb-6 print:mb-4 print:pb-3 print:border-b">
+        <div className="text-center mb-8 border-b border-gray-700 pb-6 print:mb-4 print:pb-3 print:border-gray-300">
           <h1 className="text-sm font-bold mb-1 print:text-xs">
             GOVERNO DO ESTADO DO TOCANTINS
           </h1>

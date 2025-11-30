@@ -426,7 +426,10 @@ export const PROJETO_TABS = [
   { id: 19, name: "Capacidade de Pagamento", href: "#", current: false },
   { id: 20, name: "Informações complementares", href: "#", current: false },
   { id: 21, name: "Súmula (PAG01)", href: "#", current: false },
-  { id: 22, name: "Imprimir a súmula", href: "#", current: false },
+  { id: 22, name: "Dados do Imóvel (PAG02)", href: "#", current: false },
+  { id: 23, name: "Atividades Produtivas (PAG03)", href: "#", current: false },
+  { id: 24, name: "Inventário (PAG04)", href: "#", current: false },
+  { id: 25, name: "Imprimir documentos", href: "#", current: false },
 ];
 
 export const ADMIN_EMAIL = ["pedrodaia.c@gmail.com", "teste2@teste"];
