@@ -24,6 +24,9 @@ import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
 import SimuladorPRONAF from "@/components/projeto/simulador-pronaf";
 import CapacidadePagamentoTab from "@/components/projeto/capacidade-pagamento-tab";
 import SumulaTab from "@/components/projeto/sumula-tab";
+import Pag02DadosImovel from "@/components/projeto/pag02-dados-imovel";
+import Pag03ResumoFinanciamento from "@/components/projeto/pag03-resumo-financiamento";
+import Pag04Inventario from "@/components/projeto/pag04-inventario";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -213,10 +216,41 @@ export default function ProjetoPage() {
             isAdmin={isAdmin}
           />
         );
-      case "Imprimir a súmula":
+      case "Dados do Imóvel (PAG02)":
+        return (
+          <Pag02DadosImovel
+            dadosImovelData={formData?.aba_dadosImovel}
+            preAnaliseData={formData?.aba_preanalise}
+            tiposDeSoloData={formData?.aba_tiposDeSolo}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Atividades Produtivas (PAG03)":
+        return (
+          <Pag03ResumoFinanciamento
+            preAnaliseData={formData?.aba_preanalise}
+            dadosImovelData={formData?.aba_dadosImovel}
+            investimentosData={formData?.aba_investimentos}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            sibData={formData?.aba_sib}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Inventário (PAG04)":
+        return (
+          <Pag04Inventario
+            evolucaoRebanhoData={formData?.aba_evolucao_rebanho}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
+            capacidadePagamentoData={formData?.aba_capacidade_pagamento}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Imprimir documentos":
         return (
           <div className="w-full h-[55vh] flex items-center justify-center">
-            <p className="text-xl text-gray-400">Use a aba Súmula (PAG01) para visualizar e imprimir</p>
+            <p className="text-xl text-gray-400">Use as abas individuais (PAG01, PAG02, etc) para imprimir cada documento</p>
           </div>
         );
       default:
