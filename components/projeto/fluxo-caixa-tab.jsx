@@ -42,11 +42,8 @@ export default function FluxoCaixaTab({
   const [totalReceitas, setTotalReceitas] = useState(Array(12).fill(0));
   const [totalCustos, setTotalCustos] = useState(Array(12).fill(0));
 
-  const [custoPadraoBovinocultura, setCustoPadraoBovinocultura] = useState(
-    despesasData?.custoPadraoBovinocultura || 0.5
-  );
-
   useEffect(() => {
+    // Calcula receitas totais somando todas as fontes
     const newTotalReceitas = Array(12).fill(0);
     for (let i = 0; i < 10; i++) {
       const totalMatrizes =
@@ -69,39 +66,49 @@ export default function FluxoCaixaTab({
        * @TODO adicionar outras receitas (sequeiro, irrigado e outras atividades)
        */
 
+      // Anos 10 e 11 repetem ano 9
       if (i === 9) {
-        newTotalReceitas[i + 1] = newTotalReceitas[i];
-        newTotalReceitas[i + 2] = newTotalReceitas[i];
+        newTotalReceitas[10] = newTotalReceitas[9];
+        newTotalReceitas[11] = newTotalReceitas[9];
       }
     }
     setTotalReceitas(newTotalReceitas);
-    /**
-     * @TODO recalcular custos totais (ou puxar diretamente de despesas logo)
-     */
-    const newCustos = newTotalReceitas.map((total, index) => {
-      return total * custoPadraoBovinocultura; // esse tá pegando só pra bovinocultura ainda
-    });
+
+    // Usa custos JÁ CALCULADOS de Despesas (não recalcula)
+    const newCustos = despesasData?.totalCustos || Array(12).fill(0);
     setTotalCustos(newCustos);
+    // Gera tabela de fluxo de caixa para 26 anos
     let newTabelaData = [];
+    const lucroOperacionalDespesas = despesasData?.lucroOperacional || Array(12).fill(0);
+
     for (let i = 0; i < 26; i++) {
       const ano = ANO_INICIAL + i;
-      let receitas, despesas;
+      let receitas, despesas, lucroOperacional;
+      
+      // Anos 0-11: usa dados calculados
       if (i < 12) {
         receitas = newTotalReceitas[i];
         despesas = newCustos[i];
-      } else if (i === 12) {
+        lucroOperacional = lucroOperacionalDespesas[i];
+      } 
+      // Ano 12: repete ano 11
+      else if (i === 12) {
         receitas = newTotalReceitas[11];
         despesas = newCustos[11];
-      } else {
+        lucroOperacional = lucroOperacionalDespesas[11];
+      } 
+      // Anos 13-25: repete ano 10 (período de financiamento)
+      else {
         receitas = newTotalReceitas[10];
         despesas = newCustos[10];
+        lucroOperacional = lucroOperacionalDespesas[10];
       }
-      const lucroOperacional = receitas - despesas;
-      const totalEncargos = 0; // @TODO
+
+      const totalEncargos = 0; // @TODO: Calcular com base no simulador PNCF/PRONAF
       const capacidadePagamento = lucroOperacional - totalEncargos;
-      const totalAmortizacoes = 0; // @TODO
+      const totalAmortizacoes = 0; // @TODO: Buscar do simulador PNCF/PRONAF
       const lucroLiquido = capacidadePagamento - totalAmortizacoes;
-      const percentualUtilizacao = 0; // @TODO
+      const percentualUtilizacao = 0; // @TODO: Calcular percentual usado da capacidade
       const valorLiquidoMensal = lucroLiquido / 12;
 
       newTabelaData.push({
@@ -118,7 +125,7 @@ export default function FluxoCaixaTab({
       });
     }
     setTabelaData(newTabelaData);
-  }, []);
+  }, [receitasData, despesasData]); // ✅ Re-executa quando Receitas ou Despesas mudam
 
   const [tabelaData, setTabelaData] = useState(
     fluxoCaixaData?.[0]?.aba_fluxo_de_caixa_tabela || []

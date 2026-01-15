@@ -42,7 +42,7 @@ export let DOCUMENTOS = [
     nome: "DOCUMENTO DE IDENTIFICAÇÃO DO CONJUGE (RG, CPF, TÍTULO ELEITORAL, (CNH se houver)",
     descricao: "Ver mais",
   },
-  {
+  /*{
     id: "1.8",
     nome: "QUITAÇÃO ELEITORAL - PROPONENTE",
     descricao: "Ver mais",
@@ -51,7 +51,7 @@ export let DOCUMENTOS = [
     id: "1.9",
     nome: "QUITAÇÃO ELEITORAL - CONJUGE",
     descricao: "Ver mais",
-  },
+  }, */
   {
     id: "1.10",
     nome: "COMPROVANTE DE ENDEREÇO (NÃO DEVE HAVER DIVERGÊNCIA. MANTER SEMPRE EXATAMENTE O MESMO ENDEREÇO DA DECLARACAO DE ELEGIBILIDADE DE PREFERENCIA NO NOME DO BENEFICIÁRIO OU DA ESPOSA, SE EM NOME DE TERCEIROS, JÁ INCLUI JUNTO DECLARAÇÃO DE RESIDENCIA DE PREFERENCIA NO MESMO ARQUIVO.",
@@ -426,7 +426,10 @@ export const PROJETO_TABS = [
   { id: 19, name: "Capacidade de Pagamento", href: "#", current: false },
   { id: 20, name: "Informações complementares", href: "#", current: false },
   { id: 21, name: "Súmula (PAG01)", href: "#", current: false },
-  { id: 22, name: "Imprimir a súmula", href: "#", current: false },
+  { id: 22, name: "Dados do Imóvel (PAG02)", href: "#", current: false },
+  { id: 23, name: "Atividades Produtivas (PAG03)", href: "#", current: false },
+  { id: 24, name: "Inventário (PAG04)", href: "#", current: false },
+  { id: 25, name: "Imprimir documentos", href: "#", current: false },
 ];
 
 export const ADMIN_EMAIL = ["pedrodaia.c@gmail.com", "teste2@teste"];

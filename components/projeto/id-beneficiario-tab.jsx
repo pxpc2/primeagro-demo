@@ -229,7 +229,7 @@ function DadosCandidatoForm({ form, formsDisabled }) {
             name="campo9"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>9. Naturalidade</FormLabel>
+                <FormLabel>9. Nacionalidade</FormLabel>
                 <FormControl>
                   <Input
                     type="text"

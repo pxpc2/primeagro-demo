@@ -54,3 +54,68 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+    margin: 0;
+    padding: 0;
+  }
+
+  * {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print\:p-4 {
+    padding: 1rem;
+  }
+
+  .print\:text-xs {
+    font-size: 0.75rem;
+  }
+
+  .print\:text-sm {
+    font-size: 0.875rem;
+  }
+
+  .print\:mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .print\:mb-4 {
+    margin-bottom: 1rem;
+  }
+
+  .print\:pb-3 {
+    padding-bottom: 0.75rem;
+  }
+
+  .print\:border-b {
+    border-bottom: 1px solid #000;
+  }
+
+  .print\:p-1 {
+    padding: 0.25rem;
+  }
+
+  /* Evitar quebra de página desnecessária */
+  table {
+    page-break-inside: avoid;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  div {
+    page-break-inside: avoid;
+  }
+}

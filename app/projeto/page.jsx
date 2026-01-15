@@ -23,6 +23,10 @@ import { getDadosEnquadramentoForm } from "../user-dashboard/actions";
 import FluxoCaixaTab from "@/components/projeto/fluxo-caixa-tab";
 import SimuladorPRONAF from "@/components/projeto/simulador-pronaf";
 import CapacidadePagamentoTab from "@/components/projeto/capacidade-pagamento-tab";
+import SumulaTab from "@/components/projeto/sumula-tab";
+import Pag02DadosImovel from "@/components/projeto/pag02-dados-imovel";
+import Pag03ResumoFinanciamento from "@/components/projeto/pag03-resumo-financiamento";
+import Pag04Inventario from "@/components/projeto/pag04-inventario";
 
 export default function ProjetoPage() {
   const tabs = PROJETO_TABS;
@@ -188,7 +192,66 @@ export default function ProjetoPage() {
           <CapacidadePagamentoTab
             data={formData?.aba_capacidade_pagamento}
             isAdmin={isAdmin}
+            preAnaliseData={formData?.aba_preanalise}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            dadosImovelData={formData?.aba_dadosImovel}
+            sibData={formData?.aba_sib}
+            fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
           />
+        );
+      case "Súmula (PAG01)":
+        return (
+          <SumulaTab
+            preAnaliseData={formData?.aba_preanalise}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            dadosImovelData={formData?.aba_dadosImovel}
+            investimentosData={formData?.aba_investimentos}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
+            simuladorPNCFData={formData?.aba_simuladorPNCF}
+            simuladorPRONAFData={formData?.aba_simuladorPRONAF}
+            fluxoCaixaData={formData?.aba_fluxo_de_caixa}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Dados do Imóvel (PAG02)":
+        return (
+          <Pag02DadosImovel
+            dadosImovelData={formData?.aba_dadosImovel}
+            preAnaliseData={formData?.aba_preanalise}
+            tiposDeSoloData={formData?.aba_tiposDeSolo}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Atividades Produtivas (PAG03)":
+        return (
+          <Pag03ResumoFinanciamento
+            preAnaliseData={formData?.aba_preanalise}
+            dadosImovelData={formData?.aba_dadosImovel}
+            investimentosData={formData?.aba_investimentos}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            sibData={formData?.aba_sib}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Inventário (PAG04)":
+        return (
+          <Pag04Inventario
+            evolucaoRebanhoData={formData?.aba_evolucao_rebanho}
+            receitasData={formData?.aba_receitas}
+            despesasData={formData?.aba_despesas}
+            capacidadePagamentoData={formData?.aba_capacidade_pagamento}
+            identificacaoBeneficiarioData={formData?.aba_identificacao_beneficiario}
+            isAdmin={isAdmin}
+          />
+        );
+      case "Imprimir documentos":
+        return (
+          <div className="w-full h-[55vh] flex items-center justify-center">
+            <p className="text-xl text-gray-400">Use as abas individuais (PAG01, PAG02, etc) para imprimir cada documento</p>
+          </div>
         );
       default:
         return <h1 className="h-screen">{tabName}</h1>;
